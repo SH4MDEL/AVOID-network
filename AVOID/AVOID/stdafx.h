@@ -23,6 +23,9 @@
 #include <iostream>
 #include <chrono>
 #include <string>
+#include <list>
+#include <memory.h>
+using namespace std;
 
 // 타이머를 쓰기 위함
 #pragma comment(lib, "winmm.lib")

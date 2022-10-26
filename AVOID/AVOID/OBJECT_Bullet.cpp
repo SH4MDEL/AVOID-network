@@ -41,7 +41,7 @@ void OBJECT_Bullet::Update(float fTimeElapsed)
 	}
 }
 
-void OBJECT_Bullet::Render(HDC * hDC)
+void OBJECT_Bullet::Render(HDC* hDC)
 {
 	bullet.Draw(*hDC, this->bulletx - this->radius, this->bullety - this->radius, this->radius * 2, this->radius * 2);
 }

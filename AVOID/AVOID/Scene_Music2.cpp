@@ -69,8 +69,8 @@ void Scene_Music2::OnCreate()
 	ReadFile(hFileNote, noteInbuff, n, &read_note, NULL); // hFile에서 size 만큼 읽어 InBuff에 저장
 	CloseHandle(hFileNote);
 
+	int numI = 0, numJ = 0;
 	for (int i = 0; i < 36000; i++) {
-		static int numI = 0, numJ = 0;
 		if (noteInbuff[i] >= 48 && noteInbuff[i] <= 57) {
 			note[numI][numJ] = noteInbuff[i] - 48;
 			if (numJ == 11) {
@@ -84,10 +84,10 @@ void Scene_Music2::OnCreate()
 
 	Circleradius = 200;
 
-	TimeDelay = -3;
+	TimeDelay = -3.f;
 	leastTime = 0;
 	musicStart = 0;
-	int time = 0;
+	time = 0;
 
 	this->BuildObjects();
 }
@@ -146,23 +146,23 @@ void Scene_Music2::Update(float fTimeElapsed)
 	if (this->time >= 1310) {
 		finalhp = Player->GetHp();
 		m_pFramework->ChangeScene(CScene::SceneTag::Result);
-		m_pFramework->curSceneCreate();
 		Scene_Music2::OnDestroy();
+		m_pFramework->curSceneCreate();
 	}
 }
 
 void Scene_Music2::PlayerCrash(OBJECT_MainEnemy* Enemy)
 {
-	OBJECT_Bullet * p;
+	//OBJECT_Bullet * p;
 
 	double d = 0;
 	double r1 = 0;
 	double r2 = 0;
 
-	for (p = Enemy->head; p != nullptr; p = p->nextbullet) {
-		d = sqrt((double)(pow(p->bulletx - (double)Player->GetX(), 2) + pow(p->bullety - (double)Player->GetY(), 2)));
-		r1 = p->radius + Player->GetRadius();
-		r2 = p->radius - Player->GetRadius();
+	for (auto bullet = Enemy->m_bullets.begin(); bullet != Enemy->m_bullets.end(); ++bullet) {
+		d = sqrt((double)(pow((*bullet)->bulletx - (double)Player->GetX(), 2) + pow((*bullet)->bullety - (double)Player->GetY(), 2)));
+		r1 = (*bullet)->radius + Player->GetRadius();
+		r2 = (*bullet)->radius - Player->GetRadius();
 
 		if (((r2 < d && d <= r1) || r2 >= d) && !Player->GetState()) {			// 충돌, 무적 x 이면 hp 감소
 			Player->SetHp(Player->hitHp);
@@ -178,22 +178,22 @@ void Scene_Music2::PlayerCrash(OBJECT_MainEnemy* Enemy)
 
 void Scene_Music2::AbilityCrash(OBJECT_MainEnemy* Enemy)
 {
-	OBJECT_Bullet * p;
+	//OBJECT_Bullet * p;
 
 	double d = 0;
 	double r1 = 0;
 	double r2 = 0;
 
-	for (p = Enemy->head; p != nullptr; p = p->nextbullet) {
-		d = sqrt((double)(pow(p->bulletx - (double)Player->GetX(), 2) + pow(p->bullety - (double)Player->GetY(), 2)));
-		r1 = p->radius + Player->Ability_radius;
-		r2 = p->radius - Player->Ability_radius;
+	for (auto bullet = Enemy->m_bullets.begin(); bullet != Enemy->m_bullets.end(); ++bullet) {
+		d = sqrt((double)(pow((*bullet)->bulletx - (double)Player->GetX(), 2) + pow((*bullet)->bullety - (double)Player->GetY(), 2)));
+		r1 = (*bullet)->radius + Player->Ability_radius;
+		r2 = (*bullet)->radius - Player->Ability_radius;
 
 		if (((r2 < d && d <= r1) || r2 >= d) && Player->GetAState()) {			// 충돌, 능력o 이면 속도 감소
-			p->BulletSpeed = 3;
+			(*bullet)->BulletSpeed = 3;
 		}
 		else {
-			p->BulletSpeed = 10;
+			(*bullet)->BulletSpeed = 10;
 		}
 	}
 }

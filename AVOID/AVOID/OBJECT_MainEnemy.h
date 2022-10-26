@@ -27,7 +27,7 @@ public:
 	int windowX = ::GetSystemMetrics(SM_CXSCREEN);		// 모니터 x길이 받아옴
 	int windowY = ::GetSystemMetrics(SM_CYSCREEN);		// 모니터 y길이 받아옴
 
-	OBJECT_Bullet* head;						// head 가리키는 포인터
+	std::list<OBJECT_Bullet*> m_bullets;
 
 	OBJECT_MainEnemy();							// 그냥 생성할 경우
 	OBJECT_MainEnemy(int location, int selectedMusic);				// 좌표를 넣어 생성할 경우
@@ -44,7 +44,6 @@ public:
 	//void firstRender(HDC* hdc);
 
 	void BulletCrash();							// 원과 총알 충돌체크
-	void DeleteBullet(OBJECT_Bullet* bullet);
 
 	void SetDrawFalse();				
 	void SetDrawTrue();

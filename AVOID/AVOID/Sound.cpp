@@ -47,7 +47,7 @@ void Sound::Release()
 	Music[SoundTag::GameStart]->release();
 	Music[SoundTag::Hitsound]->release();
 	pFmod->close();									// 사운드 시스템 해제
-	pFmod->release();
+	//pFmod->release();
 }
 
 void Sound::update(int _chNum)						// 출력중인지 검사하고 출력중이면 시스템을 업데이트함
