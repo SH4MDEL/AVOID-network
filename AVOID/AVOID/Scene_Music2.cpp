@@ -89,7 +89,7 @@ void Scene_Music2::OnCreate()
 	musicStart = 0;
 	time = 0;
 
-	this->BuildObjects();
+	BuildObjects();
 }
 
 void Scene_Music2::BuildObjects()
@@ -105,10 +105,10 @@ void Scene_Music2::Render(HDC hdc)
 	Ingame.Draw(hdc, 0, 0, windowX, windowY);
 	Circle.Draw(hdc, windowX / 2 - this->Circleradius, windowY / 2 - this->Circleradius, this->Circleradius * 2, this->Circleradius * 2);
 
-	this->Player->Render(&hdc);
+	Player->Render(&hdc);
 
 	for (int i = 0; i < 12; i++) {
-		this->CMainEnemy[i]->Render(&hdc);
+		CMainEnemy[i]->Render(&hdc);
 	}
 }
 
@@ -126,7 +126,6 @@ void Scene_Music2::Update(float fTimeElapsed)
 
 	if (musicStart == false && TimeDelay >= -1.f) {
 		IngameSound->play(Sound::SoundTag::TrueBlue);
-		//printf("start\n");
 		musicStart = true;
 	}
 
@@ -153,8 +152,6 @@ void Scene_Music2::Update(float fTimeElapsed)
 
 void Scene_Music2::PlayerCrash(OBJECT_MainEnemy* Enemy)
 {
-	//OBJECT_Bullet * p;
-
 	double d = 0;
 	double r1 = 0;
 	double r2 = 0;
@@ -178,8 +175,6 @@ void Scene_Music2::PlayerCrash(OBJECT_MainEnemy* Enemy)
 
 void Scene_Music2::AbilityCrash(OBJECT_MainEnemy* Enemy)
 {
-	//OBJECT_Bullet * p;
-
 	double d = 0;
 	double r1 = 0;
 	double r2 = 0;

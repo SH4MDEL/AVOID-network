@@ -40,7 +40,7 @@ void Scene_Music1::OnCreate()
 	Ingame.Load(L"Graphic\\UI\\Ingame.png");
 	Circle.Load(L"Graphic\\UI\\Circle.png");
 
-	this->IngameSound = new Sound;
+	IngameSound = new Sound;
 	IngameSound->init();
 	IngameSound->loading();
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -88,7 +88,7 @@ void Scene_Music1::OnCreate()
 	musicStart = 0;
 	time = 0;
 
-	this->BuildObjects();
+	BuildObjects();
 }
 
 void Scene_Music1::BuildObjects()
@@ -114,7 +114,6 @@ void Scene_Music1::Render(HDC hdc)
 void Scene_Music1::Update(float fTimeElapsed)
 {
 	TimeDelay += fTimeElapsed;
-	//printf("지난 시간 : %f\n", TimeDelay);
 
 	this->Player->Update(fTimeElapsed);
 
@@ -125,7 +124,6 @@ void Scene_Music1::Update(float fTimeElapsed)
 
 	if (musicStart == false && TimeDelay >= -1.f) {
 		IngameSound->play(Sound::SoundTag::bbkkbkk);
-		//printf("start\n");
 		musicStart = true;
 	}
 
@@ -142,7 +140,7 @@ void Scene_Music1::Update(float fTimeElapsed)
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	}
 
-	if (time >= 145) {
+	if (time >= 1450) {
 		finalhp = Player->GetHp();
 		m_pFramework->ChangeScene(CScene::SceneTag::Result);
 		Scene_Music1::OnDestroy();
@@ -153,8 +151,6 @@ void Scene_Music1::Update(float fTimeElapsed)
 
 void Scene_Music1::PlayerCrash(OBJECT_MainEnemy* Enemy)
 {
-	//OBJECT_Bullet * p;
-
 	double d = 0;
 	double r1 = 0;
 	double r2 = 0;
@@ -178,8 +174,6 @@ void Scene_Music1::PlayerCrash(OBJECT_MainEnemy* Enemy)
 
 void Scene_Music1::AbilityCrash(OBJECT_MainEnemy* Enemy)
 {
-	//OBJECT_Bullet * p;
-
 	double d = 0;
 	double r1 = 0;
 	double r2 = 0;

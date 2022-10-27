@@ -34,7 +34,6 @@ void OBJECT_MainEnemy::OnCreate(int location)				// OnCreate는 해당 오브젝트의 �
 	//		  (windowX / 2) + 220 * cos(location * pi / 6) <- 화면의 중앙 + 원의 반지름 * 삼각함수. 원의 반지름 수정 필수!!
 
 	this->draw = true;	// 그려진 상태가 된다.
-	//this->head = nullptr;
 }
 
 void OBJECT_MainEnemy::Update(float fTimeElapsed, int lotateSpeed, int note)
@@ -81,10 +80,6 @@ void OBJECT_MainEnemy::Render(HDC* hDC)
 {
 	Enemy[imageCount].Draw(*hDC, this->x - 20, this->y - 20, 40, 40);
 
-	//OBJECT_Bullet* p;
-	//for (p = this->head; p != nullptr; p = p->nextbullet) {
-	//	p->Render(hDC);
-	//}
 	for (auto bullet : m_bullets) (*bullet).Render(hDC);
 }
 

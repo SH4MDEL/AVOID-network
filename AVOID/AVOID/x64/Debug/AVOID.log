@@ -1,10 +1,10 @@
 ﻿  Scene_Music1.cpp
 C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_MainEnemy.h(19,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
 C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.h(22,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\Scene_Music1.cpp(146,26): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\Scene_Music1.cpp(144,26): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   Scene_Music2.cpp
 C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_MainEnemy.h(19,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
 C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.h(22,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\Scene_Music2.cpp(147,26): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\Scene_Music2.cpp(146,26): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   코드를 생성하고 있습니다...
   AVOID.vcxproj -> C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\x64\Debug\AVOID.exe
