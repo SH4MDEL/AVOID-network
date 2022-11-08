@@ -4,8 +4,6 @@
 extern int mouse_mx;
 extern int mouse_my;
 
-//int finalhp = 0;
-
 class OBJECT_Player : public CObject
 {
 private:
