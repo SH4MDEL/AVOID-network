@@ -12,6 +12,7 @@ public:
 		Title
 		, Main
 		, MusicSelect
+		, PlayerWaiting
 		, Music1
 		, Music2
 		, Result

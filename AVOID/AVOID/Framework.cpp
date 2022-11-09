@@ -3,6 +3,7 @@
 // 타이틀 씬 등을 include할 공간
 #include "Scene_Main.h"
 #include "Scene_MusicSelect.h"
+#include "Scene_PlayerWaiting.h"
 #include "Scene_Music1.h"
 #include "Scene_Music2.h"
 #include "Scene_Result.h"
@@ -109,6 +110,7 @@ void CFramework::BuildScene()
 	// arrScene[SceneTag::Title] = new TitleScene();	// 이런 방식으로 씬을 만들어라.
 	arrScene[CScene::SceneTag::Main] = new CMainScene(CScene::SceneTag::Main, this);
 	arrScene[CScene::SceneTag::MusicSelect] = new Scene_MusicSelect(CScene::SceneTag::MusicSelect, this);
+	arrScene[CScene::SceneTag::PlayerWaiting] = new Scene_PlayerWaiting(CScene::SceneTag::PlayerWaiting, this);
 	arrScene[CScene::SceneTag::Music1] = new Scene_Music1(CScene::SceneTag::Music1, this);
 	arrScene[CScene::SceneTag::Music2] = new Scene_Music2(CScene::SceneTag::Music2, this);
 	arrScene[CScene::SceneTag::Result] = new Scene_Result(CScene::SceneTag::Result, this);
