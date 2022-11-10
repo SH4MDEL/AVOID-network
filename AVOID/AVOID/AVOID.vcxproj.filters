@@ -96,6 +96,9 @@
     <ClInclude Include="Scene_PlayerWaiting.h">
       <Filter>헤더 파일\Scenes</Filter>
     </ClInclude>
+    <ClInclude Include="Scene_Ingame.h">
+      <Filter>헤더 파일\Scenes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Framework.cpp">
@@ -144,6 +147,9 @@
       <Filter>소스 파일\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="Scene_PlayerWaiting.cpp">
+      <Filter>소스 파일\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene_Ingame.cpp">
       <Filter>소스 파일\Scenes</Filter>
     </ClCompile>
   </ItemGroup>

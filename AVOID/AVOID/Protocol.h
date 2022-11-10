@@ -63,22 +63,22 @@ struct sc_packet_login_confirm : public packet
 	char playerID;
 };
 
-struct cs_packet_start_game : public packet
+struct sc_packet_start_game : public packet
 {
 	char playerNum;
 };
 
-struct cs_packet_objects_info : public packet
+struct sc_packet_objects_info : public packet
 {
 	char playerNum;
 	char bulletNum;
 };
 
-struct cs_pakcet_music_end : public packet
+struct sc_pakcet_music_end : public packet
 {
 };
 
-struct cs_packet_rank : public packet
+struct sc_packet_rank : public packet
 {
 	char rank;
 };

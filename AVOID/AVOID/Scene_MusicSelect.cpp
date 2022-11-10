@@ -119,16 +119,10 @@ void Scene_MusicSelect::Update(float fTimeElapsed)
 		if (TimeDelay >= 5.f) {			// 키 검사 이후 일정 시간 뒤 다음 장면으로 넘어감				 원래는 5.f
 			if (this->finish)
 			{
-				if (selectedMusic == 0) {
-					m_pFramework->ChangeScene(CScene::SceneTag::Music1);
-					m_pFramework->curSceneCreate();
-					Scene_MusicSelect::OnDestroy();
-				}
-				else if (selectedMusic == 1) {
-					m_pFramework->ChangeScene(CScene::SceneTag::Music2);
-					m_pFramework->curSceneCreate();
-					Scene_MusicSelect::OnDestroy();
-				}
+				m_pFramework->ChangeScene(CScene::SceneTag::Ingame);
+				m_pFramework->SetMusic(selectedMusic);
+				m_pFramework->curSceneCreate();
+				Scene_MusicSelect::OnDestroy();
 			}
 		}
 	}

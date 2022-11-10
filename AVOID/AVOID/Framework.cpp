@@ -4,8 +4,7 @@
 #include "Scene_Main.h"
 #include "Scene_MusicSelect.h"
 #include "Scene_PlayerWaiting.h"
-#include "Scene_Music1.h"
-#include "Scene_Music2.h"
+#include "Scene_Ingame.h"
 #include "Scene_Result.h"
 // 
 #include "Framework.h"
@@ -111,8 +110,7 @@ void CFramework::BuildScene()
 	arrScene[CScene::SceneTag::Main] = new CMainScene(CScene::SceneTag::Main, this);
 	arrScene[CScene::SceneTag::MusicSelect] = new Scene_MusicSelect(CScene::SceneTag::MusicSelect, this);
 	arrScene[CScene::SceneTag::PlayerWaiting] = new Scene_PlayerWaiting(CScene::SceneTag::PlayerWaiting, this);
-	arrScene[CScene::SceneTag::Music1] = new Scene_Music1(CScene::SceneTag::Music1, this);
-	arrScene[CScene::SceneTag::Music2] = new Scene_Music2(CScene::SceneTag::Music2, this);
+	arrScene[CScene::SceneTag::Ingame] = new Scene_Ingame(CScene::SceneTag::Ingame, this);
 	arrScene[CScene::SceneTag::Result] = new Scene_Result(CScene::SceneTag::Result, this);
 	arrScene[CScene::SceneTag::Main]->OnCreate();
 }
@@ -304,6 +302,13 @@ void CFramework::curSceneCreate()
 void CFramework::ChangeScene(CScene::SceneTag tag)
 {
 	m_pCurrScene = arrScene[tag];
+}
+
+void CFramework::SetMusic(int selectedMusic)
+{
+	m_selectedMusic = selectedMusic;
+	Scene_Ingame* scene = (Scene_Ingame*)m_pCurrScene;
+	scene->SetMusic(selectedMusic);
 }
 
 /*

@@ -40,7 +40,7 @@ private:
 	TCHAR m_CaptionTitle[TITLE_MX_LENGTH];	// SetWindow 함수에다가 이 타이틀을 집어넣는다.
 	int m_TitleLength;
 
-
+	int m_selectedMusic;
 public:
 	CFramework();
 	~CFramework();
@@ -82,6 +82,9 @@ public:
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	void curSceneCreate();
 	void ChangeScene(CScene::SceneTag tag);
+
+	void SetMusic(int selectedMusic);
+	int GetMusic() { return m_selectedMusic; }
 private:
 	CScene * arrScene[CScene::SceneTag::Count];
 	CScene * m_pCurrScene;

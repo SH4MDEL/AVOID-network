@@ -1,16 +1,5 @@
-﻿  Framework.cpp
-C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\Framework.cpp(171,25): warning C4244: 'return': 'LRESULT'에서 'HRESULT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\Framework.cpp(218,29): warning C4244: '인수': '_Rep'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-          with
-          [
-              _Rep=double
-          ]
-C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\Framework.cpp(237,9): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  OBJECT_MainEnemy.cpp
-C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_MainEnemy.h(19,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
-C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.h(22,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
-C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_MainEnemy.cpp(81,53): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_MainEnemy.cpp(81,39): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  Scene_Result.cpp
-  코드를 생성하고 있습니다...
-  AVOID.vcxproj -> C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\x64\Debug\AVOID.exe
+﻿  Scene_Ingame.cpp
+C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_MainEnemy.h(19,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.h(22,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\Scene_Ingame.cpp(170,26): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  AVOID.vcxproj -> C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\x64\Debug\AVOID.exe

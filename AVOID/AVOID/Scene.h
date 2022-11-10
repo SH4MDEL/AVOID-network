@@ -13,8 +13,7 @@ public:
 		, Main
 		, MusicSelect
 		, PlayerWaiting
-		, Music1
-		, Music2
+		, Ingame
 		, Result
 		, Count			// Scene의 개수를 나타내기 위한 임시 태그이다. 지우지 말자.
 	};

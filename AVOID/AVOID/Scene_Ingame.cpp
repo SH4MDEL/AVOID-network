@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Scene_Music1.h"
+#include "Scene_Ingame.h"
 
 #include "OBJECT_MainEnemy.h"
 #include "OBJECT_Player.h"
@@ -8,19 +8,19 @@
 #include "Framework.h"
 #include "Sound.h"
 
-Scene_Music1::Scene_Music1()
+Scene_Ingame::Scene_Ingame()
 {
 }
 
-Scene_Music1::Scene_Music1(SceneTag tag, CFramework * pFramework) : CScene(tag, pFramework)
+Scene_Ingame::Scene_Ingame(SceneTag tag, CFramework* pFramework) : CScene(tag, pFramework)
 {
 }
 
-Scene_Music1::~Scene_Music1()
+Scene_Ingame::~Scene_Ingame()
 {
 }
 
-void Scene_Music1::OnDestroy()
+void Scene_Ingame::OnDestroy()
 {
 	Ingame.Destroy();
 	Circle.Destroy();
@@ -29,13 +29,13 @@ void Scene_Music1::OnDestroy()
 	for (int i = 0; i < 12; i++) {
 		delete CMainEnemy[i];
 	}
-
-	this->IngameSound->stop(Sound::SoundTag::bbkkbkk);
+	if (m_selectedMusic == 0) this->IngameSound->stop(Sound::SoundTag::bbkkbkk);
+	else if (m_selectedMusic == 1) this->IngameSound->stop(Sound::SoundTag::TrueBlue);
 	this->IngameSound->Release();
 	delete IngameSound;
 }
 
-void Scene_Music1::OnCreate()
+void Scene_Ingame::OnCreate()
 {
 	Ingame.Load(L"Graphic\\UI\\Ingame.png");
 	Circle.Load(L"Graphic\\UI\\Circle.png");
@@ -48,7 +48,12 @@ void Scene_Music1::OnCreate()
 	DWORD read_size = 3000;
 	DWORD c = 3000;
 
-	hFileSpeed = CreateFile(L"Data\\bbkkbkkSpeed.txt", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
+	if (m_selectedMusic == 0) {
+		hFileSpeed = CreateFile(L"Data\\bbkkbkkSpeed.txt", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
+	}
+	else if (m_selectedMusic == 1) {
+		hFileSpeed = CreateFile(L"Data\\TrueBlueSpeed.txt", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
+	}
 	ReadFile(hFileSpeed, Inbuff, c, &read_size, NULL); // hFile에서 size 만큼 읽어 InBuff에 저장
 	CloseHandle(hFileSpeed);
 
@@ -56,15 +61,19 @@ void Scene_Music1::OnCreate()
 	for (int i = 0; i < 3000; i++) {
 		if (Inbuff[i] >= 48 && Inbuff[i] <= 57) {
 			lotateSpeed[num] = Inbuff[i] - 48;
-			num++;
+			++num;
 		}
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	char noteInbuff[36000];
 	DWORD read_note = 36000;
 	DWORD n = 36000;
-
-	hFileNote = CreateFile(L"Data\\bbkkbkkNote.txt", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
+	if (m_selectedMusic == 0) {
+		hFileNote = CreateFile(L"Data\\bbkkbkkNote.txt", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
+	}
+	else if (m_selectedMusic == 1) {
+		hFileNote = CreateFile(L"Data\\TrueBlueNote.txt", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
+	}
 	ReadFile(hFileNote, noteInbuff, n, &read_note, NULL); // hFile에서 size 만큼 읽어 InBuff에 저장
 	CloseHandle(hFileNote);
 
@@ -91,27 +100,27 @@ void Scene_Music1::OnCreate()
 	BuildObjects();
 }
 
-void Scene_Music1::BuildObjects()
+void Scene_Ingame::BuildObjects()
 {
 	for (int i = 0; i < 12; i++) {
-		this->CMainEnemy[i] = new OBJECT_MainEnemy(i + 1, 1);		// location은 1부터 12까지 들어간다.
+		this->CMainEnemy[i] = new OBJECT_MainEnemy(i + 1, m_selectedMusic + 1);		// location은 1부터 12까지 들어간다.
 	}
-	this->Player = new OBJECT_Player(windowX, windowY);
+	Player = new OBJECT_Player(windowX, windowY);
 }
 
-void Scene_Music1::Render(HDC hdc)
+void Scene_Ingame::Render(HDC hdc)
 {
 	Ingame.Draw(hdc, 0, 0, windowX, windowY);
 	Circle.Draw(hdc, windowX / 2 - this->Circleradius, windowY / 2 - this->Circleradius, this->Circleradius * 2, this->Circleradius * 2);
 
-	this->Player->Render(&hdc);
+	Player->Render(&hdc);
 
 	for (int i = 0; i < 12; i++) {
 		this->CMainEnemy[i]->Render(&hdc);
 	}
 }
 
-void Scene_Music1::Update(float fTimeElapsed)
+void Scene_Ingame::Update(float fTimeElapsed)
 {
 	TimeDelay += fTimeElapsed;
 
@@ -123,33 +132,49 @@ void Scene_Music1::Update(float fTimeElapsed)
 	}
 
 	if (musicStart == false && TimeDelay >= -1.f) {
-		IngameSound->play(Sound::SoundTag::bbkkbkk);
+		if (m_selectedMusic == 0) {
+			IngameSound->play(Sound::SoundTag::bbkkbkk);
+		}
+		else if (m_selectedMusic == 1) {
+			IngameSound->play(Sound::SoundTag::TrueBlue);
+		}
 		musicStart = true;
 	}
 
 	if (TimeDelay >= 0.f) {
 		leastTime += fTimeElapsed;
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		if (TimeDelay >= (60.f / 680.f) * (float)time) {		// 60 / bpm / 4 초마다 도는 속도를 읽어들인다.
-			for (int i = 0; i < 12; i++) {
-				CMainEnemy[i]->Update(leastTime, lotateSpeed[time], note[time][i]);
+		if (m_selectedMusic == 0) {
+			if (TimeDelay >= (60.f / 680.f) * (float)time) {		// 60 / bpm / 4 초마다 도는 속도를 읽어들인다.
+				for (int i = 0; i < 12; i++) {
+					CMainEnemy[i]->Update(leastTime, lotateSpeed[time], note[time][i]);
+				}
+				++time;
+				leastTime = 0;
 			}
-			++time;
-			leastTime = 0;
+		}
+
+		else if (m_selectedMusic == 1) {
+			if (TimeDelay >= (60.f / 656.f) * (float)time) {		// 60 / bpm / 4 초마다 도는 속도를 읽어들인다.
+				for (int i = 0; i < 12; i++) {
+					CMainEnemy[i]->Update(leastTime, lotateSpeed[time], note[time][i]);
+				}
+				++time;
+				leastTime = 0;
+			}
 		}
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	}
 
-	if (time >= 1450) {
+	if ((m_selectedMusic == 0 && time >= 1450) || (m_selectedMusic == 1 && time >= 1310)) {
 		finalhp = Player->GetHp();
 		m_pFramework->ChangeScene(CScene::SceneTag::Result);
-		Scene_Music1::OnDestroy();
+		Scene_Ingame::OnDestroy();
 		m_pFramework->curSceneCreate();
 	}
-
 }
 
-void Scene_Music1::PlayerCrash(OBJECT_MainEnemy* Enemy)
+void Scene_Ingame::PlayerCrash(OBJECT_MainEnemy* Enemy)
 {
 	double d = 0;
 	double r1 = 0;
@@ -172,7 +197,7 @@ void Scene_Music1::PlayerCrash(OBJECT_MainEnemy* Enemy)
 	}
 }
 
-void Scene_Music1::AbilityCrash(OBJECT_MainEnemy* Enemy)
+void Scene_Ingame::AbilityCrash(OBJECT_MainEnemy* Enemy)
 {
 	double d = 0;
 	double r1 = 0;
@@ -190,4 +215,9 @@ void Scene_Music1::AbilityCrash(OBJECT_MainEnemy* Enemy)
 			(*bullet)->BulletSpeed = 10;
 		}
 	}
+}
+
+void Scene_Ingame::SetMusic(int selectedMusic)
+{
+	m_selectedMusic = selectedMusic;
 }
