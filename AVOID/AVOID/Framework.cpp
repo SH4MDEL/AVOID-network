@@ -9,9 +9,6 @@
 // 
 #include "Framework.h"
 
-using namespace std;// 웬만하면 하지 말자. 컴파일 시간이 엄청 느려진다. 성능상의 문제는 없다.
-					// 컴파일 할 때 std 네임스페이스가 포함된 모든 헤더파일을 돌기 때문에 생기는 문제이다.
-
 int mouse_mx;
 int mouse_my;
 int finalhp;
@@ -311,56 +308,96 @@ void CFramework::SetMusic(int selectedMusic)
 	scene->SetMusic(selectedMusic);
 }
 
-/*
-20171206 스터디 최후
-winmain()
+void CFramework::InitServer()
 {
-	윈도우 등록
-	윈도우 생성
+	int retval;
+	// 윈속 초기화
+	WSADATA wsa;
+	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
+		std::cout << "Init Fail." << std::endl;
+		return;
+	}
 
-	메시지 루프
-	{
-		메시지 처리
-		게임 루프 처리
-		{
-			FrameWork
-				FrameAdvanced();
-				{
-					ProcessInput()	// 키 입력
-					{
-						WndProc
-							WM_KEY:
-							WM_MOUSE:
-					}
-					m_pscene->	Update();	// 로직 처리
-					m_pscene->	Render()	// 그리기	// InvalidateRect()를 통해 아래 블럭 안으로 이동
-					{
-						WndProc
-							WM_PAINT:
-							hdc = BeginDraw();
-							Render(hdc);
-							EndDraw(hdc);
-					}
-				}
-		}
+	// 소켓 생성
+	g_socket = socket(AF_INET, SOCK_STREAM, 0);
+	if (g_socket == INVALID_SOCKET) {
+		std::cout << "Create Socket Fail." << std::endl;
+		return;
+	}
+
+	// connect()
+	struct sockaddr_in serveraddr;
+	memset(&serveraddr, 0, sizeof(serveraddr));
+	serveraddr.sin_family = AF_INET;
+	inet_pton(AF_INET, SERVER_ADDR, &serveraddr.sin_addr);
+	serveraddr.sin_port = htons(SERVER_PORT);
+	retval = connect(g_socket, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
+	if (retval == SOCKET_ERROR) {
+		std::cout << "Socket Error in connect" << std::endl;
+		return;
 	}
 }
 
+char CFramework::TranslatePacket(char* packetBuf)
+{
+	int size{ 0 };
+	int type{ 0 };
 
-private:
-	CScene * m_pscene;
-	Oncreate() 함수 안에서 new를 통해 위 변수를 생성
-	씬 이름을 enum tag를 통해 정해주면 된다.
+	memcpy(&size, &packetBuf[0], sizeof(unsigned char));
+	memcpy(&type, &packetBuf[1], sizeof(char));
 
-	** arrscene;
-	2D프로그래밍때와 달리, 프레임워크가 자체적으로 씬 배열을 가지고 있다.
-	[0]에서는 로비, [1]에서는 게임오버 등...
-	그러면 2D때 푸쉬 팝과는 달리 ChangeScene으로 해결한다.
+	switch (type)
+	{
+	case SC_PACKET_LOGIN_CONFIRM:
+		return SC_PACKET_LOGIN_CONFIRM;
+		break;
+	case SC_PACKET_START_GAME:
+		return SC_PACKET_START_GAME;
+		break;
+	case SC_PACKET_OBJECTS_INFO:
+		return SC_PACKET_OBJECTS_INFO;
+		break;
+	case SC_PACKET_MUSIC_END:
+		return SC_PACKET_MUSIC_END;
+		break;
+	case SC_PACKET_RANK:
+		return SC_PACKET_MUSIC_END;
+		break;
+	case CS_PACKET_LOGOUT:
+		return CS_PACKET_LOGOUT;
+		break;
+	default:
+		return -1;
+		break;
+	}
+}
 
-	이러면 장점이 씬 이동이 자유롭다.
+void* CFramework::GetDataFromPacket(char* dataBuf, char packetType)
+{
+	cs_packet_login* asdf;
+	return asdf;
 
-
-	update와 render는 상위 클래스에서 =0; 을 만들고
-
-	각자 scene들이 상속받아서 이걸 가지고 있어야 한다.
-*/
+	switch (packetType)
+	{
+	case SC_PACKET_LOGIN_CONFIRM:
+		
+		break;
+	case SC_PACKET_START_GAME:
+		
+		break;
+	case SC_PACKET_OBJECTS_INFO:
+		
+		break;
+	case SC_PACKET_MUSIC_END:
+		
+		break;
+	case SC_PACKET_RANK:
+		
+		break;
+	case CS_PACKET_LOGOUT:
+		
+		break;
+	default:
+		return nullptr;
+	}
+}

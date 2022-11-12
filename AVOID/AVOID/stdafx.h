@@ -27,6 +27,12 @@
 #include <memory.h>
 using namespace std;
 
+// 서버 관련 헤더 파일입니다.
+#include <winsock2.h> // 윈속2 메인 헤더
+#include <ws2tcpip.h> // 윈속2 확장 헤더
+#include "Protocol.h"
+#define USE_NETWORK
+
 // 타이머를 쓰기 위함
 #pragma comment(lib, "winmm.lib")
 #include <Mmsystem.h>
@@ -35,9 +41,11 @@ using namespace std;
 #include "inc/fmod.hpp"
 #pragma comment (lib,"fmod64_vc.lib")
 
+SOCKET		g_socket;
+
 #define TITLE_MX_LENGTH 64
 
-#define TITLESTRING TEXT("A VOID")	// 타이틀 이름이 들어갈 문자열이므로 내용을 원하는 대로 바꿔주자.
+#define TITLESTRING TEXT("AVOID network")	// 타이틀 이름이 들어갈 문자열이므로 내용을 원하는 대로 바꿔주자.
 
 // 캡션 FPS 출력 여부
 // 항상 캡션에 FPS를 출력	(0: 비활성 | 1: 활성)

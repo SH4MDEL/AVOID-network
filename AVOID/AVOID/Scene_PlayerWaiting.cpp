@@ -23,7 +23,10 @@ void Scene_PlayerWaiting::OnDestroy()
 
 void Scene_PlayerWaiting::OnCreate()
 {
-
+#ifndef USE_NETWORK
+	m_pFramework->InitServer();
+#endif // !USE_NETWORK
+	
 }
 
 void Scene_PlayerWaiting::BuildObjects()

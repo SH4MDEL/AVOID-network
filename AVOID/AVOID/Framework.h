@@ -85,6 +85,10 @@ public:
 
 	void SetMusic(int selectedMusic);
 	int GetMusic() { return m_selectedMusic; }
+
+	void InitServer();
+	char TranslatePacket(char* packetBuf);
+	void* GetDataFromPacket(char* dataBuf, char packetType);
 private:
 	CScene * arrScene[CScene::SceneTag::Count];
 	CScene * m_pCurrScene;
