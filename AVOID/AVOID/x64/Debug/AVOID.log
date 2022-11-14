@@ -1,1 +1,10 @@
-﻿  AVOID.vcxproj -> C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\x64\Debug\AVOID.exe
+﻿  Framework.cpp
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\Framework.cpp(166,25): warning C4244: 'return': 'LRESULT'에서 'HRESULT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\Framework.cpp(213,29): warning C4244: '인수': '_Rep'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              _Rep=double
+          ]
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\Framework.cpp(232,9): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\Framework.cpp(404): warning C4715: 'CFramework::GetDataFromPacket': 모든 제어 경로에서 값을 반환하지는 않습니다.
+  AVOID.vcxproj -> C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\x64\Debug\AVOID.exe

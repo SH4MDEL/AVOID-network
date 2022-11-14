@@ -80,6 +80,8 @@ public:
 										// 윈도우 메시지 아래에 불리는 함수가 얘다. 모든 로직이 이 안에서 처리되기 떄문이다.
 
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+	static DWORD CALLBACK ProcessClient(LPVOID arg);
+
 	void curSceneCreate();
 	void ChangeScene(CScene::SceneTag tag);
 
@@ -87,8 +89,10 @@ public:
 	int GetMusic() { return m_selectedMusic; }
 
 	void InitServer();
-	char TranslatePacket(char* packetBuf);
+	void Recv();
+	char TranslatePacket(const packet& packetBuf);
 	void* GetDataFromPacket(char* dataBuf, char packetType);
+	void Send(void* packetBuf);
 private:
 	CScene * arrScene[CScene::SceneTag::Count];
 	CScene * m_pCurrScene;

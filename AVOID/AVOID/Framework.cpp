@@ -308,24 +308,25 @@ void CFramework::SetMusic(int selectedMusic)
 	scene->SetMusic(selectedMusic);
 }
 
+
 void CFramework::InitServer()
 {
 	int retval;
 	// 扩加 檬扁拳
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
-		std::cout << "Init Fail." << std::endl;
+		cout << "Init Fail." << endl;
 		return;
 	}
 
-	// 家南 积己
+	//家南 积己
 	g_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (g_socket == INVALID_SOCKET) {
 		std::cout << "Create Socket Fail." << std::endl;
 		return;
 	}
 
-	// connect()
+	//connect()
 	struct sockaddr_in serveraddr;
 	memset(&serveraddr, 0, sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
@@ -336,17 +337,25 @@ void CFramework::InitServer()
 		std::cout << "Socket Error in connect" << std::endl;
 		return;
 	}
+
+	HANDLE hThread = CreateThread(nullptr, 0, ProcessClient, (LPVOID)g_socket, 0, nullptr);
+	if (!hThread) closesocket(g_socket);
 }
 
-char CFramework::TranslatePacket(char* packetBuf)
+void CFramework::Recv()
 {
-	int size{ 0 };
-	int type{ 0 };
+	packet pk;
+	int retval = recv(g_socket, reinterpret_cast<char*>(&pk), sizeof(packet), MSG_WAITALL);
+	if (retval == SOCKET_ERROR) {
+		std::cout << "Socket Error in send" << std::endl;
+		return;
+	}
+	TranslatePacket(pk);
+}
 
-	memcpy(&size, &packetBuf[0], sizeof(unsigned char));
-	memcpy(&type, &packetBuf[1], sizeof(char));
-
-	switch (type)
+char CFramework::TranslatePacket(const packet& packetBuf)
+{
+	switch (packetBuf.type)
 	{
 	case SC_PACKET_LOGIN_CONFIRM:
 		return SC_PACKET_LOGIN_CONFIRM;
@@ -374,9 +383,6 @@ char CFramework::TranslatePacket(char* packetBuf)
 
 void* CFramework::GetDataFromPacket(char* dataBuf, char packetType)
 {
-	cs_packet_login* asdf;
-	return asdf;
-
 	switch (packetType)
 	{
 	case SC_PACKET_LOGIN_CONFIRM:
@@ -400,4 +406,17 @@ void* CFramework::GetDataFromPacket(char* dataBuf, char packetType)
 	default:
 		return nullptr;
 	}
+}
+
+void CFramework::Send(void* packetBuf)
+{
+	int retval = send(g_socket, reinterpret_cast<char*>(packetBuf), reinterpret_cast<packet*>(packetBuf)->size, 0);
+}
+
+DWORD CALLBACK CFramework::ProcessClient(LPVOID arg)
+{
+	while (true) {
+		//Recv();
+	}
+	return 0;
 }
