@@ -19,6 +19,12 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+void				InitServer();
+DWORD CALLBACK		ProcessClient(LPVOID arg);
+void				Recv();
+char				TranslatePacket(const packet& packetBuf);
+void*				GetDataFromPacket(char* dataBuf, char packetType);
+void				Send(void* packetBuf);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
@@ -203,4 +209,116 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 	// 성공 반환
 	return TRUE;
+}
+
+void InitServer()
+{
+	int retval;
+	// 윈속 초기화
+	WSADATA wsa;
+	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
+		cout << "Init Fail." << endl;
+		return;
+	}
+
+	//소켓 생성
+	g_socket = socket(AF_INET, SOCK_STREAM, 0);
+	if (g_socket == INVALID_SOCKET) {
+		std::cout << "Create Socket Fail." << std::endl;
+		return;
+	}
+
+	//connect()
+	struct sockaddr_in serveraddr;
+	memset(&serveraddr, 0, sizeof(serveraddr));
+	serveraddr.sin_family = AF_INET;
+	inet_pton(AF_INET, SERVER_ADDR, &serveraddr.sin_addr);
+	serveraddr.sin_port = htons(SERVER_PORT);
+	retval = connect(g_socket, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
+	if (retval == SOCKET_ERROR) {
+		std::cout << "Socket Error in connect" << std::endl;
+		return;
+	}
+
+	HANDLE hThread = CreateThread(nullptr, 0, ProcessClient, (LPVOID)g_socket, 0, nullptr);
+	if (!hThread) closesocket(g_socket);
+}
+
+DWORD CALLBACK ProcessClient(LPVOID arg)
+{
+	while (true) {
+		Recv();
+	}
+	return 0;
+}
+
+void Recv()
+{
+	packet pk;
+	int retval = recv(g_socket, reinterpret_cast<char*>(&pk), sizeof(packet), MSG_WAITALL);
+	if (retval == SOCKET_ERROR) {
+		std::cout << "Socket Error in send" << std::endl;
+		return;
+	}
+	TranslatePacket(pk);
+}
+
+char TranslatePacket(const packet& packetBuf)
+{
+	switch (packetBuf.type)
+	{
+	case SC_PACKET_LOGIN_CONFIRM:
+		return SC_PACKET_LOGIN_CONFIRM;
+		break;
+	case SC_PACKET_START_GAME:
+		return SC_PACKET_START_GAME;
+		break;
+	case SC_PACKET_OBJECTS_INFO:
+		return SC_PACKET_OBJECTS_INFO;
+		break;
+	case SC_PACKET_MUSIC_END:
+		return SC_PACKET_MUSIC_END;
+		break;
+	case SC_PACKET_RANK:
+		return SC_PACKET_MUSIC_END;
+		break;
+	case CS_PACKET_LOGOUT:
+		return CS_PACKET_LOGOUT;
+		break;
+	default:
+		return -1;
+		break;
+	}
+}
+
+void* GetDataFromPacket(char* dataBuf, char packetType)
+{
+	switch (packetType)
+	{
+	case SC_PACKET_LOGIN_CONFIRM:
+
+		break;
+	case SC_PACKET_START_GAME:
+
+		break;
+	case SC_PACKET_OBJECTS_INFO:
+
+		break;
+	case SC_PACKET_MUSIC_END:
+
+		break;
+	case SC_PACKET_RANK:
+
+		break;
+	case CS_PACKET_LOGOUT:
+
+		break;
+	default:
+		return nullptr;
+	}
+}
+
+void Send(void* packetBuf)
+{
+	int retval = send(g_socket, reinterpret_cast<char*>(packetBuf), reinterpret_cast<packet*>(packetBuf)->size, 0);
 }
