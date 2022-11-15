@@ -33,6 +33,9 @@ private:
 	COLORREF	m_clrBackBuffer = 0x00000000;	// 백버퍼 색깔. 검정으로 초기화
 	HBRUSH		m_hbrBackground = NULL;			// 그리는 도구. 색칠할 떄 쓴다.
 
+	CScene* arrScene[CScene::SceneTag::Count];
+	CScene* m_pCurrScene;
+
 	std::chrono::system_clock::time_point m_current_time;
 	std::chrono::duration<double> m_timeElapsed;	// 시간이 얼마나 지났는가?
 	double m_fps;
@@ -41,6 +44,7 @@ private:
 	int m_TitleLength;
 
 	int m_selectedMusic;
+
 public:
 	CFramework();
 	~CFramework();
@@ -83,11 +87,8 @@ public:
 
 	void curSceneCreate();
 	void ChangeScene(CScene::SceneTag tag);
+	CScene* GetCurrScene() { return m_pCurrScene; }
 
 	void SetMusic(int selectedMusic);
 	int GetMusic() { return m_selectedMusic; }
-
-private:
-	CScene* arrScene[CScene::SceneTag::Count];
-	CScene* m_pCurrScene;
 };

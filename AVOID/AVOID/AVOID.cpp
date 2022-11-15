@@ -268,21 +268,27 @@ char TranslatePacket(const packet& packetBuf)
 	switch (packetBuf.type)
 	{
 	case SC_PACKET_LOGIN_CONFIRM:
+		myFramework.GetCurrScene();
 		return SC_PACKET_LOGIN_CONFIRM;
 		break;
 	case SC_PACKET_START_GAME:
+		myFramework.GetCurrScene();
 		return SC_PACKET_START_GAME;
 		break;
 	case SC_PACKET_OBJECTS_INFO:
+		myFramework.GetCurrScene();
 		return SC_PACKET_OBJECTS_INFO;
 		break;
 	case SC_PACKET_MUSIC_END:
+		myFramework.GetCurrScene();
 		return SC_PACKET_MUSIC_END;
 		break;
 	case SC_PACKET_RANK:
+		myFramework.GetCurrScene();
 		return SC_PACKET_MUSIC_END;
 		break;
 	case CS_PACKET_LOGOUT:
+		myFramework.GetCurrScene();
 		return CS_PACKET_LOGOUT;
 		break;
 	default:
