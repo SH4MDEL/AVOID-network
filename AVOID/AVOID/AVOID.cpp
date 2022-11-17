@@ -24,6 +24,7 @@ DWORD CALLBACK		ProcessClient(LPVOID arg);
 void				Recv();
 char				TranslatePacket(const packet& packetBuf);
 void*				GetDataFromPacket(char* dataBuf, char packetType);
+void				ApplyPacketData(char* dataBuf, char packetType);
 void				Send(void* packetBuf);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -322,6 +323,33 @@ void* GetDataFromPacket(char* dataBuf, char packetType)
 	default:
 		return nullptr;
 	}
+}
+
+void ApplyPacketData(char* dataBuf, char packetType)
+{
+	switch (packetType)
+	{
+	case SC_PACKET_LOGIN_CONFIRM:
+
+		break;
+	case SC_PACKET_START_GAME:
+
+		break;
+	case SC_PACKET_OBJECTS_INFO:
+
+		break;
+	case SC_PACKET_MUSIC_END:
+
+		break;
+	case SC_PACKET_RANK:
+
+		break;
+	case CS_PACKET_LOGOUT:
+
+		break;
+	default:
+	}
+	return;
 }
 
 void Send(void* packetBuf)
