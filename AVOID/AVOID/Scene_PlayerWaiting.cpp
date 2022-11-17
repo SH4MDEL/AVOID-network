@@ -6,6 +6,7 @@
 
 Scene_PlayerWaiting::Scene_PlayerWaiting()
 {
+
 }
 
 Scene_PlayerWaiting::Scene_PlayerWaiting(SceneTag tag, CFramework* pFramework) : CScene(tag, pFramework)

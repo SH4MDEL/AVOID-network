@@ -28,7 +28,12 @@ public:
 
 	void KeyState();
 
+	// 서버 관련 추가 함수
+	void SetPlayerEnemyData(char playerNum, char bulletNum) { m_playerNum = playerNum, m_bulletNum = bulletNum; }
+	array<Coord, 3> GetPlayersCoord() { return m_playersCoord; }
+	array<Coord, 50> GetBulletsCoord() { return m_bulletsCoord; }
 
+	void SetRank(char rank) { m_rank = (int)rank; }
 private:
 	int windowX = ::GetSystemMetrics(SM_CXSCREEN);		// 모니터 x길이 받아옴
 	int windowY = ::GetSystemMetrics(SM_CYSCREEN);		// 모니터 y길이 받아옴
@@ -51,8 +56,22 @@ private:
 	HANDLE hFileSpeed, hFileNote;
 
 	int lotateSpeed[3000] = { NULL };
-	int note[3000][12] = { 0 };									// 파일 입출력을 통하여 노트의 정보를 받아와 저장한다.
-	int time = 0;													// 노래가 시작하고 얼마나 지나갔는가? 1당 bpm / 240 이다.
-};																// time 이 1450을 넘으면 노래 종료
+	int note[3000][12] = { 0 };				// 파일 입출력을 통하여 노트의 정보를 받아와 저장한다.
+	int time = 0;							// 노래가 시작하고 얼마나 지나갔는가? 1당 bpm / 240 이다.
+											// time 이 1450을 넘으면 노래 종료
+
+	// 서버 관련 추가 변수
+	// recv
+	int					m_playerID;
+	int					m_playerNum;
+	int					m_bulletNum;
+	array<Coord, 3>		m_playersCoord;
+	array<Coord, 50>	m_bulletsCoord;
+	int					m_rank;
+
+	// send
+
+};																
+
 
 

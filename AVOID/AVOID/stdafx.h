@@ -24,6 +24,7 @@
 #include <chrono>
 #include <string>
 #include <list>
+#include <array>
 #include <memory.h>
 using namespace std;
 

@@ -18,6 +18,10 @@ public:
 	void Update(float fTimeElapsed) override;	// m_pCurrScene->Update();
 												// m_pCurrScene->Render(m_hdc);
 	void KeyState();
+
+	// 서버 관련 추가 함수
+	void SetPlayerID(char playerID) { m_playerID = (int)playerID; }
+	void ChangeGameStart(char playerNum) { m_playerNum = (int)playerNum; }
 private:
 	int windowX = ::GetSystemMetrics(SM_CXSCREEN);		// 모니터 x길이 받아옴
 	int windowY = ::GetSystemMetrics(SM_CYSCREEN);		// 모니터 y길이 받아옴
@@ -25,5 +29,9 @@ private:
 	Sound* SelectSound = NULL;
 
 	CImage m_backGround;
+
+	// 서버 추가 관련 변수
+	int m_playerID;
+	int m_playerNum;
 };
 

@@ -4,6 +4,12 @@
 #include "AVOID.h"
 #include "Framework.h"
 
+#include "Scene_Main.h"
+#include "Scene_MusicSelect.h"
+#include "Scene_PlayerWaiting.h"
+#include "Scene_Ingame.h"
+#include "Scene_Result.h"
+
 #define MAX_LOADSTRING	100
 #define CLIENT_WIDTH	1920
 #define CLIENT_HEIGHT	1080
@@ -22,9 +28,7 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 void				InitServer();
 DWORD CALLBACK		ProcessClient(LPVOID arg);
 void				Recv();
-char				TranslatePacket(const packet& packetBuf);
-void*				GetDataFromPacket(char* dataBuf, char packetType);
-void				ApplyPacketData(char* dataBuf, char packetType);
+void				TranslatePacket(const packet& packetBuf);
 void				Send(void* packetBuf);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -69,8 +73,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		// 여기서 프레임을 통해 프로그램을 돌려야 한다.
 		// FrameAdvance를 통해 프로그램을 돌린다.
 		myFramework.FrameAdvance();
-
-
 	}
 
 	return (int)msg.wParam;
@@ -264,92 +266,58 @@ void Recv()
 	TranslatePacket(pk);
 }
 
-char TranslatePacket(const packet& packetBuf)
+void TranslatePacket(const packet& packetBuf)
 {
+	int retval;
 	switch (packetBuf.type)
 	{
 	case SC_PACKET_LOGIN_CONFIRM:
-		myFramework.GetCurrScene();
-		return SC_PACKET_LOGIN_CONFIRM;
-		break;
-	case SC_PACKET_START_GAME:
-		myFramework.GetCurrScene();
-		return SC_PACKET_START_GAME;
-		break;
-	case SC_PACKET_OBJECTS_INFO:
-		myFramework.GetCurrScene();
-		return SC_PACKET_OBJECTS_INFO;
-		break;
-	case SC_PACKET_MUSIC_END:
-		myFramework.GetCurrScene();
-		return SC_PACKET_MUSIC_END;
-		break;
-	case SC_PACKET_RANK:
-		myFramework.GetCurrScene();
-		return SC_PACKET_MUSIC_END;
-		break;
-	case CS_PACKET_LOGOUT:
-		myFramework.GetCurrScene();
-		return CS_PACKET_LOGOUT;
-		break;
-	default:
-		return -1;
-		break;
-	}
-}
-
-void* GetDataFromPacket(char* dataBuf, char packetType)
-{
-	switch (packetType)
 	{
-	case SC_PACKET_LOGIN_CONFIRM:
-
+		sc_packet_login_confirm pk;
+		retval = recv(g_socket, reinterpret_cast<char*>(&pk) + 2, packetBuf.size - 2, MSG_WAITALL);
+		Scene_PlayerWaiting* scene = (Scene_PlayerWaiting*)myFramework.GetCurrScene();
+		scene->SetPlayerID(pk.playerID);
 		break;
-	case SC_PACKET_START_GAME:
-
-		break;
-	case SC_PACKET_OBJECTS_INFO:
-
-		break;
-	case SC_PACKET_MUSIC_END:
-
-		break;
-	case SC_PACKET_RANK:
-
-		break;
-	case CS_PACKET_LOGOUT:
-
-		break;
-	default:
-		return nullptr;
 	}
-}
-
-void ApplyPacketData(char* dataBuf, char packetType)
-{
-	switch (packetType)
+	case SC_PACKET_START_GAME:
 	{
-	case SC_PACKET_LOGIN_CONFIRM:
-
+		sc_packet_start_game pk;
+		retval = recv(g_socket, reinterpret_cast<char*>(&pk) + 2, packetBuf.size - 2, MSG_WAITALL);
+		Scene_PlayerWaiting* scene = (Scene_PlayerWaiting*)myFramework.GetCurrScene();
+		scene->ChangeGameStart(pk.playerNum);
 		break;
-	case SC_PACKET_START_GAME:
-
-		break;
-	case SC_PACKET_OBJECTS_INFO:
-
-		break;
-	case SC_PACKET_MUSIC_END:
-
-		break;
-	case SC_PACKET_RANK:
-
-		break;
-	case CS_PACKET_LOGOUT:
-
-		break;
-	default:
 	}
-	return;
+	case SC_PACKET_OBJECTS_INFO:
+	{
+		sc_packet_objects_info pk;
+		retval = recv(g_socket, reinterpret_cast<char*>(&pk) + 2, packetBuf.size - 2, MSG_WAITALL);
+		Scene_Ingame* scene = (Scene_Ingame*)myFramework.GetCurrScene();
+		scene->SetPlayerEnemyData(pk.playerNum, pk.bulletNum);
+		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetPlayersCoord()), pk.playerNum, MSG_WAITALL);
+		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetBulletsCoord()), pk.bulletNum, MSG_WAITALL);
+		break;
+	}
+	case SC_PACKET_MUSIC_END:
+	{
+		Scene_Ingame* scene = (Scene_Ingame*)myFramework.GetCurrScene();
+		break;
+	}
+	case SC_PACKET_RANK:
+	{
+		sc_packet_rank pk;
+		retval = recv(g_socket, reinterpret_cast<char*>(&pk) + 2, packetBuf.size - 2, MSG_WAITALL);
+		Scene_Ingame* scene = (Scene_Ingame*)myFramework.GetCurrScene();
+		scene->SetRank(pk.rank);
+		break;
+	}
+	case CS_PACKET_LOGOUT:
+	{
+		myFramework.GetCurrScene();
+		break;
+	}
+	default:
+		break;
+	}
 }
 
 void Send(void* packetBuf)
