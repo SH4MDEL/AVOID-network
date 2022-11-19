@@ -130,6 +130,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="PlayerData.h" />
     <ClInclude Include="Protocol.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
