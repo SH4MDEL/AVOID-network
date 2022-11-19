@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Scene_PlayerWaiting.h"
 
+#include "AVOID.h"
 #include "Framework.h"		// 프레임워크 헤더 불러옴
 #include "Sound.h"
 
@@ -24,10 +25,12 @@ void Scene_PlayerWaiting::OnDestroy()
 
 void Scene_PlayerWaiting::OnCreate()
 {
-#ifndef USE_NETWORK
-	m_pFramework->InitServer();
-#endif // !USE_NETWORK
-	
+	InitServer();
+	cs_packet_login packet;
+	packet.type = CS_PACKET_LOGIN;
+	packet.size = sizeof(cs_packet_login);
+	packet.selectMusic = m_selectedMusic;
+	Send(&packet);
 }
 
 void Scene_PlayerWaiting::BuildObjects()
@@ -48,4 +51,9 @@ void Scene_PlayerWaiting::KeyState() {
 	if (GetAsyncKeyState(VK_RETURN) & 0x8000) {
 
 	}
+}
+
+void Scene_PlayerWaiting::SetMusic(int selectedMusic)
+{
+	m_selectedMusic = selectedMusic;
 }

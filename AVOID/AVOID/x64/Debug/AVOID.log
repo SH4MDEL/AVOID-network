@@ -1,73 +1,73 @@
 ﻿  stdafx.cpp
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\stdafx.cpp(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\stdafx.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\targetver.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\stdafx.cpp(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\stdafx.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\targetver.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
   AVOID.cpp
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\resource.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\resource.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
   Framework.cpp
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\Framework.cpp(166,25): warning C4244: 'return': 'LRESULT'에서 'HRESULT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\Framework.cpp(213,29): warning C4244: '인수': '_Rep'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\Framework.cpp(166,25): warning C4244: 'return': 'LRESULT'에서 'HRESULT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\Framework.cpp(213,29): warning C4244: '인수': '_Rep'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
           with
           [
               _Rep=double
           ]
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\Framework.cpp(232,9): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  OBJECT_Bullet.cpp
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.h(22,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.cpp(23,18): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.cpp(24,18): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.cpp(46,64): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.cpp(46,34): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.cpp(61,13): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.cpp(66,13): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.cpp(76,18): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.cpp(81,18): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  OBJECT_MainEnemy.cpp
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_MainEnemy.h(19,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.h(22,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_MainEnemy.cpp(81,53): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_MainEnemy.cpp(81,39): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  OBJECT_Player.cpp
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(30,14): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(31,14): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(81,56): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(81,30): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(85,57): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(85,32): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(94,58): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(94,33): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(97,58): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(97,33): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(104,42): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(114,43): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(125,43): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(135,13): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(140,13): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(190,12): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(191,12): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(194,13): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(195,13): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(199,13): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(200,13): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\Framework.cpp(232,9): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   Object.cpp
+  OBJECT_Bullet.cpp
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.h(22,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.cpp(23,18): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.cpp(24,18): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.cpp(46,64): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.cpp(46,34): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.cpp(61,13): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.cpp(66,13): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.cpp(76,18): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.cpp(81,18): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  OBJECT_MainEnemy.cpp
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_MainEnemy.h(19,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.h(22,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_MainEnemy.cpp(81,53): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_MainEnemy.cpp(81,39): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  OBJECT_Player.cpp
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(30,14): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(31,14): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(81,56): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(81,30): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(85,57): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(85,32): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(94,58): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(94,33): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(97,58): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(97,33): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(104,42): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(114,43): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(125,43): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(135,13): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(140,13): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(190,12): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(191,12): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(194,13): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(195,13): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(199,13): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.cpp(200,13): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   Scene.cpp
   Scene_Ingame.cpp
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_MainEnemy.h(19,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.h(22,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\Scene_Ingame.cpp(170,26): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_MainEnemy.h(19,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.h(22,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\Scene_Ingame.cpp(170,26): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   Scene_Main.cpp
   Scene_Music1.cpp
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_MainEnemy.h(19,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.h(22,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\Scene_Music1.cpp(144,26): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_MainEnemy.h(19,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.h(22,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\Scene_Music1.cpp(144,26): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   Scene_Music2.cpp
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_MainEnemy.h(19,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.h(22,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
-C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\Scene_Music2.cpp(146,26): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_MainEnemy.h(19,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.h(22,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\AVOID\Scene_Music2.cpp(146,26): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   Scene_MusicSelect.cpp
   Scene_PlayerWaiting.cpp
   Scene_Result.cpp
   Sound.cpp
   Timer.cpp
   코드를 생성하고 있습니다...
-  AVOID.vcxproj -> C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\x64\Debug\AVOID.exe
+  AVOID.vcxproj -> C:\Users\Seungjun Lee\Desktop\Coding\AVOID-network\AVOID\x64\Debug\AVOID.exe

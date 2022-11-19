@@ -89,6 +89,6 @@ public:
 	void ChangeScene(CScene::SceneTag tag);
 	CScene* GetCurrScene() { return m_pCurrScene; }
 
-	void SetMusic(int selectedMusic);
+	void SetMusic(int selectedMusic, int sceneType);
 	int GetMusic() { return m_selectedMusic; }
 };

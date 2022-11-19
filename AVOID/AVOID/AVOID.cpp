@@ -247,6 +247,7 @@ void InitServer()
 	if (!hThread) closesocket(g_socket);
 }
 
+
 DWORD CALLBACK ProcessClient(LPVOID arg)
 {
 	while (true) {

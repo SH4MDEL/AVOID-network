@@ -258,7 +258,6 @@ LRESULT CFramework::WndProc(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lP
 		self->OnProcessingMouseMessage(hWnd, nMessageID, wParam, lParam);
 		break;
 
-
 	case WM_KEYDOWN:
 	case WM_KEYUP:
 	case WM_CHAR:
@@ -301,9 +300,16 @@ void CFramework::ChangeScene(CScene::SceneTag tag)
 	m_pCurrScene = arrScene[tag];
 }
 
-void CFramework::SetMusic(int selectedMusic)
+void CFramework::SetMusic(int selectedMusic, int sceneType)
 {
 	m_selectedMusic = selectedMusic;
-	Scene_Ingame* scene = (Scene_Ingame*)m_pCurrScene;
-	scene->SetMusic(selectedMusic);
+	if (sceneType == CScene::SceneTag::PlayerWaiting) {
+		Scene_PlayerWaiting* scene = (Scene_PlayerWaiting*)m_pCurrScene;
+		scene->SetMusic(selectedMusic);
+	}
+	else if (sceneType == CScene::SceneTag::Ingame) {
+		Scene_Ingame* scene = (Scene_Ingame*)m_pCurrScene;
+		scene->SetMusic(selectedMusic);
+	}
+	else return;
 }

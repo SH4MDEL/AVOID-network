@@ -19,6 +19,9 @@ public:
 												// m_pCurrScene->Render(m_hdc);
 	void KeyState();
 
+
+	void SetMusic(int selectedMusic);
+
 	// 서버 관련 추가 함수
 	void SetPlayerID(char playerID) { m_playerID = (int)playerID; }
 	void ChangeGameStart(char playerNum) { m_playerNum = (int)playerNum; }
@@ -30,8 +33,12 @@ private:
 
 	CImage m_backGround;
 
+	int m_selectedMusic;
+
 	// 서버 추가 관련 변수
 	int m_playerID;
 	int m_playerNum;
+
+	int m_networkOK;
 };
 
