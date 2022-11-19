@@ -19,6 +19,12 @@ constexpr char		SC_PACKET_MUSIC_END = 4;
 constexpr char		SC_PACKET_RANK = 5;
 constexpr char		SC_PACKET_LOGOUT = 100;
 
+constexpr size_t CS_PACKET_LOGIN_SIZE = sizeof(char);
+constexpr size_t CS_PACKET_READY_SIZE = 0;
+constexpr size_t CS_PACKET_PLAYER_STATUS_SIZE = (sizeof(short) * 2) + sizeof(char) + sizeof(bool);
+constexpr size_t CS_PACKET_PLAYER_HP_SIZE = sizeof(char);
+constexpr size_t CS_PACKET_LOGOUT_SIZE = sizeof(char);
+
 struct packet
 {
 	unsigned char size;

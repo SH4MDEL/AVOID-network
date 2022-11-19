@@ -3,6 +3,8 @@
 
 SOCKET listen_sock = NULL;
 
+CRITICAL_SECTION cs;
+
 DWORD WINAPI Client_Thread(LPVOID arg)
 {
 	SOCKET client_sock = (SOCKET)arg;
@@ -31,8 +33,10 @@ DWORD WINAPI Client_Thread(LPVOID arg)
 
 		char packetType = TranslatePacket(packetDataBuf);
 
-		GetDataFromPacket(pBuf, packetType);
+		GetDataFromPacket(client_sock, pBuf, packetType);
+		EnterCriticalSection(&cs);
 
+		LeaveCriticalSection(&cs);
 	}
 
 
@@ -69,15 +73,35 @@ char TranslatePacket(char* packetBuf)
 	}
 }
 
-void GetDataFromPacket(char* dataBuf, char packetType)
+void GetDataFromPacket(SOCKET socket, char* dataBuf, char packetType)
 {
-
+	switch (packetType)
+	{
+	case CS_PACKET_LOGIN:
+		recv(socket, dataBuf, CS_PACKET_LOGIN_SIZE, 0);
+		break;
+	case CS_PACKET_READY:
+		break;
+	case CS_PACKET_PLAYER_STATUS:
+		recv(socket, dataBuf, CS_PACKET_PLAYER_STATUS_SIZE, 0);
+		break;
+	case CS_PACKET_PLAYER_HP:
+		recv(socket, dataBuf, CS_PACKET_PLAYER_HP_SIZE, 0);
+		break;
+	case CS_PACKET_LOGOUT:
+		recv(socket, dataBuf, CS_PACKET_LOGOUT_SIZE, 0);
+		break;
+	default:
+		std::cout << "GetDataFromPacket : The Packet Type Do Not Exist." << std::endl;
+		break;
+	}
 }
 
 DWORD WINAPI Collision_THREAD(LPVOID arg)
 {
 
 }
+
 
 
 int main(int argc, char* argv[]) {
