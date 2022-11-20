@@ -22,6 +22,7 @@ void Sound::loading()
 	r = pFmod->createSound("Sound\\bbkkbkk.mp3", FMOD_LOOP_NORMAL, NULL, &Music[bbkkbkk]);
 	r = pFmod->createSound("Sound\\TrueBlue.mp3", FMOD_LOOP_NORMAL, NULL, &Music[TrueBlue]);
 	r = pFmod->createSound("Sound\\Select.mp3", FMOD_DEFAULT, NULL, &Music[Select]);
+	r = pFmod->createSound("Sound\\PlayerWaiting.mp3", FMOD_DEFAULT, NULL, &Music[PlayerWaiting]);
 	r = pFmod->createSound("Sound\\MusicStart.mp3", FMOD_DEFAULT, NULL, &Music[MusicStart]);
 	r = pFmod->createSound("Sound\\GameStart.mp3", FMOD_DEFAULT, NULL, &Music[GameStart]);
 	r = pFmod->createSound("Sound\\Hitsound.ogg", FMOD_DEFAULT, NULL, &Music[Hitsound]);
@@ -39,13 +40,14 @@ void Sound::stop(int _chNum)
 
 void Sound::Release()
 {
-	Music[SoundTag::MainSound]->release();			// 사운드 해제
-	Music[SoundTag::bbkkbkk]->release();
-	Music[SoundTag::TrueBlue]->release();
-	Music[SoundTag::Select]->release();
-	Music[SoundTag::MusicStart]->release();
-	Music[SoundTag::GameStart]->release();
-	Music[SoundTag::Hitsound]->release();
+	Music[MainSound]->release();			// 사운드 해제
+	Music[bbkkbkk]->release();
+	Music[TrueBlue]->release();
+	Music[Select]->release();
+	Music[PlayerWaiting]->release();
+	Music[MusicStart]->release();
+	Music[GameStart]->release();
+	Music[Hitsound]->release();
 	pFmod->close();									// 사운드 시스템 해제
 	//pFmod->release();
 }

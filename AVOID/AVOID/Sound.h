@@ -10,6 +10,7 @@ public:
 		, bbkkbkk
 		, TrueBlue
 		, Select
+		, PlayerWaiting
 		, MusicStart
 		, GameStart
 		, Hitsound

@@ -24,12 +24,12 @@ public:
 
 	// 서버 관련 추가 함수
 	void SetPlayerID(char playerID) { m_playerID = (int)playerID; }
-	void ChangeGameStart(char playerNum) { m_playerNum = (int)playerNum; }
+	void ChangeGameStart(char playerNum);
 private:
 	int windowX = ::GetSystemMetrics(SM_CXSCREEN);		// 모니터 x길이 받아옴
 	int windowY = ::GetSystemMetrics(SM_CYSCREEN);		// 모니터 y길이 받아옴
 
-	Sound* SelectSound = NULL;
+	Sound* m_playerWaitingSound = NULL;
 
 	CImage m_backGround;
 
@@ -39,6 +39,6 @@ private:
 	int m_playerID;
 	int m_playerNum;
 
-	int m_networkOK;
+	bool m_nextScene;
 };
 
