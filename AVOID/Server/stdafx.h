@@ -4,3 +4,12 @@
 #include <winsock2.h>
 #include <WS2tcpip.h>
 #include <iostream>
+#include <vector>
+#include <list>
+
+constexpr float pi = 3.14159265358979;
+
+struct Coord
+{
+	short x, y;
+};

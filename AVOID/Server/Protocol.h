@@ -31,11 +31,6 @@ struct packet
 	char type;
 };
 
-struct Coord
-{
-	short x, y;
-};
-
 
 struct cs_packet_login : public packet
 {
