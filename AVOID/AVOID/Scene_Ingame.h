@@ -30,8 +30,9 @@ public:
 
 	// 서버 관련 추가 함수
 	void SetPlayerEnemyData(char playerNum, char bulletNum) { m_playerNum = playerNum, m_bulletNum = bulletNum; }
-	array<Coord, 3> GetPlayersCoord() { return m_playersCoord; }
-	array<Coord, 50> GetBulletsCoord() { return m_bulletsCoord; }
+	array<Coord, 3>& GetPlayersCoord() { return m_playersCoord; }
+	array<Coord, 12>& GetEnemysCoord() { return m_enemysCoord; }
+	array<Coord, 50>& GetBulletsCoord() { return m_bulletsCoord; }
 
 	void SetRank(char rank) { m_rank = (int)rank; }
 private:
@@ -66,6 +67,7 @@ private:
 	int					m_playerNum;
 	int					m_bulletNum;
 	array<Coord, 3>		m_playersCoord;
+	array<Coord, 12>	m_enemysCoord;
 	array<Coord, 50>	m_bulletsCoord;
 	int					m_rank;
 

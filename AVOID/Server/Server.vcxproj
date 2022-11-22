@@ -128,8 +128,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Obj_Bullet.cpp" />
+    <ClCompile Include="Obj_Enemy.cpp" />
+    <ClCompile Include="PlayerData.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Object.h" />
+    <ClInclude Include="Obj_Bullet.h" />
+    <ClInclude Include="Obj_Enemy.h" />
     <ClInclude Include="PlayerData.h" />
     <ClInclude Include="Protocol.h" />
     <ClInclude Include="stdafx.h" />

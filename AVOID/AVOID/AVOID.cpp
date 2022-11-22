@@ -295,6 +295,7 @@ void TranslatePacket(const packet& packetBuf)
 		Scene_Ingame* scene = (Scene_Ingame*)myFramework.GetCurrScene();
 		scene->SetPlayerEnemyData(pk.playerNum, pk.bulletNum);
 		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetPlayersCoord()), pk.playerNum, MSG_WAITALL);
+		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetEnemysCoord()), pk.enemyNum, MSG_WAITALL);
 		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetBulletsCoord()), pk.bulletNum, MSG_WAITALL);
 		break;
 	}

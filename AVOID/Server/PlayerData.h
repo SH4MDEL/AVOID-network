@@ -42,7 +42,6 @@ public:
 	void UpdatePlayerStatus(SOCKET sock, char* dataBuf);
 	int GetPlayerRank(SOCKET sock, char* dataBuf);
 	void CreateNewGame();
-
 };
 
 

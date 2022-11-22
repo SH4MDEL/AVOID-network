@@ -72,6 +72,7 @@ struct cs_packet_start_game : public packet
 struct cs_packet_objects_info : public packet
 {
 	char playerNum;
+	char enemyNum;
 	char bulletNum;
 };
 
