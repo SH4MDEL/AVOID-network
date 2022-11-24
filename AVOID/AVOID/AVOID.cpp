@@ -217,7 +217,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	return TRUE;
 }
 
-#ifdef USE_NEWORK
+#ifdef USE_NETWORK
 void InitServer()
 {
 	int retval;
@@ -298,9 +298,10 @@ void TranslatePacket(const packet& packetBuf)
 		retval = recv(g_socket, reinterpret_cast<char*>(&pk) + 2, packetBuf.size - 2, MSG_WAITALL);
 		Scene_Ingame* scene = (Scene_Ingame*)myFramework.GetCurrScene();
 		scene->SetPlayerEnemyData(pk.playerNum, pk.bulletNum);
-		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetPlayersCoord()), pk.playerNum, MSG_WAITALL);
-		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetEnemysCoord()), pk.enemyNum, MSG_WAITALL);
-		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetBulletsCoord()), pk.bulletNum, MSG_WAITALL);
+		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetPlayersCoord()), pk.playerNum * sizeof(PlayerStatus), MSG_WAITALL);
+		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetEnemysCoord()), pk.enemyNum * sizeof(Coord), MSG_WAITALL);
+		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetBulletsCoord()), pk.bulletNum * sizeof(Coord), MSG_WAITALL);
+		scene->SetObjectPacket();
 		break;
 	}
 	case SC_PACKET_MUSIC_END:

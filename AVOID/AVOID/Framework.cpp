@@ -106,7 +106,7 @@ void CFramework::BuildScene()
 	// arrScene[SceneTag::Title] = new TitleScene();	// 이런 방식으로 씬을 만들어라.
 	arrScene[CScene::SceneTag::Main] = new CMainScene(CScene::SceneTag::Main, this);
 	arrScene[CScene::SceneTag::MusicSelect] = new Scene_MusicSelect(CScene::SceneTag::MusicSelect, this);
-#ifdef USE_NEWORK
+#ifdef USE_NETWORK
 	arrScene[CScene::SceneTag::PlayerWaiting] = new Scene_PlayerWaiting(CScene::SceneTag::PlayerWaiting, this);
 #endif
 	arrScene[CScene::SceneTag::Ingame] = new Scene_Ingame(CScene::SceneTag::Ingame, this);
@@ -302,11 +302,21 @@ void CFramework::ChangeScene(CScene::SceneTag tag)
 	m_pCurrScene = arrScene[tag];
 }
 
+void CFramework::SetPlayerNum(int playerNum, int sceneType)
+{
+	if (sceneType == CScene::SceneTag::Ingame) {
+#ifdef USE_NETWORK
+		Scene_Ingame* scene = (Scene_Ingame*)m_pCurrScene;
+		scene->SetPlayerNum(playerNum);
+#endif
+	}
+}
+
 void CFramework::SetMusic(int selectedMusic, int sceneType)
 {
 	m_selectedMusic = selectedMusic;
 	if (sceneType == CScene::SceneTag::PlayerWaiting) {
-#ifdef USE_NEWORK
+#ifdef USE_NETWORK
 		Scene_PlayerWaiting* scene = (Scene_PlayerWaiting*)m_pCurrScene;
 		scene->SetMusic(selectedMusic);
 #endif
@@ -315,5 +325,4 @@ void CFramework::SetMusic(int selectedMusic, int sceneType)
 		Scene_Ingame* scene = (Scene_Ingame*)m_pCurrScene;
 		scene->SetMusic(selectedMusic);
 	}
-	else return;
 }

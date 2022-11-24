@@ -1,6 +1,8 @@
 #pragma once
 #include "Scene.h"
-#ifdef USE_NEWORK
+
+#ifdef USE_NETWORK
+
 class Sound;
 
 class Scene_PlayerWaiting : public CScene

@@ -12,6 +12,11 @@ OBJECT_Player::OBJECT_Player(int x, int y)
 	OnCreate(x, y);
 }
 
+OBJECT_Player::OBJECT_Player(int x, int y, int playerID) : m_playerID(playerID)
+{
+	OnCreate(x, y);
+}
+
 OBJECT_Player::~OBJECT_Player()
 {
 	Player[0].Destroy();
@@ -22,7 +27,20 @@ OBJECT_Player::~OBJECT_Player()
 
 void OBJECT_Player::OnCreate(int x, int y)
 {
-	this->Player[0].Load(L"Graphic\\OBJECT\\PLAYER\\Player.png");				// 기본
+#ifdef USE_NETWORK
+	if (m_playerID == 0) {
+		this->Player[0].Load(L"Graphic\\OBJECT\\PLAYER\\Player1.png");				// 기본
+	}
+	if (m_playerID == 1) {
+		this->Player[0].Load(L"Graphic\\OBJECT\\PLAYER\\Player2.png");				// 기본
+	}
+	if (m_playerID == 2) {
+		this->Player[0].Load(L"Graphic\\OBJECT\\PLAYER\\Player3.png");				// 기본
+	}
+#endif // USE_NETWORK
+#ifndef USE_NETWORK
+	this->Player[0].Load(L"Graphic\\OBJECT\\PLAYER\\Player1.png");				// 기본
+#endif // !USE_NETWORK
 	this->Player[1].Load(L"Graphic\\OBJECT\\PLAYER\\Hit_Player1.png");				// 피격 1
 	this->Player[2].Load(L"Graphic\\OBJECT\\PLAYER\\Hit_Player2.png");				// 피격 2
 	this->Ability.Load(L"Graphic\\OBJECT\\PLAYER\\Ability.png");					// 능력
@@ -77,15 +95,14 @@ void OBJECT_Player::Update(float fTimeElapsed)
 
 void OBJECT_Player::Render(HDC *hDC)
 {
-	if (this->AbilityCheck) {
+	if (AbilityCheck) {
 		Ability.Draw(*hDC, this->x - Ability_radius, this->y - Ability_radius, Ability_radius * 2, Ability_radius * 2);
 	}
 
-	if (this->invincibility == false) {			// 기본 피격x 상태
+	if (!invincibility) {			// 기본 피격x 상태
 		Player[0].Draw(*hDC, this->x - Player_radius, this->y - Player_radius, Player_radius * 2, Player_radius * 2);
 	}
-
-	else if (this->invincibility) {				// 피격후 무적이 켜지면
+	else {				// 피격후 무적이 켜지면
 		if (((this->TimeDelay >= 0.3f) && (this->TimeDelay <= 0.4f)) ||
 			((this->TimeDelay >= 0.6f) && (this->TimeDelay <= 0.7f)) ||
 			((this->TimeDelay >= 0.9f) && (this->TimeDelay <= 1.f)) ||

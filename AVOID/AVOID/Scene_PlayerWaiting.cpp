@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Scene_PlayerWaiting.h"
-#ifdef USE_NEWORK
+#ifdef USE_NETWORK
 #include "AVOID.h"
 #include "Framework.h"		// 프레임워크 헤더 불러옴
 #include "Sound.h"
@@ -62,6 +62,9 @@ void Scene_PlayerWaiting::Update(float fTimeElapsed)
 
 	if (m_nextScene) {
 		m_pFramework->ChangeScene(CScene::SceneTag::Ingame);
+#ifdef USE_NETWORK
+		m_pFramework->SetPlayerNum(m_playerNum, CScene::SceneTag::Ingame);
+#endif // USE_NETWORK
 		m_pFramework->SetMusic(m_selectedMusic, CScene::SceneTag::Ingame);
 		m_pFramework->curSceneCreate();
 		OnDestroy();

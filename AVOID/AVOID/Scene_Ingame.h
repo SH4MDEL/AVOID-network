@@ -24,6 +24,7 @@ public:
 	void PlayerCrash(OBJECT_MainEnemy* Enemy);
 	void AbilityCrash(OBJECT_MainEnemy* Enemy);
 
+	void SetPlayerNum(int playerNum);
 	void SetMusic(int selectedMusic);
 
 	void KeyState();
@@ -31,18 +32,20 @@ public:
 	// 서버 관련 추가 함수
 #ifdef USE_NETWORK
 	void SetPlayerEnemyData(char playerNum, char bulletNum) { m_playerNum = playerNum, m_bulletNum = bulletNum; }
-	array<Coord, 3>& GetPlayersCoord() { return m_playersCoord; }
+	array<PlayerStatus, 3>& GetPlayersCoord() { return m_playersStatus; }
 	array<Coord, 12>& GetEnemysCoord() { return m_enemysCoord; }
 	array<Coord, 50>& GetBulletsCoord() { return m_bulletsCoord; }
 
 	void SetRank(char rank) { m_rank = (int)rank; }
+	void SetObjectPacket() { m_inputObjectPacket = true; }
 #endif
 private:
 	int windowX = ::GetSystemMetrics(SM_CXSCREEN);		// 모니터 x길이 받아옴
 	int windowY = ::GetSystemMetrics(SM_CYSCREEN);		// 모니터 y길이 받아옴
 
 	OBJECT_MainEnemy* CMainEnemy[12] = { NULL };
-	OBJECT_Player* Player = nullptr;
+	OBJECT_Player* m_player = nullptr;
+	OBJECT_Player* m_rival[2];
 
 	Sound* IngameSound = NULL;
 
@@ -66,13 +69,14 @@ private:
 	// 서버 관련 추가 변수
 	// recv
 #ifdef USE_NETWORK
-	int					m_playerID;
-	int					m_playerNum;
-	int					m_bulletNum;
-	array<Coord, 3>		m_playersCoord;
-	array<Coord, 12>	m_enemysCoord;
-	array<Coord, 50>	m_bulletsCoord;
-	int					m_rank;
+	int						m_playerID;
+	int						m_playerNum;
+	int						m_bulletNum;
+	array<PlayerStatus, 3>	m_playersStatus;
+	array<Coord, 12>		m_enemysCoord;
+	array<Coord, 50>		m_bulletsCoord;
+	bool					m_inputObjectPacket;
+	int						m_rank;
 #endif
 	// send
 
