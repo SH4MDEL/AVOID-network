@@ -30,6 +30,13 @@ struct Coord
 	short x, y;
 };
 
+struct PlayerStatus
+{
+	Coord coord;
+	char playerID;
+	bool isCollide;
+};
+
 
 struct cs_packet_login : public packet
 {
