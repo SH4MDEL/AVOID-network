@@ -46,11 +46,9 @@ public:
 
 
 class PlayerStatusByPacket {
-private:
+public:
 	Coord position;
 	char playerID;
 	bool isSkill;
-public:
-	PlayerStatusByPacket();
-	PlayerStatusByPacket(short x, short y, char playerID, bool isSkill);
+
 };

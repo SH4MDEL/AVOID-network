@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <list>
+#include <algorithm>
 
 constexpr float pi = 3.14159265358979;
 
