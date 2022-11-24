@@ -2,6 +2,8 @@
 #include "Object.h"
 #include "Obj_Bullet.h"
 
+constexpr int ENEMY_DIST = 220;
+
 class Enemy : CObject {
 private:
 	Coord m_position;
@@ -10,11 +12,14 @@ private:
 	int m_iDirection;
 	int m_nBullet;
 
+	int theta;
+
 public:
 
 	std::list<Bullet> m_bullets;
 
 	Enemy();
+	Enemy(int location);
 	~Enemy();
 
 	void OnCreate(int location);

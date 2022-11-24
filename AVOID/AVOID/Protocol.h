@@ -56,6 +56,7 @@ struct cs_packet_player_status : public packet
 
 struct cs_packet_player_hp : public packet
 {
+	char playerID;
 	char hp;
 };
 
