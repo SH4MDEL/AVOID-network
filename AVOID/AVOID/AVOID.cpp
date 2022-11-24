@@ -25,11 +25,14 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+
+#ifdef USE_NEWORK
 void				InitServer();
 DWORD CALLBACK		ProcessClient(LPVOID arg);
 void				Recv();
 void				TranslatePacket(const packet& packetBuf);
 void				Send(void* packetBuf);
+#endif
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
@@ -214,6 +217,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	return TRUE;
 }
 
+#ifdef USE_NEWORK
 void InitServer()
 {
 	int retval;
@@ -326,3 +330,4 @@ void Send(void* packetBuf)
 {
 	int retval = send(g_socket, reinterpret_cast<char*>(packetBuf), reinterpret_cast<packet*>(packetBuf)->size, 0);
 }
+#endif // USE_NETWORK

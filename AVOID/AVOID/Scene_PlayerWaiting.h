@@ -1,6 +1,6 @@
 #pragma once
 #include "Scene.h"
-
+#ifdef USE_NEWORK
 class Sound;
 
 class Scene_PlayerWaiting : public CScene
@@ -36,9 +36,11 @@ private:
 	int m_selectedMusic;
 
 	// 서버 추가 관련 변수
+
 	int m_playerID;
 	int m_playerNum;
 
 	bool m_nextScene;
 };
+#endif
 

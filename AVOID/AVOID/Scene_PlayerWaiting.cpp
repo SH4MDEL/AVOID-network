@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Scene_PlayerWaiting.h"
-
+#ifdef USE_NEWORK
 #include "AVOID.h"
 #include "Framework.h"		// 프레임워크 헤더 불러옴
 #include "Sound.h"
@@ -38,6 +38,7 @@ void Scene_PlayerWaiting::OnCreate()
 	m_playerWaitingSound->play(Sound::SoundTag::PlayerWaiting);
 
 	m_nextScene = false;
+
 	InitServer();
 	cs_packet_login packet;
 	packet.type = CS_PACKET_LOGIN;
@@ -86,3 +87,4 @@ void Scene_PlayerWaiting::ChangeGameStart(char playerNum)
 	m_playerNum = (int)playerNum;
 	m_nextScene = true;
 }
+#endif

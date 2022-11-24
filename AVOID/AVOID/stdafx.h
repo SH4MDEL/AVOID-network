@@ -7,6 +7,8 @@
 
 #include "targetver.h"
 
+//#define USE_NETWORK
+
 #define WIN32_LEAN_AND_MEAN             // 거의 사용되지 않는 내용은 Windows 헤더에서 제외합니다.
 // Windows 헤더 파일:
 #include <windows.h>
@@ -28,12 +30,13 @@
 #include <memory.h>
 using namespace std;
 
+#include "Protocol.h"
+#ifdef USE_NETWORK
 // 서버 관련 헤더 파일입니다.
 #include <winsock2.h> // 윈속2 메인 헤더
 #include <ws2tcpip.h> // 윈속2 확장 헤더
-#include "Protocol.h"
 #pragma comment(lib, "ws2_32") // ws2_32.lib 링크
-#define USE_NETWORK
+#endif
 
 // 타이머를 쓰기 위함
 #pragma comment(lib, "winmm.lib")
