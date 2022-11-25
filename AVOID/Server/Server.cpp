@@ -42,6 +42,7 @@ DWORD WINAPI Client_Thread(LPVOID arg)
 
 	while (true) {
 		
+		
 		retval = recv(client_sock, packetDataBuf, 2, MSG_WAITALL);
 		if (retval == SOCKET_ERROR) {
 			std::cout << "Socket Error in recv" << std::endl;
@@ -56,9 +57,13 @@ DWORD WINAPI Client_Thread(LPVOID arg)
 			char packetType = TranslatePacket(packetDataBuf);
 
 			pBuf = GetDataFromPacket(client_sock, pBuf, packetType);
+			
 			EnterCriticalSection(&CS);
 			ApplyPacketData(client_sock, pBuf, packetType);
 			LeaveCriticalSection(&CS);
+
+			WaitForSingleObject(hClientEvent, INFINITE);
+
 			MakePacket(client_sock);
 		}
 	}
@@ -249,12 +254,40 @@ void MakePacket(SOCKET sock) {
 	}
 }
 
+DWORD WINAPI Collision_Thread(LPVOID arg)
+{
+	while (true) {
+		WaitForSingleObject(hCollideEvent, INFINITE);
+		CollisionCheckBulletAndWall();
+		CollisionCheckPlayerAndBullet();
+		CollisionCheckAbility();
+		SharedData.Update();
+		SetEvent(hClientEvent);
+	}
+}
+
+void CollisionCheckBulletAndWall() {
+
+}
+
+void CollisionCheckPlayerAndBullet() {
+
+}
+
+void CollisionCheckAbility() {
+
+}
+
 
 int main(int argc, char* argv[]) {
 	
 	initServer();
 
 	InitializeCriticalSection(&CS);
+
+	hClientEvent = CreateEvent(NULL, FALSE, TRUE, NULL);
+
+	hCollideEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 
 	SOCKET client_sock;
 	sockaddr_in clientaddr;
@@ -282,6 +315,8 @@ int main(int argc, char* argv[]) {
 			else {
 				CloseHandle(hThread);
 			}
+
+			hThread = CreateThread(NULL, 0, Collision_Thread, NULL, 0, NULL);
 		}
 	}
 

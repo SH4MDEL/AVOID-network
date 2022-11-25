@@ -123,21 +123,12 @@ void ServerSharedData::UpdatePlayerStatus(SOCKET sock, char* dataBuf)
 
 	// 모든 플레이어에게서 스테이터스를 받으면 충돌 체크 스레드를 생성해 충돌처리를 실행한다.
 	if (CheckAllPlayerStatusReceived()) {
-		// 충돌을 위한 처리가 있어야 한다.
-		// 여기서 Set Event를 사용하던지 해야함.
-		// 좀더 자세히 공부할 필요가 있는 듯.
-		// 일단은 충돌 체크 스레드를 이쪽으로 옮겨놓고 여러가지 실험을 해보자.
-
-		// 이후 모든 플레이어의 스테이터스 변화 확인을 초기화 해 주어야 한다.
+		SetEvent(hCollideEvent);
 	}
 
 }
 
-DWORD WINAPI Collision_Thread(LPVOID arg)
-{
-	return 0;
-	// 충돌 체크 스레드를 잠깐 옮겨 둠.
-}
+
 
 // 모든 플레이어가 다 한번 스테이터스를 바꿨는지 확인.
 bool ServerSharedData::CheckAllPlayerStatusReceived() {
@@ -150,9 +141,62 @@ bool ServerSharedData::CheckAllPlayerStatusReceived() {
 	return true;
 }
 
-void ServerSharedData::CreateNewGame() {
+void ServerSharedData::CreateNewGame(int musicNum) {
 	fElapsedTime = 0.0f;
 	
+	char Inbuff[3000];
+	DWORD read_size = 3000;
+	DWORD c = 3000;
+	
+	switch(musicNum){
+	case 0:
+		hPlayingMusicSpeedFile = CreateFile(L"Data\\bbkkbkkSpeed.txt", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
+		break;
+	case 1:
+		hPlayingMusicSpeedFile = CreateFile(L"Data\\bbkkbkkSpeed.txt", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
+		break;
+	}
+	ReadFile(hPlayingMusicSpeedFile, Inbuff, c, &read_size, NULL);
+	CloseHandle(hPlayingMusicSpeedFile);
+
+	int num = 0;
+
+	for (int i = 0; i < 3000; ++i) {
+		if (Inbuff[i] >= 48 && Inbuff[i] <= 57) {
+			lotateSpeed[num] = Inbuff[i] - 48;
+			++num;
+		}
+	}
+
+	char noteInbuff[36000];
+	DWORD read_note = 36000;
+	DWORD n = 36000;
+	
+	switch (musicNum) {
+	case 0:
+		hPlayingMusicNoteFile = CreateFile(L"Data\\bbkkbkkNote.txt", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
+		break;
+	case 1:
+		hPlayingMusicNoteFile = CreateFile(L"Data\\TrueBlueNote.txt", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
+		break;
+	}
+	ReadFile(hPlayingMusicNoteFile, noteInbuff, n, &read_note, NULL);
+	CloseHandle(hPlayingMusicNoteFile);
+
+	int numI = 0, numJ = 0;
+
+	for (int i = 0; i < 36000; ++i) {
+		if (noteInbuff[i] > 48 && noteInbuff[i] <= 57) {
+			note[numI][numJ] = noteInbuff[i] - 48;
+			if (numJ == 11) {
+				numJ = 0, numI++;
+			}
+			else {
+				numJ++;
+			}
+		}
+	}
+
 	for (int i = 0; i < NUMBER_OF_ENEMY; ++i)
 	{
 		m_pEnemies.push_back(Enemy(i));
@@ -198,10 +242,6 @@ void ServerSharedData::MakePacket(char packetType, int playerId) {
 	}
 }
 
-void SendPacket() {
-
-}
-
 int ServerSharedData::GetBulletNum() {
 	
 	int sum = 0;
@@ -210,4 +250,8 @@ int ServerSharedData::GetBulletNum() {
 	}
 
 	return sum;
+}
+
+void ServerSharedData::Update() {
+
 }

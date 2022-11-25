@@ -40,8 +40,15 @@ class ServerSharedData {
 public:
 	std::vector<CPlayerData> m_pPlayers;
 	std::vector<Enemy> m_pEnemies;
-	float fElapsedTime;
 	int playerIdHandle;
+	HANDLE hPlayingMusicSpeedFile, hPlayingMusicNoteFile;
+	int lotateSpeed[3000] = { NULL };
+	int note[3000][12] = { 0 };
+	float fElapsedTime;
+	float leastTime;
+	float TimeDelay = -3;
+	float leastTime = 0;
+	bool musicStart = 0;
 	char nextPacket;
 	int nextPacketPlayerId;
 
@@ -53,10 +60,10 @@ public:
 	void UpdatePlayerStatus(SOCKET sock, char* dataBuf);
 	bool CheckAllPlayerStatusReceived();
 	int GetPlayerRank(SOCKET sock, char* dataBuf);
-	void CreateNewGame();
+	void CreateNewGame(int musicNum);
 	void MakePacket(char packetType, int playerId);
+	void Update();
 	int GetBulletNum();
-	void SendPacket() {};
 };
 
 
