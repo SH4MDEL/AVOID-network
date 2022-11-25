@@ -17,6 +17,12 @@ OBJECT_Bullet::~OBJECT_Bullet()
 	bullet.Destroy();
 }
 
+void OBJECT_Bullet::OnCreate()
+{
+	this->bullet.Load(L"Graphic\\OBJECT\\BULLET\\Bullet.png");
+	this->SetDrawTrue();
+}
+
 void OBJECT_Bullet::OnCreate(int x, int y, int direction)
 {
 	this->bullet.Load(L"Graphic\\OBJECT\\BULLET\\Bullet.png");
@@ -69,6 +75,11 @@ int OBJECT_Bullet::GetY()
 float OBJECT_Bullet::GetCrashTime()
 {
 	return this->CrashTime;
+}
+
+void OBJECT_Bullet::SetPos(int x, int y)
+{
+	bulletx = x, bullety = y;
 }
 
 void OBJECT_Bullet::Setx(int x)

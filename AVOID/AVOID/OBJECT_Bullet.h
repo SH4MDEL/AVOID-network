@@ -42,6 +42,7 @@ public:
 	float bullety = 0;
 	float BulletSpeed = 15;
 
+	void OnCreate();
 	void OnCreate(int x, int y, int direction);
 	void Update(float fTimeElapsed);
 	void Render(HDC* hDC);
@@ -52,6 +53,7 @@ public:
 	int GetX();
 	int GetY();
 	float GetCrashTime();
+	void SetPos(int x, int y);
 	void Setx(int x);
 	void Sety(int y);
 };

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "stdafx.h"
 #include "Protocol.h"
 #include "Obj_Enemy.h"

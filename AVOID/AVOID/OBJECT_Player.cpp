@@ -29,27 +29,26 @@ void OBJECT_Player::OnCreate(int x, int y)
 {
 #ifdef USE_NETWORK
 	if (m_playerID == 0) {
-		this->Player[0].Load(L"Graphic\\OBJECT\\PLAYER\\Player1.png");				// 기본
+		this->Player[0].Load(L"Graphic\\OBJECT\\PLAYER\\Player1.png");
 	}
 	if (m_playerID == 1) {
-		this->Player[0].Load(L"Graphic\\OBJECT\\PLAYER\\Player2.png");				// 기본
+		this->Player[0].Load(L"Graphic\\OBJECT\\PLAYER\\Player2.png");
 	}
 	if (m_playerID == 2) {
-		this->Player[0].Load(L"Graphic\\OBJECT\\PLAYER\\Player3.png");				// 기본
+		this->Player[0].Load(L"Graphic\\OBJECT\\PLAYER\\Player3.png");
 	}
 #endif // USE_NETWORK
 #ifndef USE_NETWORK
 	this->Player[0].Load(L"Graphic\\OBJECT\\PLAYER\\Player1.png");				// 기본
 #endif // !USE_NETWORK
-	this->Player[1].Load(L"Graphic\\OBJECT\\PLAYER\\Hit_Player1.png");				// 피격 1
-	this->Player[2].Load(L"Graphic\\OBJECT\\PLAYER\\Hit_Player2.png");				// 피격 2
-	this->Ability.Load(L"Graphic\\OBJECT\\PLAYER\\Ability.png");					// 능력
+	Player[1].Load(L"Graphic\\OBJECT\\PLAYER\\Hit_Player1.png");				// 피격 1
+	Player[2].Load(L"Graphic\\OBJECT\\PLAYER\\Hit_Player2.png");				// 피격 2
+	Ability.Load(L"Graphic\\OBJECT\\PLAYER\\Ability.png");					// 능력
 
-	this->x = x / 2;											// 화면의 정 중앙이 시작점
-	this->y = y / 2;
+	m_x = x / 2;											// 화면의 정 중앙이 시작점
+	m_y = y / 2;
 	SetCursorPos(windowX / 2 + 9, windowY / 2 + 30);			// 화면 중앙에 커서를 조정함
 	ShowCursor(false);								// 마우스 커서를 감춤
-	//ShowCursor(true);								// Music1이 끝나면 보여줘야함
 
 }
 
@@ -63,7 +62,7 @@ void OBJECT_Player::Update(float fTimeElapsed)
 		}
 
 		else {									// 100보다 작으면 hp1 회복, hp 회복 카운트 0
-			Player_hp += 1;
+			Player_hp += 2;
 			hp_restore = 0;
 		}
 	}
@@ -76,7 +75,7 @@ void OBJECT_Player::Update(float fTimeElapsed)
 		}
 
 		else {
-			Player_mp += 3;
+			Player_mp += 4;
 			mp_restore = 0;
 		}
 	}
@@ -90,17 +89,18 @@ void OBJECT_Player::Update(float fTimeElapsed)
 	}
 
 	MouseState();
+
 	KeyState();
 }
 
 void OBJECT_Player::Render(HDC *hDC)
 {
 	if (AbilityCheck) {
-		Ability.Draw(*hDC, this->x - Ability_radius, this->y - Ability_radius, Ability_radius * 2, Ability_radius * 2);
+		Ability.Draw(*hDC, m_x - Ability_radius, m_y - Ability_radius, Ability_radius * 2, Ability_radius * 2);
 	}
 
 	if (!invincibility) {			// 기본 피격x 상태
-		Player[0].Draw(*hDC, this->x - Player_radius, this->y - Player_radius, Player_radius * 2, Player_radius * 2);
+		Player[0].Draw(*hDC, m_x - Player_radius, m_y - Player_radius, Player_radius * 2, Player_radius * 2);
 	}
 	else {				// 피격후 무적이 켜지면
 		if (((this->TimeDelay >= 0.3f) && (this->TimeDelay <= 0.4f)) ||
@@ -108,10 +108,10 @@ void OBJECT_Player::Render(HDC *hDC)
 			((this->TimeDelay >= 0.9f) && (this->TimeDelay <= 1.f)) ||
 			((this->TimeDelay >= 1.2f) && (this->TimeDelay <= 1.3f)) ||
 			((this->TimeDelay >= 1.5f) && (this->TimeDelay <= 1.6f))) {
-			Player[1].Draw(*hDC, this->x - Player_radius, this->y - Player_radius, Player_radius * 2, Player_radius * 2);
+			Player[1].Draw(*hDC, m_x - Player_radius, m_y - Player_radius, Player_radius * 2, Player_radius * 2);
 		}
 		else {
-			Player[2].Draw(*hDC, this->x - Player_radius, this->y - Player_radius, Player_radius * 2, Player_radius * 2);
+			Player[2].Draw(*hDC, m_x - Player_radius, m_y - Player_radius, Player_radius * 2, Player_radius * 2);
 		}
 	}
 
@@ -149,32 +149,37 @@ void OBJECT_Player::Render(HDC *hDC)
 
 int OBJECT_Player::GetX()
 {
-	return this->x;
+	return m_x;
 }
 
 int OBJECT_Player::GetY()
 {
-	return this->y;
+	return m_y;
 }
 
 float OBJECT_Player::GetHp()
 {
-	return this->Player_hp;
+	return Player_hp;
 }
 
 bool OBJECT_Player::GetState()
 {
-	return this->invincibility;
+	return invincibility;
 }
 
 int OBJECT_Player::GetRadius()
 {
-	return this->Player_radius;
+	return Player_radius;
 }
 
-bool OBJECT_Player::GetAState()
+bool OBJECT_Player::GetAbilityState()
 {
-	return this->AbilityCheck;
+	return AbilityCheck;
+}
+
+int OBJECT_Player::GetID()
+{
+	return m_playerID;
 }
 
 void OBJECT_Player::SetState(bool invincibility)
@@ -199,22 +204,21 @@ void OBJECT_Player::SetAbility(int ability)				// 곡 선택화면에서 선택하도록 함
 
 void OBJECT_Player::MouseState()
 {
+	double d = sqrt((double)(pow((double)windowX / 2 - (double)mouse_mx, 2) + pow((double)windowY / 2 - (double)mouse_my, 2)));		
+	// 플레이어 원과 플레이 원 중심의 거리
+	double r_ = 200 - Player_radius;
 	
-	//double d = sqrt((double)(pow((double)windowX / 2 - (double)this->x, 2) + pow((double)windowY / 2 - (double)this->y, 2)));		// 플레이어 원과 플레이 원 중심의 거리
-	double d = sqrt((double)(pow((double)windowX / 2 - (double)mouse_mx, 2) + pow((double)windowY / 2 - (double)mouse_my, 2)));		// 플레이어 원과 플레이 원 중심의 거리
-	double r_ = 200 - this->Player_radius;
-	
-	int tempx = this->x;
-	int tempy = this->y;
+	int tempx = m_x;
+	int tempy = m_y;
 
 	if (r_ >= d) {							// 커서가 원 내부
-		this->x = mouse_mx;
-		this->y = mouse_my;
+		m_x = mouse_mx;
+		m_y = mouse_my;
 	}
 	else {									// 커서가 원 외부
 		SetCursorPos(tempx + 9, tempy + 30);	// Cursor는 window창의 상단바를 포함?하는 듯 함			아닐 경우 tempx,tempy가 맞음
-		this->x = tempx;
-		this->y = tempy;
+		m_x = tempx;
+		m_y = tempy;
 	}
 }
 

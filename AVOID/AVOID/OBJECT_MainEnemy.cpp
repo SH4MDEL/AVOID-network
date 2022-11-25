@@ -18,8 +18,10 @@ OBJECT_MainEnemy::~OBJECT_MainEnemy()						// 소멸자
 {
 	Enemy[0].Destroy();
 	Enemy[1].Destroy();
+#ifndef USE_NETWORK
 	for (auto bullet : m_bullets) delete bullet;
 	m_bullets.clear();
+#endif
 }
 
 void OBJECT_MainEnemy::OnCreate(int location)				// OnCreate는 해당 오브젝트의 생성시 불러줍니다. 
@@ -28,12 +30,12 @@ void OBJECT_MainEnemy::OnCreate(int location)				// OnCreate는 해당 오브젝트의 �
 	this->Enemy[1].Load(L"Graphic\\OBJECT\\ENEMY\\Enemy2.png");
 	//this->Siren.Load(L"Graphic\\OBJECT\\ENEMY\\Siren.png");
 
-	this->xydata = location * pi / 6;
-	this->x = (windowX / 2) + 220 * cos(xydata); // 초기 12개의 Enemy들의 좌표
-	this->y = (windowY / 2) + 220 * sin(xydata);
+	xydata = location * pi / 6;
+	m_x = (windowX / 2) + 220 * cos(xydata); // 초기 12개의 Enemy들의 좌표
+	m_y = (windowY / 2) + 220 * sin(xydata);
 	//		  (windowX / 2) + 220 * cos(location * pi / 6) <- 화면의 중앙 + 원의 반지름 * 삼각함수. 원의 반지름 수정 필수!!
 
-	this->draw = true;	// 그려진 상태가 된다.
+	draw = true;	// 그려진 상태가 된다.
 }
 
 void OBJECT_MainEnemy::Update(float fTimeElapsed, int lotateSpeed, int note)
@@ -55,32 +57,35 @@ void OBJECT_MainEnemy::Update(float fTimeElapsed, int lotateSpeed, int note)
 	/*		bbkkbkk			*/	
 	if (selectedMusic == 1) {
 		this->xydata += SpeedData * pi * 1 / 170 * (fTimeElapsed * (680 / 60));
-		this->x = (windowX / 2) + 220 * cos(this->xydata);		
-		this->y = (windowY / 2) + 220 * sin(this->xydata);
+		m_x = (windowX / 2) + 220 * cos(this->xydata);
+		m_y = (windowY / 2) + 220 * sin(this->xydata);
 	}
 	/*		TrueBlue		*/
 	else if (selectedMusic == 2) {
 		this->xydata += SpeedData * pi * 1 / 170 * (fTimeElapsed * (656 / 60));
-		this->x = (windowX / 2) + 220 * cos(this->xydata);		
-		this->y = (windowY / 2) + 220 * sin(this->xydata);
+		m_x = (windowX / 2) + 220 * cos(this->xydata);
+		m_y = (windowY / 2) + 220 * sin(this->xydata);
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+#ifndef USE_NETWORK
 	if (note) {
-		m_bullets.push_back(new OBJECT_Bullet{(int)x, (int)y, note});
+		m_bullets.push_back(new OBJECT_Bullet{ (int)m_x, (int)m_y, note });
 	}
 	for (auto bullet : m_bullets) (*bullet).Update(fTimeElapsed);
 
 	BulletCrash();
+#endif // !USE_NETWORK
+
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 
 void OBJECT_MainEnemy::Render(HDC* hDC)
 {
-	Enemy[imageCount].Draw(*hDC, this->x - 20, this->y - 20, 40, 40);
-
+	Enemy[imageCount].Draw(*hDC, m_x - 20, m_y - 20, 40, 40);
+#ifndef USE_NETWORK
 	for (auto bullet : m_bullets) (*bullet).Render(hDC);
+#endif
 }
 
 
@@ -110,4 +115,9 @@ void OBJECT_MainEnemy::SetDrawFalse()
 void OBJECT_MainEnemy::SetDrawTrue()
 {
 	this->draw = true;
+}
+
+void OBJECT_MainEnemy::SetPos(int x, int y)
+{
+	m_x = x, m_y = y;
 }

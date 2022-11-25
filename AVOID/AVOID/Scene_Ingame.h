@@ -3,6 +3,7 @@
 
 class Sound;
 class OBJECT_MainEnemy;
+class OBJECT_Bullet;
 class OBJECT_Player;
 
 extern int finalhp;
@@ -31,7 +32,8 @@ public:
 
 	// 서버 관련 추가 함수
 #ifdef USE_NETWORK
-	void SetPlayerEnemyData(char playerNum, char bulletNum) { m_playerNum = playerNum, m_bulletNum = bulletNum; }
+	void SetPlayerEnemyData(char playerNum, char enemyNum, char bulletNum) 
+	{ m_playerNum = playerNum, m_enemyNum = enemyNum, m_bulletNum = bulletNum; }
 	array<PlayerStatus, 3>& GetPlayersCoord() { return m_playersStatus; }
 	array<Coord, 12>& GetEnemysCoord() { return m_enemysCoord; }
 	array<Coord, 50>& GetBulletsCoord() { return m_bulletsCoord; }
@@ -44,8 +46,7 @@ private:
 	int windowY = ::GetSystemMetrics(SM_CYSCREEN);		// 모니터 y길이 받아옴
 
 	OBJECT_MainEnemy* CMainEnemy[12] = { NULL };
-	OBJECT_Player* m_player = nullptr;
-	OBJECT_Player* m_rival[2];
+	OBJECT_Player* m_players[3];
 
 	Sound* IngameSound = NULL;
 
@@ -71,15 +72,17 @@ private:
 #ifdef USE_NETWORK
 	int						m_playerID;
 	int						m_playerNum;
+	int						m_enemyNum;
 	int						m_bulletNum;
 	array<PlayerStatus, 3>	m_playersStatus;
 	array<Coord, 12>		m_enemysCoord;
 	array<Coord, 50>		m_bulletsCoord;
 	bool					m_inputObjectPacket;
 	int						m_rank;
+
+	OBJECT_Bullet*			m_bullets[50];
 #endif
 	// send
-
 };																
 
 

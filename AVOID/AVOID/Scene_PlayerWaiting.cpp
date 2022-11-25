@@ -45,6 +45,10 @@ void Scene_PlayerWaiting::OnCreate()
 	packet.size = sizeof(cs_packet_login);
 	packet.selectMusic = m_selectedMusic;
 	Send(&packet);
+#ifdef NETWORK_DEBUG
+	cout << "CS_PACKET_LOGIN 송신" << endl;
+#endif // NETWORK_DEBUG
+
 }
 
 void Scene_PlayerWaiting::BuildObjects()
@@ -61,6 +65,9 @@ void Scene_PlayerWaiting::Update(float fTimeElapsed)
 	m_playerWaitingSound->update(Sound::SoundTag::PlayerWaiting);
 
 	if (m_nextScene) {
+#ifdef NETWORK_DEBUG
+		cout << "SCENE 전환(PlayerWaiting -> Ingame)" << endl;
+#endif // NETWORK_DEBUG
 		m_pFramework->ChangeScene(CScene::SceneTag::Ingame);
 #ifdef USE_NETWORK
 		m_pFramework->SetPlayerNum(m_playerNum, CScene::SceneTag::Ingame);
@@ -77,6 +84,9 @@ void Scene_PlayerWaiting::KeyState() {
 		packet.type = CS_PACKET_LOGIN;
 		packet.size = sizeof(cs_packet_ready);
 		Send(&packet);
+#ifdef NETWORK_DEBUG
+		cout << "CS_PACKET_READY 송신" << endl;
+#endif // NETWORK_DEBUG
 	}
 }
 

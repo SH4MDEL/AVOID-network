@@ -24,7 +24,15 @@ void Scene_Ingame::OnDestroy()
 {
 	Ingame.Destroy();
 	Circle.Destroy();
-	delete m_player;
+#ifdef USE_NETWORK
+	for (int i = 0; i < m_playerNum; ++i) {
+		delete m_players[i];
+}
+#endif // USE_NETWORK
+
+#ifndef USE_NETWORK
+	delete m_players[0];
+#endif
 
 	for (int i = 0; i < 12; i++) {
 		delete CMainEnemy[i];
@@ -108,18 +116,17 @@ void Scene_Ingame::BuildObjects()
 		this->CMainEnemy[i] = new OBJECT_MainEnemy(i + 1, m_selectedMusic + 1);		// location은 1부터 12까지 들어간다.
 	}
 #ifdef USE_NETWORK
-	m_player = new OBJECT_Player(windowX, windowY, m_playerID);
-	if (m_playerNum == 2) {
-		m_rival[0] = new OBJECT_Player(windowX, windowY, m_playerID == 0 ? 1 : 0);
+	
+	for (int i = 0; i < m_playerNum; ++i) {
+		m_players[i] = new OBJECT_Player(windowX, windowY, i);
 	}
-	else if (m_playerNum == 3) {
-		m_rival[0] = new OBJECT_Player(windowX, windowY, m_playerID);
-		m_rival[1] = new OBJECT_Player(windowX, windowY, m_playerID);
+	for (int i = 0; i < 50; ++i) {
+		m_bullets[i] = new OBJECT_Bullet;
+	}
 #endif
 #ifndef USE_NETWORK
-		m_player = new OBJECT_Player(windowX, windowY);
+		m_players[0] = new OBJECT_Player(windowX, windowY);
 #endif
-	}
 }
 
 void Scene_Ingame::Render(HDC hdc)
@@ -127,24 +134,64 @@ void Scene_Ingame::Render(HDC hdc)
 	Ingame.Draw(hdc, 0, 0, windowX, windowY);
 	Circle.Draw(hdc, windowX / 2 - this->Circleradius, windowY / 2 - this->Circleradius, this->Circleradius * 2, this->Circleradius * 2);
 
-	m_player->Render(&hdc);
-
 	for (int i = 0; i < 12; i++) {
-		this->CMainEnemy[i]->Render(&hdc);
+		CMainEnemy[i]->Render(&hdc);
 	}
+#ifdef USE_NETWORK
+	for (int i = 0; i < m_playerNum; i++) {
+		m_players[i]->Render(&hdc);
+	}
+	for (int i = 0; i < m_bulletNum; ++i) {
+		m_bullets[i]->Render(&hdc);
+	}
+#endif // USE_NETWORK
+#ifndef USE_NETWORK
+	m_players[0]->Render(&hdc);
+#endif // !USE_NETWORK
+
 }
 
 void Scene_Ingame::Update(float fTimeElapsed)
 {
 	TimeDelay += fTimeElapsed;
-
-	m_player->Update(fTimeElapsed);
 #ifdef USE_NETWORK
-	if (m_inputObjectPacket) {
-		// 플레이어의 위치 정해주기
-		// 적의 위치 정해주기
-		// 총알의 위치 정해주기
+	for (int i = 0; i < m_playerNum; i++) {
+		m_players[i]->Update(fTimeElapsed);
 	}
+#endif // USE_NETWORK
+#ifndef USE_NETWORK
+	m_players[0]->Update(fTimeElapsed);
+#endif // !USE_NETWORK
+#ifdef USE_NETWORK
+	// 플레이어의 위치 정해주기
+	cs_packet_player_status packet;
+	packet.type = CS_PACKET_PLAYER_STATUS;
+	packet.size = sizeof(CS_PACKET_PLAYER_STATUS);
+	packet.coord.x = (short)m_players[m_playerID]->GetX();
+	packet.coord.y = (short)m_players[m_playerID]->GetY();
+	packet.isSkill = m_players[m_playerID]->GetAbilityState();
+	packet.playerID = m_players[m_playerID]->GetID();
+	Send(&packet);
+#ifdef NETWORK_DEBUG
+	cout << "CS_PACKET_PLAYER_STATUS 송신" << endl;
+#endif // NETWORK_DEBUG
+	while (!m_inputObjectPacket) {}
+	// 플레이어의 위치 정해주기
+	for (int i = 0; i < m_playerNum; ++i) {
+		PlayerStatus ps = m_playersStatus[m_playerID];
+		m_players [m_playerID] ->SetPos(ps.coord.x, ps.coord.y);
+	}
+	// 적의 위치 정해주기
+	for (int i = 0; i < m_enemyNum; ++i) {
+		Coord coord = m_enemysCoord[i];
+		CMainEnemy[i]->SetPos(coord.x, coord.y);
+	}
+	// 총알의 위치 정해주기
+	for (int i = 0; i < m_bulletNum; ++i) {
+		Coord coord = m_bulletsCoord[i];
+		m_bullets[i]->SetPos(coord.x, coord.y);
+	}
+	m_inputObjectPacket = false;
 #endif
 #ifndef USE_NETWORK
 	if (musicStart == false && TimeDelay >= -1.f) {
@@ -188,56 +235,59 @@ void Scene_Ingame::Update(float fTimeElapsed)
 	}
 
 	if ((m_selectedMusic == 0 && time >= 1450) || (m_selectedMusic == 1 && time >= 1310)) {
-		finalhp = m_player->GetHp();
+		finalhp = m_players[0]->GetHp();
 		m_pFramework->ChangeScene(CScene::SceneTag::Result);
 		Scene_Ingame::OnDestroy();
 		m_pFramework->curSceneCreate();
 	}
 #endif // !USE_NETWORK
-
 }
 
 void Scene_Ingame::PlayerCrash(OBJECT_MainEnemy* Enemy)
 {
+#ifndef USE_NETWORK
 	double d = 0;
 	double r1 = 0;
 	double r2 = 0;
 
 	for (auto bullet = Enemy->m_bullets.begin(); bullet != Enemy->m_bullets.end(); ++bullet) {
-		d = sqrt((double)(pow((*bullet)->bulletx - (double)m_player->GetX(), 2) + pow((*bullet)->bullety - (double)m_player->GetY(), 2)));
-		r1 = (*bullet)->radius + m_player->GetRadius();
-		r2 = (*bullet)->radius - m_player->GetRadius();
+		d = sqrt((double)(pow((*bullet)->bulletx - (double)m_players[0]->GetX(), 2) + pow((*bullet)->bullety - (double)m_players[0]->GetY(), 2)));
+		r1 = (*bullet)->radius + m_players[0]->GetRadius();
+		r2 = (*bullet)->radius - m_players[0]->GetRadius();
 
-		if (((r2 < d && d <= r1) || r2 >= d) && !m_player->GetState()) {			// 충돌, 무적 x 이면 hp 감소
-			m_player->SetHp(m_player->hitHp);
-			if (m_player->GetHp() <= 0) {
-				m_player->SetHp_zero();
+		if (((r2 < d && d <= r1) || r2 >= d) && !m_players[0]->GetState()) {			// 충돌, 무적 x 이면 hp 감소
+			m_players[0]->SetHp(m_players[0]->hitHp);
+			if (m_players[0]->GetHp() <= 0) {
+				m_players[0]->SetHp_zero();
 			}
 
 			IngameSound->play(Sound::SoundTag::Hitsound);
-			m_player->SetState(true);			// 피격시 무적으로 만들음
+			m_players[0]->SetState(true);			// 피격시 무적으로 만들음
 		}
 	}
+#endif // !USE_NETWORK
 }
 
 void Scene_Ingame::AbilityCrash(OBJECT_MainEnemy* Enemy)
 {
+#ifndef USE_NETWORK
 	double d = 0;
 	double r1 = 0;
 	double r2 = 0;
 
 	for (auto bullet = Enemy->m_bullets.begin(); bullet != Enemy->m_bullets.end(); ++bullet) {
-		d = sqrt((double)(pow((*bullet)->bulletx - (double)m_player->GetX(), 2) + pow((*bullet)->bullety - (double)m_player->GetY(), 2)));
-		r1 = (*bullet)->radius + m_player->Ability_radius;
-		r2 = (*bullet)->radius - m_player->Ability_radius;
+		d = sqrt((double)(pow((*bullet)->bulletx - (double)m_players[0]->GetX(), 2) + pow((*bullet)->bullety - (double)m_players[0]->GetY(), 2)));
+		r1 = (*bullet)->radius + m_players[0]->Ability_radius;
+		r2 = (*bullet)->radius - m_players[0]->Ability_radius;
 
-		if (((r2 < d && d <= r1) || r2 >= d) && m_player->GetAState()) {			// 충돌, 능력o 이면 속도 감소
+		if (((r2 < d && d <= r1) || r2 >= d) && m_players[0]->GetAbilityState()) {			// 충돌, 능력o 이면 속도 감소
 			(*bullet)->BulletSpeed = 3;
 		}
 		else {
 			(*bullet)->BulletSpeed = 10;
 		}
 	}
+#endif
 }
 
 void Scene_Ingame::SetPlayerNum(int playerNum)

@@ -264,10 +264,12 @@ void Recv()
 {
 	packet pk;
 	int retval = recv(g_socket, reinterpret_cast<char*>(&pk), sizeof(packet), MSG_WAITALL);
+#ifdef NETWORK_DEBUG
 	if (retval == SOCKET_ERROR) {
 		std::cout << "Socket Error in send" << std::endl;
 		return;
 	}
+#endif // NETWORK_DEBUG
 	TranslatePacket(pk);
 }
 
@@ -282,6 +284,9 @@ void TranslatePacket(const packet& packetBuf)
 		retval = recv(g_socket, reinterpret_cast<char*>(&pk) + 2, packetBuf.size - 2, MSG_WAITALL);
 		Scene_PlayerWaiting* scene = (Scene_PlayerWaiting*)myFramework.GetCurrScene();
 		scene->SetPlayerID(pk.playerID);
+#ifdef NETWORK_DEBUG
+		cout << "SC_PACKET_LOGIN_CONFIRM 해석" << endl;
+#endif // NETWORK_DEBUG
 		break;
 	}
 	case SC_PACKET_START_GAME:
@@ -290,6 +295,9 @@ void TranslatePacket(const packet& packetBuf)
 		retval = recv(g_socket, reinterpret_cast<char*>(&pk) + 2, packetBuf.size - 2, MSG_WAITALL);
 		Scene_PlayerWaiting* scene = (Scene_PlayerWaiting*)myFramework.GetCurrScene();
 		scene->ChangeGameStart(pk.playerNum);
+#ifdef NETWORK_DEBUG
+		cout << "SC_PACKET_START_GAME 해석" << endl;
+#endif // NETWORK_DEBUG
 		break;
 	}
 	case SC_PACKET_OBJECTS_INFO:
@@ -297,16 +305,22 @@ void TranslatePacket(const packet& packetBuf)
 		sc_packet_objects_info pk;
 		retval = recv(g_socket, reinterpret_cast<char*>(&pk) + 2, packetBuf.size - 2, MSG_WAITALL);
 		Scene_Ingame* scene = (Scene_Ingame*)myFramework.GetCurrScene();
-		scene->SetPlayerEnemyData(pk.playerNum, pk.bulletNum);
+		scene->SetPlayerEnemyData(pk.playerNum, pk.enemyNum, pk.bulletNum);
 		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetPlayersCoord()), pk.playerNum * sizeof(PlayerStatus), MSG_WAITALL);
 		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetEnemysCoord()), pk.enemyNum * sizeof(Coord), MSG_WAITALL);
 		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetBulletsCoord()), pk.bulletNum * sizeof(Coord), MSG_WAITALL);
 		scene->SetObjectPacket();
+#ifdef NETWORK_DEBUG
+		cout << "SC_PACKET_OBJECTS_INFO 해석" << endl;
+#endif // NETWORK_DEBUG
 		break;
 	}
 	case SC_PACKET_MUSIC_END:
 	{
 		Scene_Ingame* scene = (Scene_Ingame*)myFramework.GetCurrScene();
+#ifdef NETWORK_DEBUG
+		cout << "SC_PACKET_MUSIC_END 해석" << endl;
+#endif // NETWORK_DEBUG
 		break;
 	}
 	case SC_PACKET_RANK:
@@ -315,6 +329,9 @@ void TranslatePacket(const packet& packetBuf)
 		retval = recv(g_socket, reinterpret_cast<char*>(&pk) + 2, packetBuf.size - 2, MSG_WAITALL);
 		Scene_Ingame* scene = (Scene_Ingame*)myFramework.GetCurrScene();
 		scene->SetRank(pk.rank);
+#ifdef NETWORK_DEBUG
+		cout << "SC_PACKET_RANK 해석" << endl;
+#endif // NETWORK_DEBUG
 		break;
 	}
 	case CS_PACKET_LOGOUT:

@@ -30,12 +30,15 @@ public:
 	float GetHp();
 	bool GetState();				// 무적인지 상태를 받는 함수
 	int GetRadius();				// 반지름 받는 함수
-	bool GetAState();
+	bool GetAbilityState();
+	int GetID();
 
 	void SetHp(float hp);
 	void SetHp_zero();
 	void SetAbility(int ability);
 	void SetState(bool invincibility);
+
+	void SetPos(float x, float y) { m_x = x, m_y = y; };
 
 	void KeyState();
 	void MouseState();
@@ -45,8 +48,8 @@ public:
 	void SetPlayerID(int playerID) { m_playerID = playerID; }
 #endif
 private:
-	float x = 0;											// x좌표
-	float y = 0;											// y좌표
+	float m_x = 0;											// x좌표
+	float m_y = 0;											// y좌표
 	float Player_hp = 30;									// 플레이어의 hp
 	float hp_restore = 0;
 	float Player_mp = 250;
