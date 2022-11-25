@@ -7,5 +7,5 @@ public:
 	CObject();
 	~CObject();
 
-	void Update();
+	void Update() { };
 };

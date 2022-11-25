@@ -1,3 +1,5 @@
+#pragma once
+
 #include "stdafx.h"
 #include "Protocol.h"
 #include "Obj_Enemy.h"
@@ -55,7 +57,7 @@ public:
 	void CreateNewGame();
 	void MakePacket(char packetType, int playerId);
 	int GetBulletNum();
-	void SendPacket();
+	void SendPacket() {};
 };
 
 

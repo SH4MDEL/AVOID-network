@@ -187,7 +187,7 @@ void Scene_Ingame::Update(float fTimeElapsed)
 	}
 
 	if ((m_selectedMusic == 0 && time >= 1450) || (m_selectedMusic == 1 && time >= 1310)) {
-		finalhp = Player->GetHp();
+		finalhp = m_player->GetHp();
 		m_pFramework->ChangeScene(CScene::SceneTag::Result);
 		Scene_Ingame::OnDestroy();
 		m_pFramework->curSceneCreate();

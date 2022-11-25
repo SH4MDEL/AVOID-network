@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Object.h"
 
 constexpr int BULLET_RADIUS = 18;

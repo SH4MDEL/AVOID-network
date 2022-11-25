@@ -37,15 +37,18 @@ ServerSharedData::ServerSharedData() {
 	fElapsedTime = 0.0f;
 	nextPacket = NULL;
 	nextPacketPlayerId = NULL;
+	playerIdHandle = 0;
 	
 }
 
 void ServerSharedData::PlayerJoin(SOCKET sock, char* dataBuf) {
 	char* selected = reinterpret_cast<char*>(dataBuf);
 
+	int num = (*selected);
+
 	CPlayerData newPlayer;
 
-	if (*selected != 1 || *selected != 2)
+	if (num != 1 || num != 2)
 	{
 		std::cout << "Error in PlayerJoin" << std::endl;
 	}
@@ -66,12 +69,12 @@ void ServerSharedData::PlayerJoin(SOCKET sock, char* dataBuf) {
 		}
 	}
 
-	if (*selected == 1)
+	if (num == 1)
 	{
 		newPlayer = CPlayerData(sock, PLAYER_STATE::PLAYER_WAITING, SELECTED_MUSIC::BBKKBKK, newId);
 		
 	}
-	else if (*selected == 2)
+	else if (num == 2)
 	{
 		newPlayer = CPlayerData(sock, PLAYER_STATE::PLAYER_WAITING, SELECTED_MUSIC::TRUE_BLUE, newId);
 	}
@@ -128,6 +131,7 @@ void ServerSharedData::UpdatePlayerStatus(SOCKET sock, char* dataBuf)
 
 DWORD WINAPI Collision_Thread(LPVOID arg)
 {
+	return 0;
 	// 충돌 체크 스레드를 잠깐 옮겨 둠.
 }
 
@@ -152,9 +156,10 @@ void ServerSharedData::CreateNewGame() {
 }
 
 int ServerSharedData::GetPlayerRank(SOCKET sock, char* dataBuf) {
-	(*dataBuf); // 해당 데이터는 hp인데, hp를 어떻게 rand로 바꿔야 하는가
+	//(*dataBuf); // 해당 데이터는 hp인데, hp를 어떻게 rand로 바꿔야 하는가
 				// -> SOCKET의 비교가 가능한가
 				// -> 플레이어 ID를 보내주지 않으면 여러 문제가 있을 수 있을지도
+	return 0;
 }
 
 void ServerSharedData::MakePacket(char packetType, int playerId) {

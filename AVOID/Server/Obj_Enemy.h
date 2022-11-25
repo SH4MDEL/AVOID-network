@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Object.h"
 #include "Obj_Bullet.h"
 
@@ -12,7 +13,7 @@ private:
 	int m_iDirection;
 	int m_nBullet;
 
-	int theta;
+	float theta;
 
 public:
 

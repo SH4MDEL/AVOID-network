@@ -1,6 +1,4 @@
-#include "stdafx.h"
-#include "Protocol.h"
-#include "PlayerData.h"
+#include "Server.h"
 
 /*
 -------------------------------------------------------------------------------
@@ -14,6 +12,8 @@
 
 -------------------------------------------------------------------------------
 */
+
+
 
 
 SOCKET listen_sock = NULL;
@@ -31,7 +31,7 @@ DWORD WINAPI Client_Thread(LPVOID arg)
 	char addr[INET_ADDRSTRLEN];
 	int addrlen;
 	char packetDataBuf[2];
-	char* pBuf;
+	char* pBuf = nullptr;
 
 	addrlen = sizeof(clientaddr);
 	getpeername(client_sock, (sockaddr*)&clientaddr, &addrlen);
@@ -59,7 +59,7 @@ DWORD WINAPI Client_Thread(LPVOID arg)
 		}
 	}
 
-
+	return 0;
 }
 
 char TranslatePacket(char* packetBuf)
@@ -203,6 +203,7 @@ void MakePacket(SOCKET sock) {
 			i.isCollide = FALSE;
 			playerStatus.playerID = i.playerId;
 			char* player = new char[sizeof(PlayerStatus)];
+			ZeroMemory(player, sizeof(PlayerStatus));
 			send(sock, player, sizeof(PlayerStatus), 0);
 			delete[] player;
 		}
