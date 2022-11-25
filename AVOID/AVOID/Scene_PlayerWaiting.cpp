@@ -38,6 +38,7 @@ void Scene_PlayerWaiting::OnCreate()
 	m_playerWaitingSound->play(Sound::SoundTag::PlayerWaiting);
 
 	m_nextScene = false;
+	m_returnOK = false;
 
 	InitServer();
 	cs_packet_login packet;
@@ -76,10 +77,12 @@ void Scene_PlayerWaiting::Update(float fTimeElapsed)
 		m_pFramework->curSceneCreate();
 		OnDestroy();
 	}
+	KeyState();
 }
 
 void Scene_PlayerWaiting::KeyState() {
-	if (GetAsyncKeyState(VK_RETURN) & 0x8000) {
+	if (!m_returnOK && (GetAsyncKeyState(VK_RETURN) & 0x8000)) {
+		m_returnOK = true;
 		cs_packet_ready packet;
 		packet.type = CS_PACKET_LOGIN;
 		packet.size = sizeof(cs_packet_ready);

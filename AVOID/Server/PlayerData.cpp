@@ -246,8 +246,8 @@ void ServerSharedData::MakePacket(char packetType, int playerId) {
 int ServerSharedData::GetBulletNum() {
 	
 	int sum = 0;
-	for (auto& i : m_pEnemies) {
-		sum += i.m_bullets.size();
+	for (auto& enemy : m_pEnemies) {
+		sum += enemy.GetBullets().size();
 	}
 
 	return sum;

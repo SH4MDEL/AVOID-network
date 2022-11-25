@@ -7,7 +7,7 @@
 
 #include "targetver.h"
 
-//#define USE_NETWORK
+#define USE_NETWORK
 
 #ifdef USE_NETWORK
 #define NETWORK_DEBUG

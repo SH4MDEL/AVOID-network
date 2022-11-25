@@ -43,6 +43,7 @@ private:
 	int m_playerNum;
 
 	bool m_nextScene;
+	bool m_returnOK;
 };
 #endif
 

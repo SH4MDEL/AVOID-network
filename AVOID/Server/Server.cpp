@@ -19,6 +19,8 @@ CRITICAL_SECTION CS;
 
 ServerSharedData SharedData;
 
+Enemy g_enemys[12];
+
 DWORD WINAPI Client_Thread(LPVOID arg)
 {
 	std::cout << "Client Thread Start." << std::endl;
@@ -273,7 +275,20 @@ DWORD WINAPI Collision_Thread(LPVOID arg)
 	}
 }
 
-void CollisionCheckBulletAndWall() {
+void CollisionCheckBulletAndWall() 
+{
+	int radius = 200;			// 원의 반지름. 변수로 바꿔 주는 것이 좋을 듯?
+	for (int i = 0; i < 12; ++i) {
+		for (auto bullet = g_enemys[i].GetBullets().begin(); bullet != g_enemys[i].GetBullets().end(); ++bullet) {
+			Coord pos = (*bullet).GetPosition();
+			int d = pos.x * pos.x + pos.y * pos.y;
+			if (d > radius * radius) // 원래는 원 밖에 나가도 1초가 지나야 사라질 수 있게 했지만 그런게 필요할까?
+			{
+				g_enemys[i].GetBullets().erase(bullet);
+				break;
+			}
+		}
+	}
 
 }
 
