@@ -46,6 +46,7 @@ void ServerSharedData::PlayerJoin(SOCKET sock, char* dataBuf) {
 
 	if (selected == nullptr) {
 		std::cout << "Error in PlayerJoin. selected is nullptr." << std::endl;
+		return;
 	}
 
 	char num = (*selected);

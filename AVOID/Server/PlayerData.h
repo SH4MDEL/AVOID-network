@@ -5,6 +5,9 @@
 
 constexpr int NO_NEED_PLAYER_ID = -1;
 
+extern HANDLE hClientEvent;
+extern HANDLE hCollideEvent;
+
 enum class PLAYER_STATE{
 	NONE,
 	PLAYER_WAITING,
@@ -45,7 +48,6 @@ public:
 	int lotateSpeed[3000] = { NULL };
 	int note[3000][12] = { 0 };
 	float fElapsedTime;
-	float leastTime;
 	float TimeDelay = -3;
 	float leastTime = 0;
 	bool musicStart = 0;

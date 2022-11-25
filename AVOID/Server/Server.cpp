@@ -13,9 +13,6 @@
 -------------------------------------------------------------------------------
 */
 
-
-
-
 SOCKET listen_sock = NULL;
 
 CRITICAL_SECTION CS;
@@ -142,11 +139,21 @@ void ApplyPacketData(SOCKET socket, char* dataBuf, char packetType)
 		break;
 	case CS_PACKET_READY: // dataBuf에는 데이터가 없음. 그러나, READY가 된 것이므로 플레이어의 상태를 변경해 주어야 한다.
 		// 그러므로 모든 플레이어의 상태를 게임을 시작하는 상태로 변경할 필요가 있다.
+	{
 		for (auto i = SharedData.m_pPlayers.begin(); i != SharedData.m_pPlayers.end(); ++i) {
 			(*i).playerState = PLAYER_STATE::PLAY_GAME;
 		}
-		// 이후 게임을 시작된다는 패킷을 바로 보내주어야 한다.
-		SharedData.CreateNewGame();
+
+		int selected = 0;
+
+		if ((*(SharedData.m_pPlayers.begin())).selectedMusic == SELECTED_MUSIC::BBKKBKK) {
+			selected = 0;
+		}
+		else if ((*(SharedData.m_pPlayers.begin())).selectedMusic == SELECTED_MUSIC::TRUE_BLUE) {
+			selected = 1;
+		}
+		SharedData.CreateNewGame(selected);
+	}
 		break;
 	case CS_PACKET_PLAYER_STATUS: // dataBuf에는 플레이어 넘버, 플레이어의 위치, 플레이어의 스킬 사용 여부가 들어있다.
 		// 그러므로 데이터를 갱신해 주어야 한다. 임계영역이 설정되어 있으므로 공유 데이터에 문제는 없음.
