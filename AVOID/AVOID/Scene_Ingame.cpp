@@ -117,8 +117,9 @@ void Scene_Ingame::BuildObjects()
 		m_rival[1] = new OBJECT_Player(windowX, windowY, m_playerID);
 #endif
 #ifndef USE_NETWORK
-	m_player = new OBJECT_Player(windowX, windowY);
+		m_player = new OBJECT_Player(windowX, windowY);
 #endif
+	}
 }
 
 void Scene_Ingame::Render(HDC hdc)

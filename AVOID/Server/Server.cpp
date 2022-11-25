@@ -24,6 +24,7 @@ ServerSharedData SharedData;
 
 DWORD WINAPI Client_Thread(LPVOID arg)
 {
+	std::cout << "Client Thread Start." << std::endl;
 	SOCKET client_sock = (SOCKET)arg;
 	int retval;
 
@@ -37,8 +38,11 @@ DWORD WINAPI Client_Thread(LPVOID arg)
 	getpeername(client_sock, (sockaddr*)&clientaddr, &addrlen);
 	inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
 
+	std::cout << "Network loop Start" << std::endl;
+
 	while (true) {
-		retval = recv(client_sock, packetDataBuf, 2, 0);
+		
+		retval = recv(client_sock, packetDataBuf, 2, MSG_WAITALL);
 		if (retval == SOCKET_ERROR) {
 			std::cout << "Socket Error in recv" << std::endl;
 			break;
@@ -51,7 +55,7 @@ DWORD WINAPI Client_Thread(LPVOID arg)
 		{
 			char packetType = TranslatePacket(packetDataBuf);
 
-			GetDataFromPacket(client_sock, pBuf, packetType);
+			pBuf = GetDataFromPacket(client_sock, pBuf, packetType);
 			EnterCriticalSection(&CS);
 			ApplyPacketData(client_sock, pBuf, packetType);
 			LeaveCriticalSection(&CS);
@@ -93,29 +97,35 @@ char TranslatePacket(char* packetBuf)
 	}
 }
 
-void GetDataFromPacket(SOCKET socket, char* dataBuf, char packetType)
+char* GetDataFromPacket(SOCKET socket, char* dataBuf, char packetType)
 {
 	switch (packetType)
 	{
 	case CS_PACKET_LOGIN:
-		recv(socket, dataBuf, CS_PACKET_LOGIN_SIZE, 0);
+		dataBuf = new char[CS_PACKET_LOGIN_SIZE];
+		recv(socket, dataBuf, CS_PACKET_LOGIN_SIZE, MSG_WAITALL);
 		break;
 	case CS_PACKET_READY:
 		dataBuf = nullptr;
 		break;
 	case CS_PACKET_PLAYER_STATUS:
-		recv(socket, dataBuf, CS_PACKET_PLAYER_STATUS_SIZE, 0);
+		dataBuf = new char[CS_PACKET_PLAYER_STATUS_SIZE];
+		recv(socket, dataBuf, CS_PACKET_PLAYER_STATUS_SIZE, MSG_WAITALL);
 		break;
 	case CS_PACKET_PLAYER_HP:
-		recv(socket, dataBuf, CS_PACKET_PLAYER_HP_SIZE, 0);
+		dataBuf = new char[CS_PACKET_PLAYER_HP_SIZE];
+		recv(socket, dataBuf, CS_PACKET_PLAYER_HP_SIZE, MSG_WAITALL);
 		break;
 	case CS_PACKET_LOGOUT:
-		recv(socket, dataBuf, CS_PACKET_LOGOUT_SIZE, 0);
+		dataBuf = new char[CS_PACKET_LOGOUT_SIZE];
+		recv(socket, dataBuf, CS_PACKET_LOGOUT_SIZE, MSG_WAITALL);
 		break;
 	default:
 		std::cout << "GetDataFromPacket : The Packet Type " << packetType << " is Not Exist." << std::endl;
 		break;
 	}
+
+	return dataBuf;
 }
 
 void ApplyPacketData(SOCKET socket, char* dataBuf, char packetType)

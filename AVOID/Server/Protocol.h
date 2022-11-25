@@ -2,7 +2,7 @@
 #pragma pack(1)
 
 constexpr short		SERVER_PORT = 9000;
-extern const char*	SERVER_IP = "127.0.0.1"; // constexpr로 지정할 경우 어째서인지 char* const로 변수 타입이 지정되어 오류가 발생
+//const char*	SERVER_IP = "127.0.0.1"; // constexpr로 지정할 경우 어째서인지 char* const로 변수 타입이 지정되어 오류가 발생
 constexpr int		BUF_SIZE = 256;
 constexpr int		MAX_USER = 3;
 

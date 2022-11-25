@@ -44,11 +44,13 @@ ServerSharedData::ServerSharedData() {
 void ServerSharedData::PlayerJoin(SOCKET sock, char* dataBuf) {
 	char* selected = reinterpret_cast<char*>(dataBuf);
 
-	int num = (*selected);
+	if (selected == nullptr) {
+		std::cout << "Error in PlayerJoin. selected is nullptr." << std::endl;
+	}
 
-	CPlayerData newPlayer;
+	char num = (*selected);
 
-	if (num != 1 || num != 2)
+	if (num != 0 && num != 1)
 	{
 		std::cout << "Error in PlayerJoin" << std::endl;
 	}
@@ -69,12 +71,14 @@ void ServerSharedData::PlayerJoin(SOCKET sock, char* dataBuf) {
 		}
 	}
 
-	if (num == 1)
+	CPlayerData newPlayer;
+
+	if (num == 0)
 	{
 		newPlayer = CPlayerData(sock, PLAYER_STATE::PLAYER_WAITING, SELECTED_MUSIC::BBKKBKK, newId);
 		
 	}
-	else if (num == 2)
+	else if (num == 1)
 	{
 		newPlayer = CPlayerData(sock, PLAYER_STATE::PLAYER_WAITING, SELECTED_MUSIC::TRUE_BLUE, newId);
 	}
@@ -82,7 +86,7 @@ void ServerSharedData::PlayerJoin(SOCKET sock, char* dataBuf) {
 	m_pPlayers.push_back(newPlayer);
 
 	nextPacket = SC_PACKET_LOGIN_CONFIRM;
-	nextPacketPlayerId = newPlayer.playerId;
+	nextPacketPlayerId = newId;
 }
 
 void ServerSharedData::PlayerLeft(char* dataBuf) {
