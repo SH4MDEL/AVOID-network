@@ -86,6 +86,7 @@ void Scene_PlayerWaiting::KeyState() {
 		cs_packet_ready packet;
 		packet.type = CS_PACKET_READY;
 		packet.size = sizeof(cs_packet_ready);
+		packet.playerID = m_playerID;
 		Send(&packet);
 #ifdef NETWORK_DEBUG
 		cout << "CS_PACKET_READY ¼Û½Å" << endl;

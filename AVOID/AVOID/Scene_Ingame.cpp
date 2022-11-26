@@ -163,6 +163,7 @@ void Scene_Ingame::Update(float fTimeElapsed)
 	m_players[0]->Update(fTimeElapsed);
 #endif // !USE_NETWORK
 #ifdef USE_NETWORK
+	Sleep(1000);
 	// 플레이어의 위치 정해주기
 	cs_packet_player_status packet;
 	packet.type = CS_PACKET_PLAYER_STATUS;
@@ -175,7 +176,7 @@ void Scene_Ingame::Update(float fTimeElapsed)
 #ifdef NETWORK_DEBUG
 	cout << "CS_PACKET_PLAYER_STATUS 송신" << endl;
 #endif // NETWORK_DEBUG
-	while (!m_inputObjectPacket) {}
+	//while (!m_inputObjectPacket) {}
 	// 플레이어의 위치 정해주기
 	for (int i = 0; i < m_playerNum; ++i) {
 		PlayerStatus ps = m_playersStatus[m_playerID];

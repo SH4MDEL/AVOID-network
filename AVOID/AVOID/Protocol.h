@@ -3,7 +3,7 @@
 
 constexpr short		SERVER_PORT					= 9000;
 constexpr char*		SERVER_ADDR					= "127.0.0.1";
-constexpr int		BUF_SIZE					= 256;
+constexpr int		BUF_SIZE					= 512;
 constexpr int		MAX_USER					= 3;
 
 constexpr char		CS_PACKET_LOGIN				= 1;
@@ -45,6 +45,7 @@ struct cs_packet_login : public packet
 
 struct cs_packet_ready : public packet
 {
+	char playerID;
 };
 
 struct cs_packet_player_status : public packet

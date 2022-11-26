@@ -3,7 +3,7 @@
 
 constexpr short		SERVER_PORT = 9000;
 //const char*	SERVER_IP = "127.0.0.1"; // constexpr로 지정할 경우 어째서인지 char* const로 변수 타입이 지정되어 오류가 발생
-constexpr int		BUF_SIZE = 256;
+constexpr int		BUF_SIZE = 512;
 constexpr int		MAX_USER = 3;
 
 constexpr char		CS_PACKET_LOGIN = 1;
@@ -20,7 +20,7 @@ constexpr char		SC_PACKET_RANK = 5;
 constexpr char		SC_PACKET_LOGOUT = 100;
 
 constexpr size_t CS_PACKET_LOGIN_SIZE = sizeof(char);
-constexpr size_t CS_PACKET_READY_SIZE = 0;
+constexpr size_t CS_PACKET_READY_SIZE = sizeof(char);
 constexpr size_t CS_PACKET_PLAYER_STATUS_SIZE = (sizeof(short) * 2) + sizeof(char) + sizeof(bool);
 constexpr size_t CS_PACKET_PLAYER_HP_SIZE = sizeof(char);
 constexpr size_t CS_PACKET_LOGOUT_SIZE = sizeof(char);
