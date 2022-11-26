@@ -12,7 +12,7 @@ CPlayerData::CPlayerData() {
 	isInvincible = FALSE;
 	isCollide = FALSE;
 	AttackedTime = 0.0f;
-	hp = 0;
+	hp = -1;
 }
 
 CPlayerData::CPlayerData(SOCKET sock, PLAYER_STATE state, SELECTED_MUSIC music, int id) {
@@ -27,7 +27,7 @@ CPlayerData::CPlayerData(SOCKET sock, PLAYER_STATE state, SELECTED_MUSIC music, 
 	isInvincible = FALSE;
 	isCollide = FALSE;
 	AttackedTime = 0.0f;
-	hp = 0;
+	hp = -1;
 }
 
 ServerSharedData::ServerSharedData() {
@@ -124,7 +124,12 @@ void ServerSharedData::UpdatePlayerStatus(SOCKET sock, char* dataBuf)
 
 	// 모든 플레이어에게서 스테이터스를 받으면 충돌 체크 스레드를 생성해 충돌처리를 실행한다.
 	if (CheckAllPlayerStatusReceived()) {
+		ResetEvent(hClientEvent);
 		SetEvent(hCollideEvent);
+	}
+	else {
+		nextPacket = NULL;
+		nextPacketPlayerId = NULL;
 	}
 
 }
@@ -142,9 +147,42 @@ bool ServerSharedData::CheckAllPlayerStatusReceived() {
 	return true;
 }
 
-void ServerSharedData::CreateNewGame(int musicNum) {
+void ServerSharedData::CreateNewGame(char* dataBuf) {
 	fElapsedTime = 0.0f;
+
+	int musicNum = 0;
+
+
+	if (dataBuf == NULL) {
+
+		musicNum = 0;
+
+	}
+	else {
+
+		char data = NULL;
+		memcpy(&data, dataBuf, sizeof(char));
+
+		for (auto& player : m_pPlayers) {
+			if (player.playerId == data) {
+				switch (player.selectedMusic) {
+				case SELECTED_MUSIC::BBKKBKK: 
+				{
+					int musicNum = 0;
+				}
+				break;
+				case SELECTED_MUSIC::TRUE_BLUE:
+				{
+					int musicNum = 1;
+				}
+				break;
+				}
+			}
+		}
+
+	}
 	
+
 	char Inbuff[3000];
 	DWORD read_size = 3000;
 	DWORD c = 3000;
@@ -202,15 +240,44 @@ void ServerSharedData::CreateNewGame(int musicNum) {
 	{
 		m_pEnemies.push_back(Enemy(i));
 	}
+
+	nextPacket = SC_PACKET_START_GAME;
+	nextPacketPlayerId = NULL;
 }
 
 int ServerSharedData::GetPlayerRank(SOCKET sock, char* dataBuf) {
-	//(*dataBuf); // 해당 데이터는 hp인데, hp를 어떻게 rand로 바꿔야 하는가
-				// -> SOCKET의 비교가 가능한가
-				// -> 플레이어 ID를 보내주지 않으면 여러 문제가 있을 수 있을지도
+	
+	char Id = NULL;
+	memcpy(&Id, dataBuf, sizeof(char));
+
+	char hp = NULL;
+	memcpy(&Id, dataBuf + sizeof(char), sizeof(char));
+
+	for (auto& player : m_pPlayers) {
+		if (player.playerId == Id) {
+			player.hp = hp;
+		}
+	}
+
+	for (auto& player : m_pPlayers) {
+		if (player.hp == -1) {
+			nextPacket = NULL;
+			nextPacketPlayerId = NULL;
+			return -1;
+		}
+	}
+
+	std::sort(m_pPlayers.begin(), m_pPlayers.end(), [](const CPlayerData& a, const CPlayerData& b) {
+		return a.hp > b.hp;
+		});
+
+	nextPacket = SC_PACKET_RANK;
+	nextPacketPlayerId = NULL;
+
 	return 0;
 }
 
+/*
 void ServerSharedData::MakePacket(char packetType, int playerId) {
 	switch (packetType) {
 	case SC_PACKET_LOGIN_CONFIRM:
@@ -242,6 +309,8 @@ void ServerSharedData::MakePacket(char packetType, int playerId) {
 	}
 	}
 }
+*/
+
 
 int ServerSharedData::GetBulletNum() {
 	

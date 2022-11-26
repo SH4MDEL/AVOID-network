@@ -19,8 +19,6 @@ CRITICAL_SECTION CS;
 
 ServerSharedData SharedData;
 
-Enemy g_enemys[12];
-
 DWORD WINAPI Client_Thread(LPVOID arg)
 {
 	std::cout << "Client Thread Start." << std::endl;
@@ -53,6 +51,7 @@ DWORD WINAPI Client_Thread(LPVOID arg)
 		}
 		else
 		{
+			std::cout << "New Packet Received." << std::endl;
 			char packetType = TranslatePacket(packetDataBuf);
 
 			pBuf = GetDataFromPacket(client_sock, pBuf, packetType);
@@ -62,7 +61,7 @@ DWORD WINAPI Client_Thread(LPVOID arg)
 			LeaveCriticalSection(&CS);
 
 			WaitForSingleObject(hClientEvent, INFINITE);
-
+			
 			MakePacket(client_sock);
 		}
 	}
@@ -81,21 +80,27 @@ char TranslatePacket(char* packetBuf)
 	switch (type)
 	{
 	case CS_PACKET_LOGIN:
+		std::cout << "The Packet Type is CS_PACKET_LOGIN" << std::endl;
 		return CS_PACKET_LOGIN;
 		break;
 	case CS_PACKET_READY:
+		std::cout << "The Packet Type is CS_PACKET_READY" << std::endl;
 		return CS_PACKET_READY;
 		break;
 	case CS_PACKET_PLAYER_STATUS:
+		std::cout << "The Packet Type is CS_PACKET_PLAYER_STATUS" << std::endl;
 		return CS_PACKET_PLAYER_STATUS;
 		break;
 	case CS_PACKET_PLAYER_HP:
+		std::cout << "The Packet Type is CS_PACKET_PLAYER_HP" << std::endl;
 		return CS_PACKET_PLAYER_HP;
 		break;
 	case CS_PACKET_LOGOUT:
+		std::cout << "The Packet Type is CS_PACKET_LOGOUT" << std::endl;
 		return CS_PACKET_LOGOUT;
 		break;
 	default:
+		std::cout << "The Packet Type is Not Exist." << std::endl;
 		return -1;
 		break;
 	}
@@ -103,11 +108,16 @@ char TranslatePacket(char* packetBuf)
 
 char* GetDataFromPacket(SOCKET socket, char* dataBuf, char packetType)
 {
+	int retval = {0};
 	switch (packetType)
 	{
 	case CS_PACKET_LOGIN:
 		dataBuf = new char[CS_PACKET_LOGIN_SIZE];
-		recv(socket, dataBuf, CS_PACKET_LOGIN_SIZE, MSG_WAITALL);
+		retval = recv(socket, dataBuf, CS_PACKET_LOGIN_SIZE, MSG_WAITALL);
+		if (retval == SOCKET_ERROR) {
+			std::cout << "Error In GetDataFromPacket. The Packet Type is CS_PACKET_LOGIN" << std::endl;
+		}
+		std::cout << "Packet Data Received." << std::endl;
 		break;
 	case CS_PACKET_READY:
 		dataBuf = nullptr;
@@ -115,14 +125,26 @@ char* GetDataFromPacket(SOCKET socket, char* dataBuf, char packetType)
 	case CS_PACKET_PLAYER_STATUS:
 		dataBuf = new char[CS_PACKET_PLAYER_STATUS_SIZE];
 		recv(socket, dataBuf, CS_PACKET_PLAYER_STATUS_SIZE, MSG_WAITALL);
+		if (retval == SOCKET_ERROR) {
+			std::cout << "Error In GetDataFromPacket. The Packet Type is CS_PACKET_PLAYER_STATUS" << std::endl;
+		}
+		std::cout << "Packet Data Received." << std::endl;
 		break;
 	case CS_PACKET_PLAYER_HP:
 		dataBuf = new char[CS_PACKET_PLAYER_HP_SIZE];
 		recv(socket, dataBuf, CS_PACKET_PLAYER_HP_SIZE, MSG_WAITALL);
+		if (retval == SOCKET_ERROR) {
+			std::cout << "Error In GetDataFromPacket. The Packet Type is CS_PACKET_PLAYER_HP" << std::endl;
+		}
+		std::cout << "Packet Data Received." << std::endl;
 		break;
 	case CS_PACKET_LOGOUT:
 		dataBuf = new char[CS_PACKET_LOGOUT_SIZE];
 		recv(socket, dataBuf, CS_PACKET_LOGOUT_SIZE, MSG_WAITALL);
+		if (retval == SOCKET_ERROR) {
+			std::cout << "Error In GetDataFromPacket. The Packet Type is CS_PACKET_LOGOUT" << std::endl;
+		}
+		std::cout << "Packet Data Received." << std::endl;
 		break;
 	default:
 		std::cout << "GetDataFromPacket : The Packet Type " << packetType << " is Not Exist." << std::endl;
@@ -138,36 +160,29 @@ void ApplyPacketData(SOCKET socket, char* dataBuf, char packetType)
 	{
 	case CS_PACKET_LOGIN: // dataBuf에는 플레이어가 선택한 음악 종류가 들어있음. 
 		SharedData.PlayerJoin(socket, dataBuf);
+		std::cout << "Apply CS_PACKET_LOGIN Packet." << std::endl;
+		std::cout << "Now the Player Count is " << SharedData.m_pPlayers.size() << std::endl;
 		break;
-	case CS_PACKET_READY: // dataBuf에는 데이터가 없음. 그러나, READY가 된 것이므로 플레이어의 상태를 변경해 주어야 한다.
-		// 그러므로 모든 플레이어의 상태를 게임을 시작하는 상태로 변경할 필요가 있다.
+	case CS_PACKET_READY: // 이제 dataBuf에는 playerId가 들어있다. 그러므로, 해당 데이터를 바탕으로 받아줘야 한다.
 	{
-		for (auto i = SharedData.m_pPlayers.begin(); i != SharedData.m_pPlayers.end(); ++i) {
-			(*i).playerState = PLAYER_STATE::PLAY_GAME;
-		}
 
-		int selected = 0;
-
-		if ((*(SharedData.m_pPlayers.begin())).selectedMusic == SELECTED_MUSIC::BBKKBKK) {
-			selected = 0;
-		}
-		else if ((*(SharedData.m_pPlayers.begin())).selectedMusic == SELECTED_MUSIC::TRUE_BLUE) {
-			selected = 1;
-		}
-		SharedData.CreateNewGame(selected);
+		SharedData.CreateNewGame(dataBuf);
+		std::cout << "Apply CS_PACKET_READY Packet." << std::endl;
 	}
 		break;
 	case CS_PACKET_PLAYER_STATUS: // dataBuf에는 플레이어 넘버, 플레이어의 위치, 플레이어의 스킬 사용 여부가 들어있다.
 		// 그러므로 데이터를 갱신해 주어야 한다. 임계영역이 설정되어 있으므로 공유 데이터에 문제는 없음.
 		SharedData.UpdatePlayerStatus(socket, dataBuf);
-		// 이후 이벤트를 활용해 Collision 쓰레드를 실행시켜야 하므로 일단 대기.
+		std::cout << "Apply CS_PACKET_PLAYER_STATUS Packet." << std::endl;
 		break;
 	case CS_PACKET_PLAYER_HP: // dataBuf에는 플레이어의 HP가 들어와 있다.
 		// 이는 게임이 끝나고, 순위를 결정해 주기를 원하는 것.
 		SharedData.GetPlayerRank(socket, dataBuf);
+		std::cout << "Apply CS_PACKET_PLAYER_HP Packet." << std::endl;
 		break;
 	case CS_PACKET_LOGOUT: // dataBuf에는 플레이어의 ID가 들어있음.
 		SharedData.PlayerLeft(dataBuf);
+		std::cout << "Apply CS_PACKET_LOGOUT Packet." << std::endl;
 		break;
 	default:
 		std::cout << "ApplyPacketData : The Packet Type " << packetType << " is Not Exist." << std::endl;
@@ -193,7 +208,8 @@ void MakePacket(SOCKET sock) {
 		char* data = new char[sizeof(sc_packet_login_confirm)];
 		memcpy(data, &packet, sizeof(sc_packet_login_confirm));
 		send(sock, data, sizeof(sc_packet_login_confirm), 0);
-		
+		std::cout << "Send SC_PACKET_LOGIN_CONFIRM." << std::endl;
+		delete[] data;
 	}
 		break;
 	case SC_PACKET_START_GAME:
@@ -204,7 +220,10 @@ void MakePacket(SOCKET sock) {
 		packet.type = SC_PACKET_START_GAME;
 		char* data = new char[sizeof(sc_packet_start_game)];
 		memcpy(data, &packet, sizeof(sc_packet_start_game));
-		send(sock, data, sizeof(sc_packet_start_game), 0);
+		for (auto& i : SharedData.m_pPlayers) {
+			send(i.playerSocket, data, sizeof(sc_packet_start_game), 0);
+		}
+		std::cout << "Send SC_PACKET_START_GAME." << std::endl;
 		delete[] data;
 	}
 		break;
@@ -229,6 +248,7 @@ void MakePacket(SOCKET sock) {
 			char* player = new char[sizeof(PlayerStatus)];
 			ZeroMemory(player, sizeof(PlayerStatus));
 			send(sock, player, sizeof(PlayerStatus), 0);
+			std::cout << "Send SC_PACKET_START_GAME." << std::endl;
 			delete[] player;
 		}
 		delete[] data;
@@ -242,6 +262,7 @@ void MakePacket(SOCKET sock) {
 		char* data = new char[sizeof(sc_packet_music_end)];
 		memcpy(data, &packet, sizeof(sc_packet_music_end));
 		send(sock, data, sizeof(sc_packet_music_end), 0);
+		delete[] data;
 	}
 		break;
 	case SC_PACKET_RANK:
@@ -252,12 +273,12 @@ void MakePacket(SOCKET sock) {
 		char* data = new char[sizeof(sc_packet_rank)];
 		memcpy(data, &packet, sizeof(sc_packet_rank));
 		send(sock, data, sizeof(sc_packet_rank), 0);
+		delete[] data;
 	}
 		break;
-	case SC_PACKET_LOGOUT:
+	case NULL:
 	{
-		// 굳이 보내줄 필요가 있는가?
-		// 클라이언트 측에서 로그아웃을 하는 경우 그냥 끊고 가버리면 되는 것이라고 생각.
+		//다음 send를 호출하기 위해 넘기는 경우 사용. (플레이어 3명에게 모두 받아야 하는 데이터의 경우)
 	}
 		break;
 	}
@@ -271,20 +292,24 @@ DWORD WINAPI Collision_Thread(LPVOID arg)
 		CollisionCheckPlayerAndBullet();
 		CollisionCheckAbility();
 		SharedData.Update();
+		SharedData.nextPacket = SC_PACKET_OBJECTS_INFO;
+		ResetEvent(hCollideEvent);
 		SetEvent(hClientEvent);
 	}
 }
 
 void CollisionCheckBulletAndWall() 
-{
-	int radius = 200;			// 원의 반지름. 변수로 바꿔 주는 것이 좋을 듯?
-	for (int i = 0; i < 12; ++i) {
-		for (auto bullet = g_enemys[i].GetBullets().begin(); bullet != g_enemys[i].GetBullets().end(); ++bullet) {
+{	
+
+	// 데이터는 모두 SharedData안에 있으므로, 굳이 따로 전역변수를 다시 지정해 줄 이유는 없다.
+
+	for (auto& enemy : SharedData.m_pEnemies) {
+		for (auto bullet = enemy.GetBullets().begin(); bullet != enemy.GetBullets().end(); ++bullet) {
 			Coord pos = (*bullet).GetPosition();
 			int d = pos.x * pos.x + pos.y * pos.y;
-			if (d > radius * radius) // 원래는 원 밖에 나가도 1초가 지나야 사라질 수 있게 했지만 그런게 필요할까?
+			if (d > RADIUS_OF_ENEMY * RADIUS_OF_ENEMY) // 원래는 원 밖에 나가도 1초가 지나야 사라질 수 있게 했지만 그런게 필요할까?
 			{
-				g_enemys[i].GetBullets().erase(bullet);
+				enemy.GetBullets().erase(bullet);
 				break;
 			}
 		}
@@ -307,9 +332,9 @@ int main(int argc, char* argv[]) {
 
 	InitializeCriticalSection(&CS);
 
-	hClientEvent = CreateEvent(NULL, FALSE, TRUE, NULL);
+	hClientEvent = CreateEvent(NULL, TRUE, TRUE, NULL);
 
-	hCollideEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+	hCollideEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
 
 	SOCKET client_sock;
 	sockaddr_in clientaddr;

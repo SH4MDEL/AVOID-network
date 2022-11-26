@@ -62,12 +62,16 @@ public:
 	void UpdatePlayerStatus(SOCKET sock, char* dataBuf);
 	bool CheckAllPlayerStatusReceived();
 	int GetPlayerRank(SOCKET sock, char* dataBuf);
-	void CreateNewGame(int musicNum);
+	void CreateNewGame(char* dataBuf);
 	void MakePacket(char packetType, int playerId);
 	void Update();
 	int GetBulletNum();
 };
 
+
+class SelectedMusicByPacket {
+	char playerID;
+};
 
 class PlayerStatusByPacket {
 public:

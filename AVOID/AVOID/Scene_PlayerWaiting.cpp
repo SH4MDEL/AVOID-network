@@ -84,7 +84,7 @@ void Scene_PlayerWaiting::KeyState() {
 	if (!m_returnOK && (GetAsyncKeyState(VK_RETURN) & 0x8000)) {
 		m_returnOK = true;
 		cs_packet_ready packet;
-		packet.type = CS_PACKET_LOGIN;
+		packet.type = CS_PACKET_READY;
 		packet.size = sizeof(cs_packet_ready);
 		Send(&packet);
 #ifdef NETWORK_DEBUG

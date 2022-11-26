@@ -46,6 +46,7 @@ struct cs_packet_login : public packet
 
 struct cs_packet_ready : public packet
 {
+	char playerID;
 };
 
 struct cs_packet_player_status : public packet

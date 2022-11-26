@@ -12,7 +12,7 @@
 
 constexpr float pi = 3.14159265358979;
 constexpr int NUMBER_OF_ENEMY = 12;
-
+constexpr int RADIUS_OF_ENEMY = 200;
 
 
 struct Coord
