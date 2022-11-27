@@ -34,10 +34,9 @@ ServerSharedData::ServerSharedData() {
 	m_pPlayers.clear();
 
 	m_pEnemies.clear();
-	fElapsedTime = 0.0f;
+	time = 0;
 	nextPacket = NULL;
 	nextPacketPlayerId = NULL;
-	playerIdHandle = 0;
 	
 }
 
@@ -121,16 +120,15 @@ void ServerSharedData::UpdatePlayerStatus(SOCKET sock, char* dataBuf)
 		}
 	}
 
+	nextPacket = NULL;
+	nextPacketPlayerId = NULL;
 
 	// 모든 플레이어에게서 스테이터스를 받으면 충돌 체크 스레드를 생성해 충돌처리를 실행한다.
 	if (CheckAllPlayerStatusReceived()) {
 		ResetEvent(hClientEvent);
 		SetEvent(hCollideEvent);
 	}
-	else {
-		nextPacket = NULL;
-		nextPacketPlayerId = NULL;
-	}
+
 
 }
 
@@ -148,7 +146,6 @@ bool ServerSharedData::CheckAllPlayerStatusReceived() {
 }
 
 void ServerSharedData::CreateNewGame(char* dataBuf) {
-	fElapsedTime = 0.0f;
 
 	int musicNum = 0;
 
@@ -169,18 +166,20 @@ void ServerSharedData::CreateNewGame(char* dataBuf) {
 				case SELECTED_MUSIC::BBKKBKK: 
 				{
 					int musicNum = 0;
+					music = SELECTED_MUSIC::BBKKBKK;
 				}
 				break;
 				case SELECTED_MUSIC::TRUE_BLUE:
 				{
 					int musicNum = 1;
+					music = SELECTED_MUSIC::TRUE_BLUE;
 				}
 				break;
 				}
 			}
 		}
-
 	}
+	
 	
 
 	char Inbuff[3000];
@@ -277,40 +276,6 @@ int ServerSharedData::GetPlayerRank(SOCKET sock, char* dataBuf) {
 	return 0;
 }
 
-/*
-void ServerSharedData::MakePacket(char packetType, int playerId) {
-	switch (packetType) {
-	case SC_PACKET_LOGIN_CONFIRM:
-	{
-		sc_packet_login_confirm packet;
-		packet.playerID = playerId;
-		packet.size = sizeof(sc_packet_login_confirm);
-		packet.type = SC_PACKET_LOGIN_CONFIRM;
-	}
-		break;
-	case SC_PACKET_START_GAME:
-	{
-		sc_packet_start_game packet;
-		packet.playerNum = m_pPlayers.size();
-		packet.size = sizeof(sc_packet_start_game);
-		packet.type = SC_PACKET_START_GAME;
-		
-	}
-	break;
-	case SC_PACKET_OBJECTS_INFO:
-	{
-		sc_packet_objects_info packet;
-		packet.bulletNum = GetBulletNum();
-		packet.enemyNum = m_pEnemies.size();
-		packet.playerNum = m_pPlayers.size();
-		packet.size = sizeof(sc_packet_objects_info);
-		packet.type = SC_PACKET_OBJECTS_INFO;
-		
-	}
-	}
-}
-*/
-
 
 int ServerSharedData::GetBulletNum() {
 	
@@ -322,6 +287,41 @@ int ServerSharedData::GetBulletNum() {
 	return sum;
 }
 
-void ServerSharedData::Update() {
+void ServerSharedData::Update(float fTimeElapsed) {
+	if (TimeDelay >= 0.f) {
+		leastTime += fTimeElapsed;
+
+		if (music == SELECTED_MUSIC::BBKKBKK) {
+			if (TimeDelay >= (60.f / 680.f) * (float)time) {
+				int i = 0;
+				for (auto& enemy : m_pEnemies) {
+					enemy.Update(leastTime, lotateSpeed[time], note[time][i], 0);
+					++i;
+				}
+				++time;
+				leastTime = 0;
+			}
+		}
+		else if (music == SELECTED_MUSIC::TRUE_BLUE) {
+			if (TimeDelay >= (60.f / 680.f) * (float)time) {
+				int i = 0;
+				for (auto& enemy : m_pEnemies) {
+					enemy.Update(leastTime, lotateSpeed[time], note[time][i], 1);
+					++i;
+				}
+				++time;
+				leastTime = 0;
+			}
+		}	
+	}
+
+	if ((music == SELECTED_MUSIC::BBKKBKK && time >= 1450) && (music == SELECTED_MUSIC::TRUE_BLUE && time >= 1310)) {
+		nextPacket = SC_PACKET_MUSIC_END;
+		nextPacketPlayerId = NO_NEED_PLAYER_ID;
+	}
+	else {
+		nextPacket = SC_PACKET_OBJECTS_INFO;
+		nextPacketPlayerId = NO_NEED_PLAYER_ID;
+	}
 
 }

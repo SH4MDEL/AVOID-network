@@ -19,11 +19,7 @@ constexpr char		SC_PACKET_MUSIC_END = 4;
 constexpr char		SC_PACKET_RANK = 5;
 constexpr char		SC_PACKET_LOGOUT = 100;
 
-constexpr size_t CS_PACKET_LOGIN_SIZE = sizeof(char);
-constexpr size_t CS_PACKET_READY_SIZE = sizeof(char);
-constexpr size_t CS_PACKET_PLAYER_STATUS_SIZE = (sizeof(short) * 2) + sizeof(char) + sizeof(bool);
-constexpr size_t CS_PACKET_PLAYER_HP_SIZE = sizeof(char);
-constexpr size_t CS_PACKET_LOGOUT_SIZE = sizeof(char);
+
 
 struct packet
 {
@@ -93,3 +89,9 @@ struct sc_packet_rank : public packet
 {
 	char rank;
 };
+
+constexpr size_t CS_PACKET_LOGIN_SIZE = sizeof(cs_packet_login) - 2;
+constexpr size_t CS_PACKET_READY_SIZE = sizeof(cs_packet_ready) - 2;
+constexpr size_t CS_PACKET_PLAYER_STATUS_SIZE = sizeof(cs_packet_player_status) - 2;
+constexpr size_t CS_PACKET_PLAYER_HP_SIZE = sizeof(cs_packet_player_hp) - 2;
+constexpr size_t CS_PACKET_LOGOUT_SIZE = sizeof(cs_packet_logout) - 2;

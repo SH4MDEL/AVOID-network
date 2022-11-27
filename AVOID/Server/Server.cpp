@@ -28,7 +28,7 @@ DWORD WINAPI Client_Thread(LPVOID arg)
 	sockaddr_in clientaddr;
 	char addr[INET_ADDRSTRLEN];
 	int addrlen;
-	char packetDataBuf[2];
+	char packetDataBuf[2] = {NULL};
 	char* pBuf = nullptr;
 
 	addrlen = sizeof(clientaddr);
@@ -51,7 +51,10 @@ DWORD WINAPI Client_Thread(LPVOID arg)
 		}
 		else
 		{
+			
 			std::cout << "New Packet Received." << std::endl;
+			std::cout << "New Packet Size is " << retval << "byte" << std::endl;
+
 			char packetType = TranslatePacket(packetDataBuf);
 
 			pBuf = GetDataFromPacket(client_sock, pBuf, packetType);
@@ -63,7 +66,10 @@ DWORD WINAPI Client_Thread(LPVOID arg)
 			WaitForSingleObject(hClientEvent, INFINITE);
 			
 			MakePacket(client_sock);
+			delete[] pBuf;
 		}
+
+		
 	}
 
 	return 0;
@@ -120,7 +126,12 @@ char* GetDataFromPacket(SOCKET socket, char* dataBuf, char packetType)
 		std::cout << "Packet Data Received." << std::endl;
 		break;
 	case CS_PACKET_READY:
-		dataBuf = nullptr;
+		dataBuf = new char[CS_PACKET_READY_SIZE];
+		retval = recv(socket, dataBuf, CS_PACKET_READY_SIZE, MSG_WAITALL);
+		if (retval == SOCKET_ERROR) {
+			std::cout << "Error In GetDataFromPacket. The Packet Type is CS_PACKET_LOGIN" << std::endl;
+		}
+		std::cout << "Packet Data Received." << std::endl;
 		break;
 	case CS_PACKET_PLAYER_STATUS:
 		dataBuf = new char[CS_PACKET_PLAYER_STATUS_SIZE];
@@ -230,27 +241,58 @@ void MakePacket(SOCKET sock) {
 	case SC_PACKET_OBJECTS_INFO:
 	{
 		sc_packet_objects_info packet;
-		packet.playerNum = SharedData.m_pPlayers.size();
 		packet.size = sizeof(sc_packet_objects_info);
-		packet.type = SC_PACKET_START_GAME;
+		packet.type = SC_PACKET_OBJECTS_INFO;
+		packet.playerNum = SharedData.m_pPlayers.size();
+		packet.enemyNum = SharedData.m_pEnemies.size();
+		packet.bulletNum = SharedData.GetBulletNum();
 		char* data = new char[sizeof(sc_packet_objects_info)];
 		memcpy(data, &packet, sizeof(sc_packet_objects_info));
 		send(sock, data, sizeof(sc_packet_objects_info), 0);
-		
-		for (auto& i : SharedData.m_pPlayers)
+		std::cout << "Send SC_PACKET_OBJECTS_INFO." << std::endl;
+
+		PlayerStatus* playerDataBuf = new PlayerStatus[packet.playerNum];
+
+		int i = 0;
+		for (auto& player : SharedData.m_pPlayers)
 		{
-			PlayerStatus playerStatus;
-			playerStatus.coord.x = i.position.x;
-			playerStatus.coord.y = i.position.y;
-			playerStatus.isCollide = i.isCollide;
-			i.isCollide = FALSE;
-			playerStatus.playerID = i.playerId;
-			char* player = new char[sizeof(PlayerStatus)];
-			ZeroMemory(player, sizeof(PlayerStatus));
-			send(sock, player, sizeof(PlayerStatus), 0);
-			std::cout << "Send SC_PACKET_START_GAME." << std::endl;
-			delete[] player;
+			playerDataBuf[i].coord = player.position;
+			playerDataBuf[i].isCollide = player.isCollide;
+			player.isCollide = FALSE;
+			playerDataBuf[i].playerID = player.playerId;
+			++i;
 		}
+
+		char* cPlayerData = reinterpret_cast<char*>(playerDataBuf);
+		send(sock, cPlayerData, sizeof(PlayerStatus) * packet.playerNum, 0);
+		delete[] playerDataBuf;
+
+		Coord* enemyDataBuf = new Coord[packet.enemyNum];
+
+		i = 0;
+		for (auto& enemy : SharedData.m_pEnemies) {	
+			enemyDataBuf[i] = enemy.GetPosition();
+			++i;
+		}
+
+		char* cEnemyData = reinterpret_cast<char*>(enemyDataBuf);
+		send(sock, cPlayerData, sizeof(Coord) * packet.enemyNum, 0);
+		delete[] enemyDataBuf;
+
+		Coord* bulletDataBuf = new Coord[packet.bulletNum];
+
+		i = 0;
+		for (auto& enemy : SharedData.m_pEnemies) {
+			for (auto& bullet : enemy.GetBullets()) {
+				bulletDataBuf[i] = bullet.GetPosition();
+				++i;
+			}
+		}
+
+		char* cBulletData = reinterpret_cast<char*>(bulletDataBuf);
+		send(sock, cPlayerData, sizeof(Coord) * packet.bulletNum, 0);
+		delete[] bulletDataBuf;
+
 		delete[] data;
 	}
 		break;
@@ -258,7 +300,7 @@ void MakePacket(SOCKET sock) {
 	{
 		sc_packet_music_end packet;
 		packet.size = sizeof(sc_packet_music_end);
-		packet.type = SC_PACKET_START_GAME;
+		packet.type = SC_PACKET_MUSIC_END;
 		char* data = new char[sizeof(sc_packet_music_end)];
 		memcpy(data, &packet, sizeof(sc_packet_music_end));
 		send(sock, data, sizeof(sc_packet_music_end), 0);
@@ -291,8 +333,14 @@ DWORD WINAPI Collision_Thread(LPVOID arg)
 		CollisionCheckBulletAndWall();
 		CollisionCheckPlayerAndBullet();
 		CollisionCheckAbility();
-		SharedData.Update();
-		SharedData.nextPacket = SC_PACKET_OBJECTS_INFO;
+		
+		timeElapsed = std::chrono::system_clock::now() - currentTime;
+		if (timeElapsed.count() > 1.0f / 60.0f)
+		{
+			currentTime = std::chrono::system_clock::now();
+			SharedData.Update(0.0f);
+
+		}
 		ResetEvent(hCollideEvent);
 		SetEvent(hClientEvent);
 	}
@@ -319,10 +367,53 @@ void CollisionCheckBulletAndWall()
 
 void CollisionCheckPlayerAndBullet() {
 
+	double d = 0;
+	double r1 = 0;
+	double r2 = 0;
+
+	for (auto& enemy : SharedData.m_pEnemies) {
+		for (auto& bullet = enemy.GetBullets().begin(); bullet != enemy.GetBullets().end(); ++bullet) {
+			for (auto& player : SharedData.m_pPlayers) {
+				Coord bPos = (*bullet).GetPosition();
+				d = sqrt((double)(pow((double)bPos.x - (double)(player.position.x), 2) + pow(bPos.y - (double)(player.position.y), 2)));
+				r1 = BULLET_RADIUS + PLAYER_RADIUS;
+				r2 = BULLET_RADIUS - PLAYER_RADIUS;
+
+				if (((r2 < d && d <= r1) || r2 >= d) && !(player.isInvincible)) {
+					player.isCollide = true;
+					player.isInvincible = true;
+					player.AttackedTime = 0.0f;
+				}
+			}
+		}
+	}
 }
 
 void CollisionCheckAbility() {
 
+	double d = 0;
+	double r1 = 0;
+	double r2 = 0;
+
+	for (auto enemy : SharedData.m_pEnemies) {
+		for (auto& bullet : enemy.GetBullets()) {
+			for (auto& player : SharedData.m_pPlayers) {
+				Coord bPos = bullet.GetPosition();
+				d = sqrt((double)(pow((double)bPos.x - (double)(player.position.x), 2) + pow(bPos.y - (double)(player.position.y), 2)));
+				r1 = BULLET_RADIUS + ABILITY_RADIUS;
+				r2 = BULLET_RADIUS - ABILITY_RADIUS;
+
+				if (player.isSkill) {
+					if ((r2 < d && d <= r1) || r2 >= d) {
+						bullet.SetBulletSpeed(3);
+					}
+				}
+				else {
+					bullet.SetBulletSpeed(10);
+				}
+			}
+		}
+	}
 }
 
 

@@ -163,11 +163,10 @@ void Scene_Ingame::Update(float fTimeElapsed)
 	m_players[0]->Update(fTimeElapsed);
 #endif // !USE_NETWORK
 #ifdef USE_NETWORK
-	Sleep(1000);
 	// 플레이어의 위치 정해주기
 	cs_packet_player_status packet;
 	packet.type = CS_PACKET_PLAYER_STATUS;
-	packet.size = sizeof(CS_PACKET_PLAYER_STATUS);
+	packet.size = sizeof(cs_packet_player_status);
 	packet.coord.x = (short)m_players[m_playerID]->GetX();
 	packet.coord.y = (short)m_players[m_playerID]->GetY();
 	packet.isSkill = m_players[m_playerID]->GetAbilityState();

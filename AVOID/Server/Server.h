@@ -4,6 +4,9 @@
 #include "Protocol.h"
 #include "PlayerData.h"
 
+std::chrono::system_clock::time_point currentTime;
+std::chrono::duration<double> timeElapsed;
+
 DWORD WINAPI Collision_Thread(LPVOID arg);
 char TranslatePacket(char* packetBuf);
 char* GetDataFromPacket(SOCKET socket, char* dataBuf, char packetType);

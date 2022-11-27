@@ -33,17 +33,29 @@ void Enemy::OnCreate(int location) {
 	m_position.y = ENEMY_DIST * sin(theta);
 }
 
-void Enemy::Update(float fElapsedTime, int lotateSpeed, int note) {
+void Enemy::Update(float fElapsedTime, int lotateSpeed, int note, int selectedMusic) {
+
+
 	float SpeedData = (float)lotateSpeed;
 
-	theta += SpeedData * pi * 1 / 170 * (fElapsedTime * (680 / 60));
-	m_position.x = ENEMY_DIST * cos(theta);
-	m_position.y = ENEMY_DIST * sin(theta);
+	if (selectedMusic == 0) {
+		theta += SpeedData * pi * 1 / 170 * (fElapsedTime * (680 / 60));
+		m_position.x = ENEMY_DIST * cos(theta);
+		m_position.y = ENEMY_DIST * sin(theta);
+	}
+	else if (selectedMusic == 1) {
+		theta += SpeedData * pi * 1 / 170 * (fElapsedTime * (656 / 60));
+		m_position.x = ENEMY_DIST * cos(theta);
+		m_position.y = ENEMY_DIST * sin(theta);
+	}
 
 	if (note) {
-		m_bullets.push_back(Bullet());
+		m_bullets.push_back(Bullet((int)m_position.x, (int)m_position.y, note));
 	}
+
 	for (auto& bullet : m_bullets) {
-		
+		bullet.Update(fElapsedTime);
 	}
+
+	m_nBullet = m_bullets.size();
 }

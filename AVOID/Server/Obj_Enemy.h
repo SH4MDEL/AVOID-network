@@ -13,7 +13,7 @@ public:
 	~Enemy();
 
 	void OnCreate(int location);
-	void Update(float fTimeElapsed, int lotateSpeed, int note);
+	void Update(float fTimeElapsed, int lotateSpeed, int note, int selectedMusic);
 
 	Coord GetPosition() { return m_position; };
 	float GetBeatCount() { return m_fBeatCount; };

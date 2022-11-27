@@ -347,5 +347,6 @@ void TranslatePacket(const packet& packetBuf)
 void Send(void* packetBuf)
 {
 	int retval = send(g_socket, reinterpret_cast<char*>(packetBuf), reinterpret_cast<packet*>(packetBuf)->size, 0);
+	std::cout << "send " << retval << "byte." << std::endl;
 }
 #endif // USE_NETWORK

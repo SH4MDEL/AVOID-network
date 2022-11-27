@@ -8,6 +8,9 @@ constexpr int NO_NEED_PLAYER_ID = -1;
 extern HANDLE hClientEvent;
 extern HANDLE hCollideEvent;
 
+constexpr int PLAYER_RADIUS = 10;
+constexpr int ABILITY_RADIUS = 85;
+
 enum class PLAYER_STATE{
 	NONE,
 	PLAYER_WAITING,
@@ -43,11 +46,11 @@ class ServerSharedData {
 public:
 	std::vector<CPlayerData> m_pPlayers;
 	std::vector<Enemy> m_pEnemies;
-	int playerIdHandle;
 	HANDLE hPlayingMusicSpeedFile, hPlayingMusicNoteFile;
+	SELECTED_MUSIC music = SELECTED_MUSIC::NONE;
 	int lotateSpeed[3000] = { NULL };
 	int note[3000][12] = { 0 };
-	float fElapsedTime;
+	int time = 0;
 	float TimeDelay = -3;
 	float leastTime = 0;
 	bool musicStart = 0;
@@ -63,8 +66,7 @@ public:
 	bool CheckAllPlayerStatusReceived();
 	int GetPlayerRank(SOCKET sock, char* dataBuf);
 	void CreateNewGame(char* dataBuf);
-	void MakePacket(char packetType, int playerId);
-	void Update();
+	void Update(float fTimeElapsed);
 	int GetBulletNum();
 };
 
