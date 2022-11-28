@@ -8,6 +8,10 @@
 #include "Framework.h"
 #include "Sound.h"
 
+#ifdef USE_NETWORK
+extern HANDLE g_event;
+#endif
+
 Scene_Ingame::Scene_Ingame()
 {
 }
@@ -48,10 +52,11 @@ void Scene_Ingame::OnCreate()
 	Ingame.Load(L"Graphic\\UI\\Ingame.png");
 	Circle.Load(L"Graphic\\UI\\Circle.png");
 	
-#ifndef USE_NETWORK
 	IngameSound = new Sound;
 	IngameSound->init();
 	IngameSound->loading();
+
+#ifndef USE_NETWORK
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	char Inbuff[3000];
 	DWORD read_size = 3000;
@@ -154,6 +159,15 @@ void Scene_Ingame::Render(HDC hdc)
 void Scene_Ingame::Update(float fTimeElapsed)
 {
 	TimeDelay += fTimeElapsed;
+	if (musicStart == false && TimeDelay >= -1.f) {
+		if (m_selectedMusic == 0) {
+			IngameSound->play(Sound::SoundTag::bbkkbkk);
+		}
+		else if (m_selectedMusic == 1) {
+			IngameSound->play(Sound::SoundTag::TrueBlue);
+		}
+		musicStart = true;
+	}
 #ifdef USE_NETWORK
 	for (int i = 0; i < m_playerNum; i++) {
 		m_players[i]->Update(fTimeElapsed);
@@ -164,46 +178,37 @@ void Scene_Ingame::Update(float fTimeElapsed)
 #endif // !USE_NETWORK
 #ifdef USE_NETWORK
 	// 플레이어의 위치 정해주기
-	cs_packet_player_status packet;
-	packet.type = CS_PACKET_PLAYER_STATUS;
-	packet.size = sizeof(cs_packet_player_status);
-	packet.coord.x = (short)m_players[m_playerID]->GetX();
-	packet.coord.y = (short)m_players[m_playerID]->GetY();
-	packet.isSkill = m_players[m_playerID]->GetAbilityState();
-	packet.playerID = m_players[m_playerID]->GetID();
-	Send(&packet);
+	if (TimeDelay >= -1.f) {
+		cs_packet_player_status packet;
+		packet.type = CS_PACKET_PLAYER_STATUS;
+		packet.size = sizeof(cs_packet_player_status);
+		packet.coord.x = (short)m_players[m_playerID]->GetServerX();
+		packet.coord.y = (short)m_players[m_playerID]->GetServerY();
+		packet.isSkill = m_players[m_playerID]->GetAbilityState();
+		packet.playerID = m_players[m_playerID]->GetID();
+		Send(&packet);
 #ifdef NETWORK_DEBUG
-	cout << "CS_PACKET_PLAYER_STATUS 송신" << endl;
+		cout << "CS_PACKET_PLAYER_STATUS 송신" << endl;
 #endif // NETWORK_DEBUG
-	//while (!m_inputObjectPacket) {}
-	// 플레이어의 위치 정해주기
-	for (int i = 0; i < m_playerNum; ++i) {
-		PlayerStatus ps = m_playersStatus[m_playerID];
-		m_players [m_playerID] ->SetPos(ps.coord.x, ps.coord.y);
+		WaitForSingleObject(g_event, INFINITE);
+		// 플레이어의 위치 정해주기
+		for (int i = 0; i < m_playerNum; ++i) {
+			PlayerStatus ps = m_playersStatus[m_playerID];
+			m_players[m_playerID]->SetServerPos(ps.coord.x, ps.coord.y);
+		}
+		// 적의 위치 정해주기
+		for (int i = 0; i < m_enemyNum; ++i) {
+			Coord coord = m_enemysCoord[i];
+			CMainEnemy[i]->SetServerPos(coord.x, coord.y);
+		}
+		// 총알의 위치 정해주기
+		for (int i = 0; i < m_bulletNum; ++i) {
+			Coord coord = m_bulletsCoord[i];
+			m_bullets[i]->SetServerPos(coord.x, coord.y);
+		}
 	}
-	// 적의 위치 정해주기
-	for (int i = 0; i < m_enemyNum; ++i) {
-		Coord coord = m_enemysCoord[i];
-		CMainEnemy[i]->SetPos(coord.x, coord.y);
-	}
-	// 총알의 위치 정해주기
-	for (int i = 0; i < m_bulletNum; ++i) {
-		Coord coord = m_bulletsCoord[i];
-		m_bullets[i]->SetPos(coord.x, coord.y);
-	}
-	m_inputObjectPacket = false;
 #endif
 #ifndef USE_NETWORK
-	if (musicStart == false && TimeDelay >= -1.f) {
-		if (m_selectedMusic == 0) {
-			IngameSound->play(Sound::SoundTag::bbkkbkk);
-		}
-		else if (m_selectedMusic == 1) {
-			IngameSound->play(Sound::SoundTag::TrueBlue);
-		}
-		musicStart = true;
-	}
-
 	for (int i = 0; i < 12; i++) {
 		PlayerCrash(CMainEnemy[i]);
 		AbilityCrash(CMainEnemy[i]);

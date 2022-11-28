@@ -32,6 +32,14 @@ public:
 	void SetDrawTrue();
 	void SetPos(int x, int y);
 
+	// 서버 관련 추가 함수입니다.
+	int GetServerX() { return m_x - windowX / 2; }
+	int GetServerY() { return m_y - windowY / 2; }
+	// 클라이언트의 기준 좌표계를 서버 좌표계로 변경합니다.
+	void SetServerPos(float x, float y)
+	{ m_x = x + windowX / 2, m_y = y + windowY / 2; }
+	// 전송된 서버 좌표계를 클라이언트 좌표계로 변경합니다.
+
 private:
 	float m_x = 0;									// x축 좌표와 y축 좌표. 생성시 적어준 location의 값에 따라 달라진다.
 	float m_y = 0;									// 그 외 MainEnemy의 좌표가 달라질 일은?

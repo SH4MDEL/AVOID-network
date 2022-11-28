@@ -44,6 +44,12 @@ public:
 	void MouseState();
 
 	// 서버 관련 추가 함수입니다.
+	int GetServerX() { return m_x - windowX / 2; }	
+	int GetServerY() { return m_y - windowY / 2; }
+	// 클라이언트의 기준 좌표계를 서버 좌표계로 변경합니다.
+	void SetServerPos(float x, float y) 
+	{ m_x = x + windowX / 2, m_y = y + windowY / 2; }
+	// 전송된 서버 좌표계를 클라이언트 좌표계로 변경합니다.
 #ifdef USE_NETWORK
 	void SetPlayerID(int playerID) { m_playerID = playerID; }
 #endif

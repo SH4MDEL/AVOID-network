@@ -56,4 +56,12 @@ public:
 	void SetPos(int x, int y);
 	void Setx(int x);
 	void Sety(int y);
+
+	//서버 관련 추가 함수입니다.
+	int GetServerX() { return bulletx - windowX / 2; }
+	int GetServerY() { return bullety - windowY / 2; }
+	// 클라이언트의 기준 좌표계를 서버 좌표계로 변경합니다.
+	void SetServerPos(float x, float y)
+	{ bulletx = x + windowX / 2, bullety = y + windowY / 2; }
+	// 전송된 서버 좌표계를 클라이언트 좌표계로 변경합니다.
 };

@@ -19,6 +19,7 @@ HINSTANCE hInst;                                // 현재 인스턴스입니다.
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 CFramework myFramework;
+HANDLE g_event;
 
 // 이 코드 모듈에 들어 있는 함수의 정방향 선언입니다.
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -228,6 +229,8 @@ void InitServer()
 		return;
 	}
 
+	g_event = CreateEvent(NULL, FALSE, TRUE, NULL);
+
 	//소켓 생성
 	g_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (g_socket == INVALID_SOCKET) {
@@ -248,7 +251,10 @@ void InitServer()
 	}
 
 	HANDLE hThread = CreateThread(nullptr, 0, ProcessClient, (LPVOID)g_socket, 0, nullptr);
-	if (!hThread) closesocket(g_socket);
+	if (!hThread) {
+		CloseHandle(g_event);
+		closesocket(g_socket);
+	}
 }
 
 
@@ -309,7 +315,7 @@ void TranslatePacket(const packet& packetBuf)
 		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetPlayersCoord()), pk.playerNum * sizeof(PlayerStatus), MSG_WAITALL);
 		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetEnemysCoord()), pk.enemyNum * sizeof(Coord), MSG_WAITALL);
 		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetBulletsCoord()), pk.bulletNum * sizeof(Coord), MSG_WAITALL);
-		scene->SetObjectPacket();
+		SetEvent(g_event);
 #ifdef NETWORK_DEBUG
 		cout << "SC_PACKET_OBJECTS_INFO 해석" << endl;
 #endif // NETWORK_DEBUG

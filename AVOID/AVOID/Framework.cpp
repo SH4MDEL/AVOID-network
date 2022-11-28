@@ -238,7 +238,7 @@ void CFramework::FrameAdvance()
 	wcscat_s(
 		m_CaptionTitle + m_TitleLength
 		, TITLE_MX_LENGTH - m_TitleLength
-		, TEXT("FPS )"));
+		, TEXT("FPS)"));
 	SetWindowText(m_hWnd, m_CaptionTitle);
 }
 
