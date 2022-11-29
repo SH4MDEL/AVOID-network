@@ -28,9 +28,9 @@ Enemy::~Enemy() {
 }
 
 void Enemy::OnCreate(int location) {
-	theta = location * pi / 6;
-	m_position.x = ENEMY_DIST * cos(theta);
-	m_position.y = ENEMY_DIST * sin(theta);
+	theta = (float)location * pi / 6.f;
+	m_position.x = (float)ENEMY_DIST * cos(theta);
+	m_position.y = (float)ENEMY_DIST * sin(theta);
 }
 
 void Enemy::Update(float fElapsedTime, int lotateSpeed, int note, int selectedMusic) {
@@ -39,14 +39,14 @@ void Enemy::Update(float fElapsedTime, int lotateSpeed, int note, int selectedMu
 	float SpeedData = (float)lotateSpeed;
 
 	if (selectedMusic == 0) {
-		theta += SpeedData * pi * 1 / 170 * (fElapsedTime * (680 / 60));
+		theta += SpeedData * pi * 1.f / 170.f * (fElapsedTime * (680.f / 60.f));
 		m_position.x = ENEMY_DIST * cos(theta);
 		m_position.y = ENEMY_DIST * sin(theta);
 	}
 	else if (selectedMusic == 1) {
-		theta += SpeedData * pi * 1 / 170 * (fElapsedTime * (656 / 60));
-		m_position.x = ENEMY_DIST * cos(theta);
-		m_position.y = ENEMY_DIST * sin(theta);
+		theta += SpeedData * pi * 1.f / 170.f * (fElapsedTime * (656.f / 60.f));
+		m_position.x = (float)ENEMY_DIST * cos(theta);
+		m_position.y = (float)ENEMY_DIST * sin(theta);
 	}
 
 	if (note) {

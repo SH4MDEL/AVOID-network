@@ -73,7 +73,7 @@ extern SOCKET		g_socket;
 
 // 최대 FPS
 #if _DEBUG
-#define MAX_FPS 1.0 / 60.0
+#define MAX_FPS 1.0 / 30.0
 #else
 // #define MAX_FPS 1.0 / 60.0
 #define MAX_FPS 0.0

@@ -288,6 +288,7 @@ int ServerSharedData::GetBulletNum() {
 }
 
 void ServerSharedData::Update(float fTimeElapsed) {
+	TimeDelay += fTimeElapsed;
 	if (TimeDelay >= 0.f) {
 		leastTime += fTimeElapsed;
 

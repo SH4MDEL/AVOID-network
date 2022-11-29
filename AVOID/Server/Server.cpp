@@ -272,11 +272,12 @@ void MakePacket(SOCKET sock) {
 		i = 0;
 		for (auto& enemy : SharedData.m_pEnemies) {	
 			enemyDataBuf[i] = enemy.GetPosition();
+			std::cout << enemy.GetPosition().x << ", " << enemy.GetPosition().y << std::endl;
 			++i;
 		}
 
 		char* cEnemyData = reinterpret_cast<char*>(enemyDataBuf);
-		send(sock, cPlayerData, sizeof(Coord) * packet.enemyNum, 0);
+		send(sock, cEnemyData, sizeof(Coord) * packet.enemyNum, 0);
 		delete[] enemyDataBuf;
 
 		Coord* bulletDataBuf = new Coord[packet.bulletNum];
@@ -290,7 +291,7 @@ void MakePacket(SOCKET sock) {
 		}
 
 		char* cBulletData = reinterpret_cast<char*>(bulletDataBuf);
-		send(sock, cPlayerData, sizeof(Coord) * packet.bulletNum, 0);
+		send(sock, cBulletData, sizeof(Coord) * packet.bulletNum, 0);
 		delete[] bulletDataBuf;
 
 		delete[] data;
@@ -338,7 +339,7 @@ DWORD WINAPI Collision_Thread(LPVOID arg)
 		if (timeElapsed.count() > 1.0f / 60.0f)
 		{
 			currentTime = std::chrono::system_clock::now();
-			SharedData.Update(0.0f);
+			SharedData.Update(timeElapsed.count());
 
 		}
 		ResetEvent(hCollideEvent);

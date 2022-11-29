@@ -190,7 +190,7 @@ void Scene_Ingame::Update(float fTimeElapsed)
 #ifdef NETWORK_DEBUG
 		cout << "CS_PACKET_PLAYER_STATUS 송신" << endl;
 #endif // NETWORK_DEBUG
-		WaitForSingleObject(g_event, INFINITE);
+		WaitForSingleObject(g_event, 300);
 		// 플레이어의 위치 정해주기
 		for (int i = 0; i < m_playerNum; ++i) {
 			PlayerStatus ps = m_playersStatus[m_playerID];
