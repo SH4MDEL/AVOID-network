@@ -121,15 +121,18 @@ void ServerSharedData::UpdatePlayerStatus(SOCKET sock, char* dataBuf)
 		}
 	}
 
-	nextPacket = NULL;
-	nextPacketPlayerId = NULL;
+
 
 	// 모든 플레이어에게서 스테이터스를 받으면 충돌 체크 스레드를 생성해 충돌처리를 실행한다.
 	if (CheckAllPlayerStatusReceived()) {
 		ResetEvent(hClientEvent);
 		SetEvent(hCollideEvent);
+		WaitForSingleObject(hClientEvent, INFINITE);
 	}
-
+	else {
+		nextPacket = NULL;
+		nextPacketPlayerId = NULL;
+	}
 
 }
 
@@ -225,7 +228,7 @@ void ServerSharedData::CreateNewGame(char* dataBuf) {
 	int numI = 0, numJ = 0;
 
 	for (int i = 0; i < 36000; ++i) {
-		if (noteInbuff[i] > 48 && noteInbuff[i] <= 57) {
+		if (noteInbuff[i] >= 48 && noteInbuff[i] <= 57) {
 			note[numI][numJ] = noteInbuff[i] - 48;
 			if (numJ == 11) {
 				numJ = 0, numI++;
