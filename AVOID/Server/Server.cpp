@@ -272,7 +272,6 @@ void MakePacket(SOCKET sock) {
 		i = 0;
 		for (auto& enemy : SharedData.m_pEnemies) {	
 			enemyDataBuf[i] = enemy.GetPosition();
-			std::cout << enemy.GetPosition().x << ", " << enemy.GetPosition().y << std::endl;
 			++i;
 		}
 
@@ -336,7 +335,7 @@ DWORD WINAPI Collision_Thread(LPVOID arg)
 		CollisionCheckAbility();
 		
 		timeElapsed = std::chrono::system_clock::now() - currentTime;
-		if (timeElapsed.count() > 1.0f / 60.0f)
+		if (timeElapsed.count() > 1.0f / 30.0f)
 		{
 			currentTime = std::chrono::system_clock::now();
 			SharedData.Update(timeElapsed.count());

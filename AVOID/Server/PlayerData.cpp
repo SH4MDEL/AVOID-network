@@ -35,6 +35,7 @@ ServerSharedData::ServerSharedData() {
 
 	m_pEnemies.clear();
 	time = 0;
+	TimeDelay = -3.f;
 	nextPacket = NULL;
 	nextPacketPlayerId = NULL;
 	
@@ -191,7 +192,7 @@ void ServerSharedData::CreateNewGame(char* dataBuf) {
 		hPlayingMusicSpeedFile = CreateFile(L"Data\\bbkkbkkSpeed.txt", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
 		break;
 	case 1:
-		hPlayingMusicSpeedFile = CreateFile(L"Data\\bbkkbkkSpeed.txt", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
+		hPlayingMusicSpeedFile = CreateFile(L"Data\\TrueBlueSpeed.txt", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
 		break;
 	}
 	ReadFile(hPlayingMusicSpeedFile, Inbuff, c, &read_size, NULL);
@@ -237,7 +238,7 @@ void ServerSharedData::CreateNewGame(char* dataBuf) {
 
 	for (int i = 0; i < NUMBER_OF_ENEMY; ++i)
 	{
-		m_pEnemies.push_back(Enemy(i));
+		m_pEnemies.emplace_back(Enemy(i));
 	}
 
 	nextPacket = SC_PACKET_START_GAME;
@@ -289,6 +290,7 @@ int ServerSharedData::GetBulletNum() {
 
 void ServerSharedData::Update(float fTimeElapsed) {
 	TimeDelay += fTimeElapsed;
+	std::cout << TimeDelay << ", " << fTimeElapsed << std::endl;
 	if (TimeDelay >= 0.f) {
 		leastTime += fTimeElapsed;
 

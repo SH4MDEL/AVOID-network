@@ -4,6 +4,7 @@
 
 OBJECT_Bullet::OBJECT_Bullet()
 {
+	OnCreate();
 }
 
 OBJECT_Bullet::OBJECT_Bullet(int x, int y, int direction)

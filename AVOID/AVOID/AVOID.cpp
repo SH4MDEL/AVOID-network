@@ -314,10 +314,10 @@ void TranslatePacket(const packet& packetBuf)
 		scene->SetPlayerEnemyData(pk.playerNum, pk.enemyNum, pk.bulletNum);
 		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetPlayersCoord()), pk.playerNum * sizeof(PlayerStatus), MSG_WAITALL);
 		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetEnemysCoord()), pk.enemyNum * sizeof(Coord), MSG_WAITALL);
+		//for (int i = 0; i < pk.enemyNum; ++i) {
+		//	cout << scene->GetEnemysCoord().at(i).x << ", " << scene->GetEnemysCoord().at(i).y << endl;
+		//}
 		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetBulletsCoord()), pk.bulletNum * sizeof(Coord), MSG_WAITALL);
-		for (int i = 0; i < pk.enemyNum; ++i) {
-			cout << scene->GetEnemysCoord().at(i).x << ", " << scene->GetEnemysCoord().at(i).x << endl;
-		}
 		SetEvent(g_event);
 #ifdef NETWORK_DEBUG
 		cout << "SC_PACKET_OBJECTS_INFO ÇØ¼®" << endl;

@@ -51,7 +51,7 @@ public:
 	int lotateSpeed[3000] = { NULL };
 	int note[3000][12] = { 0 };
 	int time = 0;
-	float TimeDelay = -3;
+	float TimeDelay = -3.f;
 	float leastTime = 0;
 	bool musicStart = 0;
 	char nextPacket;

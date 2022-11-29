@@ -42,6 +42,7 @@ void Enemy::Update(float fElapsedTime, int lotateSpeed, int note, int selectedMu
 		theta += SpeedData * pi * 1.f / 170.f * (fElapsedTime * (680.f / 60.f));
 		m_position.x = ENEMY_DIST * cos(theta);
 		m_position.y = ENEMY_DIST * sin(theta);
+		//std::cout << m_position.x << ", " << m_position.y << std::endl;
 	}
 	else if (selectedMusic == 1) {
 		theta += SpeedData * pi * 1.f / 170.f * (fElapsedTime * (656.f / 60.f));
@@ -50,7 +51,7 @@ void Enemy::Update(float fElapsedTime, int lotateSpeed, int note, int selectedMu
 	}
 
 	if (note) {
-		m_bullets.push_back(Bullet((int)m_position.x, (int)m_position.y, note));
+		m_bullets.emplace_back(Bullet((int)m_position.x, (int)m_position.y, note));
 	}
 
 	for (auto& bullet : m_bullets) {
