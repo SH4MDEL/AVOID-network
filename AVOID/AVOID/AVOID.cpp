@@ -314,9 +314,6 @@ void TranslatePacket(const packet& packetBuf)
 		scene->SetPlayerEnemyData(pk.playerNum, pk.enemyNum, pk.bulletNum);
 		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetPlayersCoord()), pk.playerNum * sizeof(PlayerStatus), MSG_WAITALL);
 		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetEnemysCoord()), pk.enemyNum * sizeof(Coord), MSG_WAITALL);
-		//for (int i = 0; i < pk.enemyNum; ++i) {
-		//	cout << scene->GetEnemysCoord().at(i).x << ", " << scene->GetEnemysCoord().at(i).y << endl;
-		//}
 		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetBulletsCoord()), pk.bulletNum * sizeof(Coord), MSG_WAITALL);
 		SetEvent(g_event);
 #ifdef NETWORK_DEBUG
@@ -356,6 +353,5 @@ void TranslatePacket(const packet& packetBuf)
 void Send(void* packetBuf)
 {
 	int retval = send(g_socket, reinterpret_cast<char*>(packetBuf), reinterpret_cast<packet*>(packetBuf)->size, 0);
-	std::cout << "send " << retval << "byte." << std::endl;
 }
 #endif // USE_NETWORK

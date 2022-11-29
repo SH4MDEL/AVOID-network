@@ -208,7 +208,7 @@ void MakePacket(SOCKET sock) {
 	// 아마 make_unique 같은 함수를 바탕으로 만들어야 하는 것 같음. 
 	// 그래서 일단은 평범한 동적 할당을 바탕으로 만듦.
 	// 공부 열심히 할게요...
-
+	std::cout << (int)SharedData.nextPacket << std::endl;
 	switch (SharedData.nextPacket) {
 	case SC_PACKET_LOGIN_CONFIRM:
 	{
@@ -328,6 +328,7 @@ void MakePacket(SOCKET sock) {
 
 DWORD WINAPI Collision_Thread(LPVOID arg)
 {
+	currentTime = std::chrono::system_clock::now();
 	while (true) {
 		WaitForSingleObject(hCollideEvent, INFINITE);
 		CollisionCheckBulletAndWall();
@@ -339,6 +340,7 @@ DWORD WINAPI Collision_Thread(LPVOID arg)
 		{
 			currentTime = std::chrono::system_clock::now();
 			SharedData.Update(timeElapsed.count());
+
 
 		}
 		ResetEvent(hCollideEvent);
