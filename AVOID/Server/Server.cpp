@@ -336,12 +336,10 @@ DWORD WINAPI Collision_Thread(LPVOID arg)
 		CollisionCheckAbility();
 		
 		timeElapsed = std::chrono::system_clock::now() - currentTime;
-		if (timeElapsed.count() > 1.0f / 30.0f)
+		if (timeElapsed.count() > 1.0f / 60.0f)
 		{
 			currentTime = std::chrono::system_clock::now();
 			SharedData.Update(timeElapsed.count());
-
-
 		}
 		ResetEvent(hCollideEvent);
 		SetEvent(hClientEvent);
@@ -357,7 +355,7 @@ void CollisionCheckBulletAndWall()
 		for (auto bullet = enemy.GetBullets().begin(); bullet != enemy.GetBullets().end(); ++bullet) {
 			Coord pos = (*bullet).GetPosition();
 			int d = pos.x * pos.x + pos.y * pos.y;
-			if (d > RADIUS_OF_ENEMY * RADIUS_OF_ENEMY) // 원래는 원 밖에 나가도 1초가 지나야 사라질 수 있게 했지만 그런게 필요할까?
+			if (d > (RADIUS_OF_ENEMY + 20) * (RADIUS_OF_ENEMY + 20)) // 원래는 원 밖에 나가도 1초가 지나야 사라질 수 있게 했지만 그런게 필요할까?
 			{
 				enemy.GetBullets().erase(bullet);
 				break;

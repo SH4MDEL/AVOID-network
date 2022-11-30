@@ -35,7 +35,7 @@ ServerSharedData::ServerSharedData() {
 
 	m_pEnemies.clear();
 	time = 0;
-	TimeDelay = -3.f;
+	TimeDelay = -3.2f;
 	nextPacket = NULL;
 	nextPacketPlayerId = NULL;
 	
@@ -300,7 +300,7 @@ void ServerSharedData::Update(float fTimeElapsed) {
 			if (TimeDelay >= (60.f / 680.f) * (float)time) {
 				int i = 0;
 				for (auto& enemy : m_pEnemies) {
-					enemy.Update(leastTime, lotateSpeed[time], note[time][i], 0);
+					enemy.SetNextNote(leastTime, lotateSpeed[time], note[time][i], 0);
 					++i;
 				}
 				++time;
@@ -308,10 +308,10 @@ void ServerSharedData::Update(float fTimeElapsed) {
 			}
 		}
 		else if (music == SELECTED_MUSIC::TRUE_BLUE) {
-			if (TimeDelay >= (60.f / 680.f) * (float)time) {
+			if (TimeDelay >= (60.f / 656.f) * (float)time) {
 				int i = 0;
 				for (auto& enemy : m_pEnemies) {
-					enemy.Update(leastTime, lotateSpeed[time], note[time][i], 1);
+					enemy.SetNextNote(leastTime, lotateSpeed[time], note[time][i], 1);
 					++i;
 				}
 				++time;
@@ -319,7 +319,9 @@ void ServerSharedData::Update(float fTimeElapsed) {
 			}
 		}	
 	}
-
+	for (auto& enemy : m_pEnemies) {
+		enemy.Update(leastTime);
+	}
 	if ((music == SELECTED_MUSIC::BBKKBKK && time >= 1450) && (music == SELECTED_MUSIC::TRUE_BLUE && time >= 1310)) {
 		nextPacket = SC_PACKET_MUSIC_END;
 		nextPacketPlayerId = NO_NEED_PLAYER_ID;

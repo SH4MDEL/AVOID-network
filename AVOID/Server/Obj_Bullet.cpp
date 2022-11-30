@@ -12,8 +12,8 @@ void Bullet::Update(float fTimeElapsed)
 	TimeDelay += fTimeElapsed;
 	if (TimeDelay >= 0.05f) {
 		float theta = (((float)9 - (float)m_iDirection) * pi / (float)4);
-		m_position.x += (bulletSpeed * cos(theta) * (TimeDelay * (float)20));
-		m_position.y += (bulletSpeed * sin(theta) * (TimeDelay * (float)20));
+		m_position.x += (bulletSpeed * cos(theta) * (TimeDelay * (float)12));
+		m_position.y += (bulletSpeed * sin(theta) * (TimeDelay * (float)12));
 		TimeDelay = 0.0f;
 	}
 }

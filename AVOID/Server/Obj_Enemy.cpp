@@ -33,7 +33,7 @@ void Enemy::OnCreate(int location) {
 	m_position.y = (float)ENEMY_DIST * sin(theta);
 }
 
-void Enemy::Update(float fElapsedTime, int lotateSpeed, int note, int selectedMusic) {
+void Enemy::SetNextNote(float fElapsedTime, int lotateSpeed, int note, int selectedMusic) {
 
 
 	float SpeedData = (float)lotateSpeed;
@@ -53,7 +53,10 @@ void Enemy::Update(float fElapsedTime, int lotateSpeed, int note, int selectedMu
 	if (note) {
 		m_bullets.emplace_back(Bullet((int)m_position.x, (int)m_position.y, note));
 	}
+}
 
+void Enemy::Update(float fElapsedTime)
+{
 	for (auto& bullet : m_bullets) {
 		bullet.Update(fElapsedTime);
 	}
