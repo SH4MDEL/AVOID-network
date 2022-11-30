@@ -302,12 +302,13 @@ void CFramework::ChangeScene(CScene::SceneTag tag)
 	m_pCurrScene = arrScene[tag];
 }
 
-void CFramework::SetPlayerNum(int playerNum, int sceneType)
+void CFramework::SetPlayerNumAndID(int playerNum, int playerID, int sceneType)
 {
 	if (sceneType == CScene::SceneTag::Ingame) {
 #ifdef USE_NETWORK
 		Scene_Ingame* scene = (Scene_Ingame*)m_pCurrScene;
 		scene->SetPlayerNum(playerNum);
+		scene->SetPlayerID(playerID);
 #endif
 	}
 }

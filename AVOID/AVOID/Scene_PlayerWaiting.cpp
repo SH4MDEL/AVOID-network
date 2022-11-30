@@ -64,14 +64,13 @@ void Scene_PlayerWaiting::Render(HDC hDC)
 void Scene_PlayerWaiting::Update(float fTimeElapsed)
 {
 	m_playerWaitingSound->update(Sound::SoundTag::PlayerWaiting);
-
 	if (m_nextScene) {
 #ifdef NETWORK_DEBUG
 		cout << "SCENE 전환(PlayerWaiting -> Ingame)" << endl;
 #endif // NETWORK_DEBUG
 		m_pFramework->ChangeScene(CScene::SceneTag::Ingame);
 #ifdef USE_NETWORK
-		m_pFramework->SetPlayerNum(m_playerNum, CScene::SceneTag::Ingame);
+		m_pFramework->SetPlayerNumAndID(m_playerNum, m_playerID, CScene::SceneTag::Ingame);
 #endif // USE_NETWORK
 		m_pFramework->SetMusic(m_selectedMusic, CScene::SceneTag::Ingame);
 		m_pFramework->curSceneCreate();
@@ -88,6 +87,7 @@ void Scene_PlayerWaiting::KeyState() {
 		packet.size = sizeof(cs_packet_ready);
 		packet.playerID = m_playerID;
 		Send(&packet);
+
 #ifdef NETWORK_DEBUG
 		cout << "CS_PACKET_READY 송신" << endl;
 #endif // NETWORK_DEBUG

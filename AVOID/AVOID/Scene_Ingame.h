@@ -26,6 +26,7 @@ public:
 	void AbilityCrash(OBJECT_MainEnemy* Enemy);
 
 	void SetPlayerNum(int playerNum);
+	void SetPlayerID(int playerID);
 	void SetMusic(int selectedMusic);
 
 	void KeyState();

@@ -303,6 +303,13 @@ void Scene_Ingame::SetPlayerNum(int playerNum)
 #endif
 }
 
+void Scene_Ingame::SetPlayerID(int playerID)
+{
+#ifdef USE_NETWORK
+	m_playerID = playerID;
+#endif
+}
+
 void Scene_Ingame::SetMusic(int selectedMusic)
 {
 	m_selectedMusic = selectedMusic;
