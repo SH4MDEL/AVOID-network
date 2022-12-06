@@ -20,6 +20,9 @@ public:
 	int finalhp = 0;
 	void KeyState();
 
+	// 서버 관련 추가 함수입니다.
+	void SetRank(int rank) { m_rank = rank; }
+
 private:
 	int windowX = ::GetSystemMetrics(SM_CXSCREEN);		// 모니터 x길이 받아옴
 	int windowY = ::GetSystemMetrics(SM_CYSCREEN);		// 모니터 y길이 받아옴
@@ -28,5 +31,8 @@ private:
 
 	bool CheckKey;
 	bool finish;
+
+	// 서버 관련 추가 변수입니다.
+	int		m_rank;
 };
 

@@ -91,5 +91,6 @@ public:
 
 	void SetPlayerNumAndID(int playerNum, int playerID, int sceneType);
 	void SetMusic(int selectedMusic, int sceneType);
+	void SetRank(int rank, int sceneType);
 	int GetMusic() { return m_selectedMusic; }
 };

@@ -121,7 +121,8 @@ void Scene_Ingame::BuildObjects()
 		this->CMainEnemy[i] = new OBJECT_MainEnemy(i + 1, m_selectedMusic + 1);		// location은 1부터 12까지 들어간다.
 	}
 #ifdef USE_NETWORK
-	
+	m_isGameEnd = false;
+	m_rank = -1;
 	for (int i = 0; i < m_playerNum; ++i) {
 		m_players[i] = new OBJECT_Player(windowX, windowY, i);
 	}
@@ -207,6 +208,26 @@ void Scene_Ingame::Update(float fTimeElapsed)
 			m_bullets[i]->SetServerPos(coord.x, coord.y);
 			cout << coord.x << ", " << coord.y << endl;
 		}
+	}
+	if (m_isGameEnd) {
+		m_isGameEnd = false;
+		cs_packet_player_hp packet;
+		packet.type = CS_PACKET_READY;
+		packet.size = sizeof(cs_packet_player_hp);
+		packet.playerID = m_playerID;
+		packet.hp = m_players[m_playerID]->GetHp();
+		Send(&packet);
+	}
+	if (m_rank != -1) {
+#ifdef NETWORK_DEBUG
+		cout << "SCENE 전환(Ingame -> Result)" << endl;
+#endif // NETWORK_DEBUG
+#ifdef USE_NETWORK
+#endif // USE_NETWORK
+		m_pFramework->ChangeScene(CScene::SceneTag::Result);
+		m_pFramework->SetRank(m_selectedMusic, CScene::SceneTag::Result);
+		m_pFramework->curSceneCreate();
+		OnDestroy();
 	}
 #endif
 #ifndef USE_NETWORK

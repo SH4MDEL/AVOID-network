@@ -324,6 +324,8 @@ void TranslatePacket(const packet& packetBuf)
 	case SC_PACKET_MUSIC_END:
 	{
 		Scene_Ingame* scene = (Scene_Ingame*)myFramework.GetCurrScene();
+		scene->SetGameEnd();
+
 #ifdef NETWORK_DEBUG
 		cout << "SC_PACKET_MUSIC_END ÇØ¼®" << endl;
 #endif // NETWORK_DEBUG

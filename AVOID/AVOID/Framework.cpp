@@ -311,6 +311,11 @@ void CFramework::SetPlayerNumAndID(int playerNum, int playerID, int sceneType)
 		scene->SetPlayerID(playerID);
 #endif
 	}
+	else {
+#ifdef NETWORK_DEBUG
+		cout << "Undefined behavior! : SetPlayerNumAndID" << endl;
+#endif
+	}
 }
 
 void CFramework::SetMusic(int selectedMusic, int sceneType)
@@ -325,5 +330,25 @@ void CFramework::SetMusic(int selectedMusic, int sceneType)
 	else if (sceneType == CScene::SceneTag::Ingame) {
 		Scene_Ingame* scene = (Scene_Ingame*)m_pCurrScene;
 		scene->SetMusic(selectedMusic);
+	}
+	else {
+#ifdef NETWORK_DEBUG
+		cout << "Undefined behavior! : SetMusic" << endl;
+#endif
+	}
+}
+
+void CFramework::SetRank(int rank, int sceneType)
+{
+	if (sceneType == CScene::SceneTag::Ingame) {
+#ifdef USE_NETWORK
+		Scene_Result* scene = (Scene_Result*)m_pCurrScene;
+		scene->SetRank(rank);
+#endif
+	}
+	else {
+#ifdef NETWORK_DEBUG
+		cout << "Undefined behavior! : SetRank" << endl;
+#endif
 	}
 }

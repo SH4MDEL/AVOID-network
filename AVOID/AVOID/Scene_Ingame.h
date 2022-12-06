@@ -39,7 +39,9 @@ public:
 	array<Coord, 12>& GetEnemysCoord() { return m_enemysCoord; }
 	array<Coord, 50>& GetBulletsCoord() { return m_bulletsCoord; }
 
-	void SetRank(char rank) { m_rank = (int)rank; }
+	void SetGameEnd() { m_isGameEnd = true; }
+	void SetRank(int rank) { m_rank = rank; }
+
 #endif
 private:
 	int windowX = ::GetSystemMetrics(SM_CXSCREEN);		// 모니터 x길이 받아옴
@@ -77,6 +79,7 @@ private:
 	array<PlayerStatus, 3>	m_playersStatus;
 	array<Coord, 12>		m_enemysCoord;
 	array<Coord, 50>		m_bulletsCoord;
+	bool					m_isGameEnd;
 	int						m_rank;
 
 	OBJECT_Bullet*			m_bullets[50];
