@@ -1,1 +1,24 @@
-﻿  AVOID.vcxproj -> C:\Users\Saden\Documents\GitHub\AVOID-network\AVOID\x64\Debug\AVOID.exe
+﻿  AVOID.cpp
+C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\resource.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+  Framework.cpp
+C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\resource.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\Framework.cpp(168,25): warning C4244: 'return': 'LRESULT'에서 'HRESULT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\Framework.cpp(215,29): warning C4244: '인수': '_Rep'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              _Rep=double
+          ]
+C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\Framework.cpp(234,9): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Scene_Ingame.cpp
+C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\resource.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_MainEnemy.h(53,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_MainEnemy.h(36,32): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_MainEnemy.h(37,32): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.h(47,32): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Player.h(48,32): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.h(22,11): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.h(61,36): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\OBJECT_Bullet.h(62,36): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\AVOID\Scene_Ingame.cpp(219,43): warning C4244: '=': 'float'에서 'char'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다...
+  AVOID.vcxproj -> C:\Users\이승준\Desktop\Coding\AVOID-network\AVOID\x64\Debug\AVOID.exe

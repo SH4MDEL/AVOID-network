@@ -37,7 +37,7 @@ public:
 	{ m_playerNum = playerNum, m_enemyNum = enemyNum, m_bulletNum = bulletNum; }
 	array<PlayerStatus, 3>& GetPlayersCoord() { return m_playersStatus; }
 	array<Coord, 12>& GetEnemysCoord() { return m_enemysCoord; }
-	array<Coord, 50>& GetBulletsCoord() { return m_bulletsCoord; }
+	array<Coord, 100>& GetBulletsCoord() { return m_bulletsCoord; }
 
 	void SetGameEnd() { m_isGameEnd = true; }
 	void SetRank(int rank) { m_rank = rank; }
@@ -78,7 +78,7 @@ private:
 	int						m_bulletNum;
 	array<PlayerStatus, 3>	m_playersStatus;
 	array<Coord, 12>		m_enemysCoord;
-	array<Coord, 50>		m_bulletsCoord;
+	array<Coord, 100>		m_bulletsCoord;
 	bool					m_isGameEnd;
 	int						m_rank;
 

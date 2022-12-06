@@ -194,8 +194,9 @@ void Scene_Ingame::Update(float fTimeElapsed)
 		WaitForSingleObject(g_event, INFINITE);
 		// 플레이어의 위치 정해주기
 		for (int i = 0; i < m_playerNum; ++i) {
-			PlayerStatus ps = m_playersStatus[m_playerID];
-			m_players[m_playerID]->SetServerPos(ps.coord.x, ps.coord.y);
+			PlayerStatus ps = m_playersStatus[i];
+			cout << i << ": x: " << ps.coord.x << " y: " << ps.coord.y << endl;
+			m_players[i]->SetServerPos(ps.coord.x, ps.coord.y);
 		}
 		// 적의 위치 정해주기
 		for (int i = 0; i < m_enemyNum; ++i) {
@@ -212,7 +213,7 @@ void Scene_Ingame::Update(float fTimeElapsed)
 	if (m_isGameEnd) {
 		m_isGameEnd = false;
 		cs_packet_player_hp packet;
-		packet.type = CS_PACKET_READY;
+		packet.type = CS_PACKET_PLAYER_HP;
 		packet.size = sizeof(cs_packet_player_hp);
 		packet.playerID = m_playerID;
 		packet.hp = m_players[m_playerID]->GetHp();

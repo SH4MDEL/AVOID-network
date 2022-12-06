@@ -326,7 +326,7 @@ DWORD WINAPI Collision_Thread(LPVOID arg)
 		std::cout << "충돌체크 작동" << std::endl;
 
 		timeElapsed = std::chrono::system_clock::now() - currentTime;
-		if (timeElapsed.count() > 1.0f / 60.0f)
+		if (timeElapsed.count() > 1.0f / 30.0f)
 		{
 			currentTime = std::chrono::system_clock::now();
 			SharedData.Update(timeElapsed.count());

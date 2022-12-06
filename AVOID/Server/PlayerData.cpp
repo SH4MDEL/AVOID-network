@@ -365,7 +365,7 @@ void ServerSharedData::Update(float fTimeElapsed) {
 	*/
 
 	for (auto& enemy : m_pEnemies) {
-		enemy.Update(leastTime);
+		enemy.Update(fTimeElapsed);
 	}
 	
 
