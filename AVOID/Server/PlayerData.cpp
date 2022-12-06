@@ -1,6 +1,9 @@
 #include "PlayerData.h"
 
 CPlayerData::CPlayerData() {
+
+	// 플레이어 데이터를 안 받았을 때 초기화
+
 	playerSocket = NULL;
 	playerState = PLAYER_STATE::NONE;
 	selectedMusic = SELECTED_MUSIC::NONE;
@@ -13,9 +16,13 @@ CPlayerData::CPlayerData() {
 	isCollide = FALSE;
 	AttackedTime = 0.0f;
 	hp = -1;
+
 }
 
 CPlayerData::CPlayerData(SOCKET sock, PLAYER_STATE state, SELECTED_MUSIC music, int id) {
+
+	// 플레이어 데이터를 받았을 때 초기화
+
 	playerSocket = sock;
 	playerState = state;
 	selectedMusic = music;
@@ -28,49 +35,67 @@ CPlayerData::CPlayerData(SOCKET sock, PLAYER_STATE state, SELECTED_MUSIC music, 
 	isCollide = FALSE;
 	AttackedTime = 0.0f;
 	hp = -1;
+
 }
 
 ServerSharedData::ServerSharedData() {
-	m_pPlayers.clear();
 
+	// 최초로 서버가 생성되었을 때
+
+
+	m_pPlayers.clear();
 	m_pEnemies.clear();
+
 	time = 0;
 	TimeDelay = -3.2f;
 	nextPacket = NULL;
 	nextPacketPlayerId = NULL;
-	
 }
 
 void ServerSharedData::PlayerJoin(SOCKET sock, char* dataBuf) {
+	
+	// 플레이어가 PlayerWaiting Scene에 들어왔을 때 실행
 	char* selected = reinterpret_cast<char*>(dataBuf);
 
+	// selected가 널포인터면 돌려줌.
 	if (selected == nullptr) {
-		std::cout << "Error in PlayerJoin. selected is nullptr." << std::endl;
 		return;
 	}
 
+	// 실제 받은 음악 번호로 변경
 	char num = (*selected);
 
+	// 받은 음악 번호가 0 또는 1 즉, 실제로 있는 음악의 주소가 아닌 경우 에러
 	if (num != 0 && num != 1)
 	{
 		std::cout << "Error in PlayerJoin" << std::endl;
+		return;
 	}
 
-	bool occupiedId[3] = { FALSE };
-
-	for (auto& i : m_pPlayers)
-	{
-		occupiedId[i.playerId] = TRUE;
-	}
-
-	int newId = NULL;
+	// ID 결정
+	int newId = 0;
 
 	for (int i = 0; i < MAX_USER; ++i) {
-		if (!occupiedId[i]) {
+
+		bool isIdOccupied = false;
+
+		for (auto& player : m_pPlayers) {
+			if (player.playerId == i) {
+				isIdOccupied = true;
+				break;
+			}
+		}
+
+		if (!isIdOccupied)
+		{
 			newId = i;
 			break;
 		}
+
 	}
+
+	std::cout << "새 ID 는 " << newId << "입니다." << std::endl;
+	// 플레이어 데이터 생성
 
 	CPlayerData newPlayer;
 
@@ -86,66 +111,76 @@ void ServerSharedData::PlayerJoin(SOCKET sock, char* dataBuf) {
 
 	m_pPlayers.push_back(newPlayer);
 
+	// 다음에 보낼 패킷 설정
+
 	nextPacket = SC_PACKET_LOGIN_CONFIRM;
 	nextPacketPlayerId = newId;
 }
 
-void ServerSharedData::PlayerLeft(char* dataBuf) {
-	int* leftPlayerId = reinterpret_cast<int*>(dataBuf);
+void ServerSharedData::PlayerLeft(SOCKET sock) {
 
-	// 유저 데이터 삭제
-	m_pPlayers.erase(remove_if(m_pPlayers.begin(), m_pPlayers.end(), [=](const CPlayerData& a) {return a.playerId == (*leftPlayerId); }), m_pPlayers.end());
+	//플레이어가 사라졌음을 파악했을 때에 실행
 
-	// 그리고 쓰레드 아이디도 저장해 두는 것이 좋을 수도 있을 듯
-	// 
+	// 해당 소켓에 해당하는 플레이어 데이터를 지운다
+	// 소켓은 UINT_PTR 타입이므로, 비교 연산을 통해 비교 가능
+	m_pPlayers.erase(remove_if(m_pPlayers.begin(), m_pPlayers.end(), [=](const CPlayerData& a) {
+		return a.playerSocket == sock;
+		}), m_pPlayers.end());
+
+
+	// 다음에 보낼 패킷 설정
+
 	nextPacket = SC_PACKET_LOGOUT;
 	nextPacketPlayerId = NO_NEED_PLAYER_ID;
 }
 
-void ServerSharedData::ChangePlayerState(PLAYER_STATE state)
-{
-	// 일단은 비워둠.
-}
 
 void ServerSharedData::UpdatePlayerStatus(SOCKET sock, char* dataBuf)
 {
+
+	// 데이터를 받았을 때
+
 	PlayerStatusByPacket* packet = reinterpret_cast<PlayerStatusByPacket*>(dataBuf);
 
-	for (auto& i : m_pPlayers) {
-		if (packet->playerID == i.playerId)
+	for (auto& player : m_pPlayers) {
+		if (packet->playerID == player.playerId)
 		{
-			i.position = packet->position;
-			i.isSkill = packet->isSkill;
-			i.isStatusChanged = TRUE;
+			player.position = packet->position;
+			player.isSkill = packet->isSkill;
+			player.isStatusChanged = TRUE;
+			std::cout << player.playerId << "번 플레이어 현재 상태 데이터 적용" << std::endl;
 			break;
 		}
 	}
 
-
-
 	// 모든 플레이어에게서 스테이터스를 받으면 충돌 체크 스레드를 생성해 충돌처리를 실행한다.
-	if (CheckAllPlayerStatusReceived()) {
-		ResetEvent(hClientEvent);
-		SetEvent(hCollideEvent);
-		WaitForSingleObject(hClientEvent, INFINITE);
-	}
-	else {
-		nextPacket = NULL;
-		nextPacketPlayerId = NULL;
-	}
+	// while은 계속해서 Context Switching이 일어나게 되므로 좋지 않음. 그러나 마땅한 해결책이 떠오르지 않으므로 일단은 while로 멈춰둔다.
+
+	// 문제를 알게 되었다. 이미 CriticalSection에 들어가 있으므로 영원히 첫 스레드에서만 돌게 된다.
+	// 그러니까 Apply 단계에서는 데이터를 변경하는 것만 하는 것이 맞는 것으로 보인다.
+	// 그리고 스레드를 만들 때에 해당 충돌체크를 하는 것이 맞는지 확인하여 충돌체크의 순서를 도는것이 맞는듯 하다.
+	// 그러니까 항상 스레드를 만드는 것으로 해야겠다.
+
+	nextPacket = SC_PACKET_OBJECTS_INFO;
+	nextPacketPlayerId = packet->playerID;
+
+	ResetEvent(hClientEvent);
+	SetEvent(hCollideEvent);
+	CreateThread(NULL, 0, Collision_Thread, NULL, 0, NULL);
 
 }
 
 
 
 // 모든 플레이어가 다 한번 스테이터스를 바꿨는지 확인.
-bool ServerSharedData::CheckAllPlayerStatusReceived() {
+bool ServerSharedData::CheckAllPlayerStatusReady() {
 	for (auto& i : m_pPlayers) {
 		if (!(i.isStatusChanged)) {
 			return false;
 		}
 	}
 
+	std::cout << "충돌 체크 이벤트 생성 가능" << std::endl;
 	return true;
 }
 
@@ -153,16 +188,13 @@ void ServerSharedData::CreateNewGame(char* dataBuf) {
 
 	int musicNum = 0;
 
-
 	if (dataBuf == NULL) {
 
 		musicNum = 0;
 
 	}
 	else {
-
-		char data = NULL;
-		memcpy(&data, dataBuf, sizeof(char));
+		char data = (*dataBuf);
 
 		for (auto& player : m_pPlayers) {
 			if (player.playerId == data) {
@@ -184,8 +216,6 @@ void ServerSharedData::CreateNewGame(char* dataBuf) {
 		}
 	}
 	
-	
-
 	char Inbuff[3000];
 	DWORD read_size = 3000;
 	DWORD c = 3000;
@@ -250,11 +280,8 @@ void ServerSharedData::CreateNewGame(char* dataBuf) {
 
 int ServerSharedData::GetPlayerRank(SOCKET sock, char* dataBuf) {
 	
-	char Id = NULL;
-	memcpy(&Id, dataBuf, sizeof(char));
-
-	char hp = NULL;
-	memcpy(&Id, dataBuf + sizeof(char), sizeof(char));
+	char Id = dataBuf[0];
+	char hp = dataBuf[1];
 
 	for (auto& player : m_pPlayers) {
 		if (player.playerId == Id) {
@@ -270,9 +297,11 @@ int ServerSharedData::GetPlayerRank(SOCKET sock, char* dataBuf) {
 		}
 	}
 
+
 	std::sort(m_pPlayers.begin(), m_pPlayers.end(), [](const CPlayerData& a, const CPlayerData& b) {
 		return a.hp > b.hp;
 		});
+
 
 	nextPacket = SC_PACKET_RANK;
 	nextPacketPlayerId = NULL;
@@ -292,6 +321,7 @@ int ServerSharedData::GetBulletNum() {
 }
 
 void ServerSharedData::Update(float fTimeElapsed) {
+
 	TimeDelay += fTimeElapsed;
 	if (TimeDelay >= 0.f) {
 		leastTime += fTimeElapsed;
@@ -319,9 +349,21 @@ void ServerSharedData::Update(float fTimeElapsed) {
 			}
 		}	
 	}
+
+	/*
+	//-----------------------
+
+	아래 for 절에서 leastTime이 항상 0이 됨.
+	이걸 고치지 않으면 실행을 할 수가 없음.
+
+	//-----------------------
+	*/
+
 	for (auto& enemy : m_pEnemies) {
 		enemy.Update(leastTime);
 	}
+	
+
 	if ((music == SELECTED_MUSIC::BBKKBKK && time >= 1450) && (music == SELECTED_MUSIC::TRUE_BLUE && time >= 1310)) {
 		nextPacket = SC_PACKET_MUSIC_END;
 		nextPacketPlayerId = NO_NEED_PLAYER_ID;

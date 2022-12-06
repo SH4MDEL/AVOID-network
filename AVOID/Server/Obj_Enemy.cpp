@@ -1,5 +1,8 @@
 #include "Obj_Enemy.h"
 
+// 화면 중앙은 0,0 으로 하기로 했었음.
+
+
 Enemy::Enemy() {
 	m_fBeatCount = 0;
 	m_nBullet = 0;
@@ -7,8 +10,6 @@ Enemy::Enemy() {
 	m_position.y = 0;
 	theta = 0;
 }
-
-// 화면의 중앙은 0, 0으로 고정. 그렇게 하면 클라이언트 크기에 상관 없이 그릴 수 있음.
 
 Enemy::Enemy(int location) {
 	m_fBeatCount = 0;

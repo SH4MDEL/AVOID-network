@@ -8,6 +8,8 @@ constexpr int NO_NEED_PLAYER_ID = -1;
 extern HANDLE hClientEvent;
 extern HANDLE hCollideEvent;
 
+extern DWORD WINAPI Collision_Thread(LPVOID arg);
+
 constexpr int PLAYER_RADIUS = 10;
 constexpr int ABILITY_RADIUS = 85;
 
@@ -48,6 +50,9 @@ public:
 	std::vector<Enemy> m_pEnemies;
 	HANDLE hPlayingMusicSpeedFile, hPlayingMusicNoteFile;
 	SELECTED_MUSIC music = SELECTED_MUSIC::NONE;
+
+	bool isCollideOk = false;
+
 	int lotateSpeed[3000] = { NULL };
 	int note[3000][12] = { 0 };
 	int time = 0;
@@ -60,11 +65,10 @@ public:
 	
 	ServerSharedData();
 	void PlayerJoin(SOCKET sock, char* dataBuf);
-	void PlayerLeft(char* dataBuf);
-	void ChangePlayerState(PLAYER_STATE state);
+	void PlayerLeft(SOCKET sock);
 	void UpdatePlayerStatus(SOCKET sock, char* dataBuf);
-	bool CheckAllPlayerStatusReceived();
 	int GetPlayerRank(SOCKET sock, char* dataBuf);
+	bool CheckAllPlayerStatusReady();
 	void CreateNewGame(char* dataBuf);
 	void Update(float fTimeElapsed);
 	int GetBulletNum();
