@@ -262,7 +262,7 @@ void MakePacket(SOCKET sock) {
 		//////////////////////////////////////////////
 		//Enemy Data
 
-		Coord enemyDataBuf[15] = { 0, 0 };
+		Coord enemyDataBuf[24] = { 0, 0 };
 
 		i = 0;
 		for (auto& enemy : SharedData.m_pEnemies) {	

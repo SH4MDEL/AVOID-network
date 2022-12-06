@@ -50,6 +50,7 @@ ServerSharedData::ServerSharedData() {
 	TimeDelay = -3.2f;
 	nextPacket = NULL;
 	nextPacketPlayerId = NULL;
+	musicStart = false;
 }
 
 void ServerSharedData::PlayerJoin(SOCKET sock, char* dataBuf) {
@@ -186,96 +187,100 @@ bool ServerSharedData::CheckAllPlayerStatusReady() {
 
 void ServerSharedData::CreateNewGame(char* dataBuf) {
 
-	int musicNum = 0;
+	if (!musicStart) {
+		int musicNum = 0;
 
-	if (dataBuf == NULL) {
+		if (dataBuf == NULL) {
 
-		musicNum = 0;
+			musicNum = 0;
 
-	}
-	else {
-		char data = (*dataBuf);
+		}
+		else {
+			char data = (*dataBuf);
 
-		for (auto& player : m_pPlayers) {
-			if (player.playerId == data) {
-				switch (player.selectedMusic) {
-				case SELECTED_MUSIC::BBKKBKK: 
-				{
-					int musicNum = 0;
-					music = SELECTED_MUSIC::BBKKBKK;
-				}
-				break;
-				case SELECTED_MUSIC::TRUE_BLUE:
-				{
-					int musicNum = 1;
-					music = SELECTED_MUSIC::TRUE_BLUE;
-				}
-				break;
+			for (auto& player : m_pPlayers) {
+				if (player.playerId == data) {
+					switch (player.selectedMusic) {
+					case SELECTED_MUSIC::BBKKBKK:
+					{
+						int musicNum = 0;
+						music = SELECTED_MUSIC::BBKKBKK;
+					}
+					break;
+					case SELECTED_MUSIC::TRUE_BLUE:
+					{
+						int musicNum = 1;
+						music = SELECTED_MUSIC::TRUE_BLUE;
+					}
+					break;
+					}
 				}
 			}
 		}
-	}
-	
-	char Inbuff[3000];
-	DWORD read_size = 3000;
-	DWORD c = 3000;
-	
-	switch(musicNum){
-	case 0:
-		hPlayingMusicSpeedFile = CreateFile(L"Data\\bbkkbkkSpeed.txt", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
-		break;
-	case 1:
-		hPlayingMusicSpeedFile = CreateFile(L"Data\\TrueBlueSpeed.txt", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
-		break;
-	}
-	ReadFile(hPlayingMusicSpeedFile, Inbuff, c, &read_size, NULL);
-	CloseHandle(hPlayingMusicSpeedFile);
 
-	int num = 0;
+		char Inbuff[3000];
+		DWORD read_size = 3000;
+		DWORD c = 3000;
 
-	for (int i = 0; i < 3000; ++i) {
-		if (Inbuff[i] >= 48 && Inbuff[i] <= 57) {
-			lotateSpeed[num] = Inbuff[i] - 48;
-			++num;
+		switch (musicNum) {
+		case 0:
+			hPlayingMusicSpeedFile = CreateFile(L"Data\\bbkkbkkSpeed.txt", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
+			break;
+		case 1:
+			hPlayingMusicSpeedFile = CreateFile(L"Data\\TrueBlueSpeed.txt", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
+			break;
 		}
-	}
+		ReadFile(hPlayingMusicSpeedFile, Inbuff, c, &read_size, NULL);
+		CloseHandle(hPlayingMusicSpeedFile);
 
-	char noteInbuff[36000];
-	DWORD read_note = 36000;
-	DWORD n = 36000;
-	
-	switch (musicNum) {
-	case 0:
-		hPlayingMusicNoteFile = CreateFile(L"Data\\bbkkbkkNote.txt", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
-		break;
-	case 1:
-		hPlayingMusicNoteFile = CreateFile(L"Data\\TrueBlueNote.txt", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
-		break;
-	}
-	ReadFile(hPlayingMusicNoteFile, noteInbuff, n, &read_note, NULL);
-	CloseHandle(hPlayingMusicNoteFile);
+		int num = 0;
 
-	int numI = 0, numJ = 0;
-
-	for (int i = 0; i < 36000; ++i) {
-		if (noteInbuff[i] >= 48 && noteInbuff[i] <= 57) {
-			note[numI][numJ] = noteInbuff[i] - 48;
-			if (numJ == 11) {
-				numJ = 0, numI++;
-			}
-			else {
-				numJ++;
+		for (int i = 0; i < 3000; ++i) {
+			if (Inbuff[i] >= 48 && Inbuff[i] <= 57) {
+				lotateSpeed[num] = Inbuff[i] - 48;
+				++num;
 			}
 		}
-	}
 
-	for (int i = 0; i < NUMBER_OF_ENEMY; ++i)
-	{
-		m_pEnemies.emplace_back(Enemy(i));
-	}
+		char noteInbuff[36000];
+		DWORD read_note = 36000;
+		DWORD n = 36000;
 
-	nextPacket = SC_PACKET_START_GAME;
-	nextPacketPlayerId = NULL;
+		switch (musicNum) {
+		case 0:
+			hPlayingMusicNoteFile = CreateFile(L"Data\\bbkkbkkNote.txt", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
+			break;
+		case 1:
+			hPlayingMusicNoteFile = CreateFile(L"Data\\TrueBlueNote.txt", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
+			break;
+		}
+		ReadFile(hPlayingMusicNoteFile, noteInbuff, n, &read_note, NULL);
+		CloseHandle(hPlayingMusicNoteFile);
+
+		int numI = 0, numJ = 0;
+
+		for (int i = 0; i < 36000; ++i) {
+			if (noteInbuff[i] >= 48 && noteInbuff[i] <= 57) {
+				note[numI][numJ] = noteInbuff[i] - 48;
+				if (numJ == 11) {
+					numJ = 0, numI++;
+				}
+				else {
+					numJ++;
+				}
+			}
+		}
+
+		for (int i = 0; i < NUMBER_OF_ENEMY; ++i)
+		{
+			m_pEnemies.emplace_back(Enemy(i));
+		}
+
+		nextPacket = SC_PACKET_START_GAME;
+		nextPacketPlayerId = NO_NEED_PLAYER_ID;
+
+		musicStart = true;
+	}
 }
 
 int ServerSharedData::GetPlayerRank(SOCKET sock, char* dataBuf) {
@@ -367,6 +372,7 @@ void ServerSharedData::Update(float fTimeElapsed) {
 	if ((music == SELECTED_MUSIC::BBKKBKK && time >= 1450) && (music == SELECTED_MUSIC::TRUE_BLUE && time >= 1310)) {
 		nextPacket = SC_PACKET_MUSIC_END;
 		nextPacketPlayerId = NO_NEED_PLAYER_ID;
+		musicStart = false;
 	}
 	else {
 		nextPacket = SC_PACKET_OBJECTS_INFO;
