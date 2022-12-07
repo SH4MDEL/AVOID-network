@@ -352,6 +352,14 @@ void ServerSharedData::Update(float fTimeElapsed) {
 		}	
 	}
 
+	for (auto& player : m_pPlayers) {
+		if (player.isInvincible) {
+			if (player.AttackedTime - TimeDelay > 2.0f) {
+				player.isInvincible = false;
+			}
+		}
+	}
+
 	for (auto& enemy : m_pEnemies) {
 		enemy.Update(fTimeElapsed);
 	}

@@ -32,6 +32,7 @@ struct PlayerStatus
 	Coord coord;
 	char playerID;
 	bool isCollide;
+	bool isSkill;
 };
 
 

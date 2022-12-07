@@ -252,8 +252,9 @@ void MakePacket(SOCKET sock) {
 			playerData[i].coord = player.position;
 
 			playerData[i].isCollide = player.isCollide;
-			player.isCollide = FALSE;
-
+			if (player.isCollide) {
+				player.isCollide = FALSE;
+			}
 			playerData[i].playerID = player.playerId;
 #ifdef NetworkDebug
 			for (auto& player : SharedData.m_pPlayers)
@@ -261,6 +262,7 @@ void MakePacket(SOCKET sock) {
 				std::cout << player.playerId << " : " << player.position.x << ", " << player.position.y << std::endl;
 			}
 #endif
+			playerData[i].isSkill = player.isSkill;
 			++i;
 		}
 		
@@ -404,7 +406,7 @@ void CollisionCheckPlayerAndBullet() {
 				if (((r2 < d && d <= r1) || r2 >= d) && !(player.isInvincible)) {
 					player.isCollide = true;
 					player.isInvincible = true;
-					player.AttackedTime = 0.0f;
+					player.AttackedTime = SharedData.TimeDelay;
 				}
 			}
 		}
