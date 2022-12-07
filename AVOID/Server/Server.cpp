@@ -291,12 +291,10 @@ void MakePacket(SOCKET sock) {
 		i = 0;
 		for (auto& enemy : SharedData.m_pEnemies) {
 			for (auto& bullet : enemy.GetBullets()) {
-				
 				bulletDataBuf[i] = bullet.GetPosition();
 #ifdef NetworkDebug
 				std::cout << bullet.GetPosition().x << ", " << bullet.GetPosition().y << std::endl;
 #endif
-
 				++i;
 			}
 		}
@@ -317,6 +315,13 @@ void MakePacket(SOCKET sock) {
 		sc_packet_rank packet;
 		packet.size = sizeof(sc_packet_rank);
 		packet.type = SC_PACKET_RANK;
+		int i = 1;
+		for (auto p = SharedData.m_pPlayers.begin(); p != SharedData.m_pPlayers.end(); ++p) {
+			if (sock == p->playerSocket) {
+				packet.rank = i;
+			}
+			++i;
+		}
 		send(sock, reinterpret_cast<char*>(&packet), sizeof(sc_packet_rank), 0);
 	}
 		break;
@@ -329,6 +334,7 @@ void MakePacket(SOCKET sock) {
 
 DWORD WINAPI Collision_Thread(LPVOID arg)
 {
+
 	static bool start = false;
 	if (!start) {
 		currentTime = std::chrono::system_clock::now();
@@ -340,9 +346,11 @@ DWORD WINAPI Collision_Thread(LPVOID arg)
 #endif
 	if (SharedData.CheckAllPlayerStatusReady())
 	{
+		EnterCriticalSection(&CS2);
 		CollisionCheckBulletAndWall();
 		CollisionCheckPlayerAndBullet();
 		CollisionCheckAbility();
+		LeaveCriticalSection(&CS2);
 #ifdef NetworkDebug
 		std::cout << "충돌체크 작동" << std::endl;
 #endif
@@ -362,6 +370,7 @@ DWORD WINAPI Collision_Thread(LPVOID arg)
 		//}
 #endif
 	}
+	
 	ResetEvent(hCollideEvent);
 	SetEvent(hClientEvent);
 #ifdef NetworkDebug
