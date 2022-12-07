@@ -53,6 +53,25 @@ ServerSharedData::ServerSharedData() {
 	musicStart = false;
 }
 
+void ServerSharedData::InitializeSharedData() {
+	
+	isCollideOk = false;
+	
+	m_pPlayers.clear();
+	m_pEnemies.clear();
+
+	hPlayingMusicSpeedFile = NULL;
+	hPlayingMusicNoteFile = NULL;
+	music = SELECTED_MUSIC::NONE;
+
+	time = 0;
+	leastTime = 0;
+	TimeDelay = -0.8f;
+	nextPacket = NULL;
+	nextPacketPlayerId = NULL;
+	musicStart = false;
+}
+
 void ServerSharedData::PlayerJoin(SOCKET sock, char* dataBuf) {
 	
 	// 플레이어가 PlayerWaiting Scene에 들어왔을 때 실행

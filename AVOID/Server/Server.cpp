@@ -18,6 +18,8 @@ CRITICAL_SECTION CS2;
 
 ServerSharedData SharedData;
 
+static bool start = false;
+
 DWORD WINAPI Client_Thread(LPVOID arg)
 {
 	std::cout << "Client Thread Start." << std::endl;
@@ -319,6 +321,8 @@ void MakePacket(SOCKET sock) {
 			++i;
 		}
 		send(sock, reinterpret_cast<char*>(&packet), sizeof(sc_packet_rank), 0);
+		SharedData.InitializeSharedData();
+		start = false;
 	}
 		break;
 	case NULL:
@@ -331,7 +335,7 @@ void MakePacket(SOCKET sock) {
 DWORD WINAPI Collision_Thread(LPVOID arg)
 {
 
-	static bool start = false;
+
 	if (!start) {
 		currentTime = std::chrono::system_clock::now();
 		start = true;

@@ -64,6 +64,7 @@ public:
 
 	
 	ServerSharedData();
+	void InitializeSharedData();
 	void PlayerJoin(SOCKET sock, char* dataBuf);
 	void PlayerLeft(SOCKET sock);
 	void UpdatePlayerStatus(SOCKET sock, char* dataBuf);
