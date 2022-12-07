@@ -354,7 +354,7 @@ void ServerSharedData::Update(float fTimeElapsed) {
 
 	for (auto& player : m_pPlayers) {
 		if (player.isInvincible) {
-			if (player.AttackedTime - TimeDelay > 2.0f) {
+			if (TimeDelay - player.AttackedTime > 2.0f) {
 				player.isInvincible = false;
 			}
 		}
