@@ -69,6 +69,8 @@ private:
 	int time = 0;							// 노래가 시작하고 얼마나 지나갔는가? 1당 bpm / 240 이다.
 											// time 이 1450을 넘으면 노래 종료
 
+	HBRUSH hBrush, oldBrush;
+
 	// 서버 관련 추가 변수
 	// recv
 #ifdef USE_NETWORK

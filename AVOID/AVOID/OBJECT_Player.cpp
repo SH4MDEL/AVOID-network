@@ -95,7 +95,7 @@ void OBJECT_Player::Update(float fTimeElapsed)
 
 void OBJECT_Player::Render(HDC *hDC)
 {
-	if (AbilityCheck) {
+	if (m_abilityCheck) {
 		Ability.Draw(*hDC, m_x - Ability_radius, m_y - Ability_radius, Ability_radius * 2, Ability_radius * 2);
 	}
 
@@ -114,37 +114,6 @@ void OBJECT_Player::Render(HDC *hDC)
 			Player[2].Draw(*hDC, m_x - Player_radius, m_y - Player_radius, Player_radius * 2, Player_radius * 2);
 		}
 	}
-
-	hBrush = CreateSolidBrush(RGB(0, 0, 105));			// 옅은 파란색
-	oldBrush = (HBRUSH)SelectObject(*hDC, hBrush);
-
-	Rectangle(*hDC, 0, windowY - 72, windowX*(Player_mp / (float)(2.5) / 100), windowY - 50);		// mp에 따라 mp바의 길이가 달라짐
-
-	SelectObject(*hDC, oldBrush);
-	DeleteObject(hBrush);
-
-	if (this->Player_hp < 70.f) {
-
-		hBrush = CreateSolidBrush(RGB(105, 0, 0));			// 옅은 붉은색
-		oldBrush = (HBRUSH)SelectObject(*hDC, hBrush);
-
-		Rectangle(*hDC, 0, windowY - 50, windowX*(Player_hp / 100), windowY);		// hp에 따라 hp바의 길이가 달라짐
-
-		SelectObject(*hDC, oldBrush);
-		DeleteObject(hBrush);
-	}
-
-	else {
-
-		hBrush = CreateSolidBrush(RGB(0, 105, 0));			// 옅은 붉은색
-		oldBrush = (HBRUSH)SelectObject(*hDC, hBrush);
-
-		Rectangle(*hDC, 0, windowY - 50, windowX*(Player_hp / 100), windowY);		// hp에 따라 hp바의 길이가 달라짐
-
-		SelectObject(*hDC, oldBrush);
-		DeleteObject(hBrush);
-
-	}
 }
 
 int OBJECT_Player::GetX()
@@ -162,6 +131,11 @@ float OBJECT_Player::GetHp()
 	return Player_hp;
 }
 
+float OBJECT_Player::GetMp()
+{
+	return Player_mp;
+}
+
 bool OBJECT_Player::GetState()
 {
 	return invincibility;
@@ -174,7 +148,7 @@ int OBJECT_Player::GetRadius()
 
 bool OBJECT_Player::GetAbilityState()
 {
-	return AbilityCheck;
+	return m_spaceKeyDown;
 }
 
 int OBJECT_Player::GetID()
@@ -223,13 +197,13 @@ void OBJECT_Player::KeyState() {
 	if (GetAsyncKeyState(VK_SPACE) & 0x8000) {
 		if (Player_mp > 10.f) {
 			Player_mp -= 1.f;
-			AbilityCheck = true;
+			m_spaceKeyDown = true;
 			if (Player_mp <= 10.f) {
-				AbilityCheck = false;
+				m_spaceKeyDown = false;
 			}
 		}
 	}
 	else {
-		AbilityCheck = false;
+		m_spaceKeyDown = false;
 	}
 }

@@ -28,6 +28,7 @@ public:
 	int GetX();
 	int GetY();
 	float GetHp();
+	float GetMp();
 	bool GetState();				// 무적인지 상태를 받는 함수
 	int GetRadius();				// 반지름 받는 함수
 	bool GetAbilityState();
@@ -42,6 +43,9 @@ public:
 
 	void KeyState();
 	void MouseState();
+
+	bool GetSpaceKeyDown() { return m_spaceKeyDown; }
+	void SetAbilityState(bool useAbility) { m_abilityCheck = useAbility; }
 
 	// 서버 관련 추가 함수입니다.
 	int GetServerX() { return m_x - windowX / 2; }	
@@ -66,10 +70,9 @@ private:
 	bool invincibility = false;								// 피격시 무적 확인용 변수
 	int Player_radius = 10;									// 플레이어 원의 반지름			 바꿀 시 Bullet의 특수기능 충돌체크의 반지름도 바꿔줘야함
 	int Player_ability = 1;									// 특수능력	
-	bool AbilityCheck = true;								// 능력이 발동중인지 확인하는 변수
+	bool m_abilityCheck;								// 능력이 발동중인지 확인하는 변수
+	bool m_spaceKeyDown;
 	bool CheckKey = false;
-
-	HBRUSH hBrush, oldBrush;
 
 	// 서버 관련 추가 변수입니다.
 	int m_playerID;

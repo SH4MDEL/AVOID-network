@@ -155,6 +155,33 @@ void Scene_Ingame::Render(HDC hdc)
 	m_players[0]->Render(&hdc);
 #endif // !USE_NETWORK
 
+	hBrush = CreateSolidBrush(RGB(0, 0, 105));			// 옅은 파란색
+	oldBrush = (HBRUSH)SelectObject(hdc, hBrush);
+
+	Rectangle(hdc, 0, windowY - 72, windowX * (m_players[m_playerID]->GetMp() / (float)(2.5) / 100), windowY - 50);		// mp에 따라 mp바의 길이가 달라짐
+
+	SelectObject(hdc, oldBrush);
+	DeleteObject(hBrush);
+
+	if (m_players[m_playerID]->GetHp() < 70.f) {
+
+		hBrush = CreateSolidBrush(RGB(105, 0, 0));			// 옅은 붉은색
+		oldBrush = (HBRUSH)SelectObject(hdc, hBrush);
+
+		Rectangle(hdc, 0, windowY - 50, windowX * (m_players[m_playerID]->GetHp() / 100), windowY);		// hp에 따라 hp바의 길이가 달라짐
+
+		SelectObject(hdc, oldBrush);
+		DeleteObject(hBrush);
+	}
+	else {
+		hBrush = CreateSolidBrush(RGB(0, 105, 0));			// 옅은 붉은색
+		oldBrush = (HBRUSH)SelectObject(hdc, hBrush);
+
+		Rectangle(hdc, 0, windowY - 50, windowX * (m_players[m_playerID]->GetHp() / 100), windowY);		// hp에 따라 hp바의 길이가 달라짐
+
+		SelectObject(hdc, oldBrush);
+		DeleteObject(hBrush);
+	}
 }
 
 void Scene_Ingame::Update(float fTimeElapsed)
@@ -185,7 +212,7 @@ void Scene_Ingame::Update(float fTimeElapsed)
 		packet.size = sizeof(cs_packet_player_status);
 		packet.coord.x = (short)m_players[m_playerID]->GetServerX();
 		packet.coord.y = (short)m_players[m_playerID]->GetServerY();
-		packet.isSkill = m_players[m_playerID]->GetAbilityState();
+		packet.isSkill = m_players[m_playerID]->GetSpaceKeyDown();
 		packet.playerID = m_players[m_playerID]->GetID();
 		Send(&packet);
 #ifdef NETWORK_DEBUG
@@ -196,6 +223,7 @@ void Scene_Ingame::Update(float fTimeElapsed)
 		for (int i = 0; i < m_playerNum; ++i) {
 			PlayerStatus ps = m_playersStatus[i];
 			m_players[i]->SetServerPos(ps.coord.x, ps.coord.y);
+			m_players[i]->SetAbilityState(ps.isSkill);
 			if (ps.isCollide) {
 				if (i == m_playerID) {
 					m_players[i]->SetHp(m_players[i]->hitHp);
@@ -216,7 +244,6 @@ void Scene_Ingame::Update(float fTimeElapsed)
 		for (int i = 0; i < m_bulletNum; ++i) {
 			Coord coord = m_bulletsCoord[i];
 			m_bullets[i]->SetServerPos(coord.x, coord.y);
-			cout << coord.x << ", " << coord.y << endl;
 		}
 	}
 	if (m_isGameEnd && m_rank == -1) {
