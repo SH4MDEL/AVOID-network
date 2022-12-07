@@ -8,3 +8,4 @@
 // 이 파일이 아닌 STDAFX.H에서 참조합니다.
 
 SOCKET		g_socket;
+bool		g_threadRun;

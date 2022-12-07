@@ -19,8 +19,11 @@ Scene_Result::~Scene_Result()
 
 void Scene_Result::OnDestroy()
 {
-	this->Result[0].Destroy();
-	this->Result[1].Destroy();
+	Result[0].Destroy();
+	Result[1].Destroy();
+	m_imageRank[0].Destroy();
+	m_imageRank[1].Destroy();
+	m_imageRank[2].Destroy();
 }
 
 void Scene_Result::BuildObjects()
@@ -61,6 +64,7 @@ void Scene_Result::Update(float fTimeElapsed)
 	KeyState();
 
 	if (this->finish) {
+		g_threadRun = false;
 		m_pFramework->ChangeScene(CScene::SceneTag::MusicSelect);
 		m_pFramework->curSceneCreate();
 		Scene_Result::OnDestroy();

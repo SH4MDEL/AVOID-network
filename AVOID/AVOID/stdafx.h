@@ -51,6 +51,7 @@ using namespace std;
 #pragma comment (lib,"fmod64_vc.lib")
 
 extern SOCKET		g_socket;
+extern bool			g_threadRun;
 
 #define TITLE_MX_LENGTH 64
 

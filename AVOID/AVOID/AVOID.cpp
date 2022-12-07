@@ -250,6 +250,7 @@ void InitServer()
 		return;
 	}
 
+	g_threadRun = true;
 	HANDLE hThread = CreateThread(nullptr, 0, ProcessClient, (LPVOID)g_socket, 0, nullptr);
 	if (!hThread) {
 		CloseHandle(g_event);
@@ -260,7 +261,7 @@ void InitServer()
 
 DWORD CALLBACK ProcessClient(LPVOID arg)
 {
-	while (true) {
+	while (g_threadRun) {
 		Recv();
 	}
 	return 0;
