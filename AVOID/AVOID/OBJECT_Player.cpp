@@ -80,11 +80,11 @@ void OBJECT_Player::Update(float fTimeElapsed)
 		}
 	}
 
-	if (this->invincibility) {					// 피격 후 무적이 되면
-		this->TimeDelay += fTimeElapsed;		
-		if (this->TimeDelay >= 2.f) {			// 2초후 TimeDelay를 0으로 만들고 무적을 해제함
-			this->TimeDelay = 0;
-			this->invincibility = false;
+	if (invincibility) {					// 피격 후 무적이 되면
+		TimeDelay += fTimeElapsed;		
+		if (TimeDelay >= 2.f) {			// 2초후 TimeDelay를 0으로 만들고 무적을 해제함
+			TimeDelay = 0;
+			invincibility = false;
 		}
 	}
 

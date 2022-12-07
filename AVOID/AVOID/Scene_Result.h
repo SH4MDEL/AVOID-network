@@ -28,6 +28,7 @@ private:
 	int windowY = ::GetSystemMetrics(SM_CYSCREEN);		// 모니터 y길이 받아옴
 
 	CImage Result[2];
+	CImage m_imageRank[3];
 
 	bool CheckKey;
 	bool finish;

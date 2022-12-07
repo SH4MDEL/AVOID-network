@@ -179,7 +179,7 @@ void Scene_Ingame::Update(float fTimeElapsed)
 #endif // !USE_NETWORK
 #ifdef USE_NETWORK
 	// 플레이어의 위치 정해주기
-	if (TimeDelay >= -1.f) {
+	if (!m_isGameEnd && TimeDelay >= -1.f) {
 		cs_packet_player_status packet;
 		packet.type = CS_PACKET_PLAYER_STATUS;
 		packet.size = sizeof(cs_packet_player_status);
@@ -195,8 +195,17 @@ void Scene_Ingame::Update(float fTimeElapsed)
 		// 플레이어의 위치 정해주기
 		for (int i = 0; i < m_playerNum; ++i) {
 			PlayerStatus ps = m_playersStatus[i];
-			cout << i << ": x: " << ps.coord.x << " y: " << ps.coord.y << endl;
 			m_players[i]->SetServerPos(ps.coord.x, ps.coord.y);
+			if (ps.isCollide) {
+				if (i == m_playerID) {
+					m_players[i]->SetHp(m_players[i]->hitHp);
+					if (m_players[0]->GetHp() <= 0) {
+						m_players[0]->SetHp_zero();
+					}
+					IngameSound->play(Sound::SoundTag::Hitsound);
+				}
+				m_players[i]->SetState(true);			// 피격시 무적으로 만들음
+			}
 		}
 		// 적의 위치 정해주기
 		for (int i = 0; i < m_enemyNum; ++i) {
@@ -210,8 +219,7 @@ void Scene_Ingame::Update(float fTimeElapsed)
 			cout << coord.x << ", " << coord.y << endl;
 		}
 	}
-	if (m_isGameEnd) {
-		m_isGameEnd = false;
+	if (m_isGameEnd && m_rank == -1) {
 		cs_packet_player_hp packet;
 		packet.type = CS_PACKET_PLAYER_HP;
 		packet.size = sizeof(cs_packet_player_hp);
@@ -226,7 +234,7 @@ void Scene_Ingame::Update(float fTimeElapsed)
 #ifdef USE_NETWORK
 #endif // USE_NETWORK
 		m_pFramework->ChangeScene(CScene::SceneTag::Result);
-		m_pFramework->SetRank(m_selectedMusic, CScene::SceneTag::Result);
+		m_pFramework->SetRank(m_rank, CScene::SceneTag::Result);
 		m_pFramework->curSceneCreate();
 		OnDestroy();
 	}

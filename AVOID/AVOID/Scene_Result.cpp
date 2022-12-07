@@ -30,21 +30,30 @@ void Scene_Result::BuildObjects()
 
 void Scene_Result::OnCreate()
 {
-	this->Result[0].Load(L"Graphic\\UI\\Clear.png");
-	this->Result[1].Load(L"Graphic\\UI\\Fail.png");
+	Result[0].Load(L"Graphic\\UI\\Clear.png");
+	Result[1].Load(L"Graphic\\UI\\Fail.png");
+	m_imageRank[0].Load(L"Graphic\\UI\\Rank1.png");
+	m_imageRank[1].Load(L"Graphic\\UI\\Rank2.png");
+	m_imageRank[2].Load(L"Graphic\\UI\\Rank3.png");
 
-	this->CheckKey = false;
-	this->finish = false;
+	CheckKey = false;
+	finish = false;
 }
 
 void Scene_Result::Render(HDC hDC)
 {
+#ifdef USE_NETWORK
+	m_imageRank[m_rank - 1].Draw(hDC, 0, 0, windowX, windowY);
+#endif // USE_NETWORK
+#ifndef USE_NETWORK
 	if (finalhp >= 70.f) {
-		this->Result[0].Draw(hDC, 0, 0, windowX, windowY);
-	}
+		Result[0].Draw(hDC, 0, 0, windowX, windowY);
+}
 	else {
-		this->Result[1].Draw(hDC, 0, 0, windowX, windowY);
+		Result[1].Draw(hDC, 0, 0, windowX, windowY);
 	}
+#endif // !USE_NETWORK
+
 }
 
 void Scene_Result::Update(float fTimeElapsed)
