@@ -26,5 +26,5 @@ private:
 
 
 	int radius = BULLET_RADIUS;
-	int bulletSpeed = BULLET_SPEED;
+	int bulletSpeed;
 };

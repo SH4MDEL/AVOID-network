@@ -421,21 +421,23 @@ void CollisionCheckAbility() {
 	double r1 = 0;
 	double r2 = 0;
 
-	for (auto enemy : SharedData.m_pEnemies) {
+	for (auto& enemy : SharedData.m_pEnemies) {
+		for (auto& bullet : enemy.GetBullets()) {
+			bullet.SetBulletSpeed(15);
+		}
+	}
+	for (auto& enemy : SharedData.m_pEnemies) {
 		for (auto& bullet : enemy.GetBullets()) {
 			for (auto& player : SharedData.m_pPlayers) {
-				Coord bPos = bullet.GetPosition();
-				d = sqrt((double)(pow((double)bPos.x - (double)(player.position.x), 2) + pow(bPos.y - (double)(player.position.y), 2)));
-				r1 = BULLET_RADIUS + ABILITY_RADIUS;
-				r2 = BULLET_RADIUS - ABILITY_RADIUS;
-
 				if (player.isSkill) {
+					Coord bPos = bullet.GetPosition();
+					d = sqrt((double)(pow((double)bPos.x - (double)(player.position.x), 2) + pow(bPos.y - (double)(player.position.y), 2)));
+					r1 = BULLET_RADIUS + ABILITY_RADIUS;
+					r2 = BULLET_RADIUS - ABILITY_RADIUS;
+
 					if ((r2 < d && d <= r1) || r2 >= d) {
-						bullet.SetBulletSpeed(3);
+						bullet.SetBulletSpeed(5);
 					}
-				}
-				else {
-					bullet.SetBulletSpeed(10);
 				}
 			}
 		}
