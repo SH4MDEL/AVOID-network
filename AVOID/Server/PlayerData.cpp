@@ -47,7 +47,7 @@ ServerSharedData::ServerSharedData() {
 	m_pEnemies.clear();
 
 	time = 0;
-	TimeDelay = -3.2f;
+	TimeDelay = -0.8f;
 	nextPacket = NULL;
 	nextPacketPlayerId = NULL;
 	musicStart = false;
@@ -336,7 +336,7 @@ void ServerSharedData::Update(float fTimeElapsed) {
 					++i;
 				}
 				++time;
-				leastTime = 0;
+				leastTime = 0.f;
 			}
 		}
 		else if (music == SELECTED_MUSIC::TRUE_BLUE) {
@@ -347,19 +347,10 @@ void ServerSharedData::Update(float fTimeElapsed) {
 					++i;
 				}
 				++time;
-				leastTime = 0;
+				leastTime = 0.f;
 			}
 		}	
 	}
-
-	/*
-	//-----------------------
-
-	아래 for 절에서 leastTime이 항상 0이 됨.
-	이걸 고치지 않으면 실행을 할 수가 없음.
-
-	//-----------------------
-	*/
 
 	for (auto& enemy : m_pEnemies) {
 		enemy.Update(fTimeElapsed);

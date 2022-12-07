@@ -207,18 +207,15 @@ void OBJECT_Player::MouseState()
 	double d = sqrt((double)(pow((double)windowX / 2 - (double)mouse_mx, 2) + pow((double)windowY / 2 - (double)mouse_my, 2)));		
 	// 플레이어 원과 플레이 원 중심의 거리
 	double r_ = 200 - Player_radius;
-	
-	int tempx = m_x;
-	int tempy = m_y;
 
 	if (r_ >= d) {							// 커서가 원 내부
 		m_x = mouse_mx;
 		m_y = mouse_my;
 	}
 	else {									// 커서가 원 외부
-		SetCursorPos(tempx + 9, tempy + 30);	// Cursor는 window창의 상단바를 포함?하는 듯 함			아닐 경우 tempx,tempy가 맞음
-		m_x = tempx;
-		m_y = tempy;
+		m_x = (mouse_mx - windowX / 2) / d * r_ + windowX / 2;
+		m_y = (mouse_my - windowY / 2) / d * r_ + windowY / 2;
+		SetCursorPos(m_x + 9, m_y + 30);
 	}
 }
 

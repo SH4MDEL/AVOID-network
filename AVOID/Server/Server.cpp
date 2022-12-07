@@ -18,8 +18,6 @@ CRITICAL_SECTION CS2;
 
 ServerSharedData SharedData;
 
-bool ThreadStart = false;
-
 DWORD WINAPI Client_Thread(LPVOID arg)
 {
 	std::cout << "Client Thread Start." << std::endl;
@@ -329,16 +327,15 @@ void MakePacket(SOCKET sock) {
 
 DWORD WINAPI Collision_Thread(LPVOID arg)
 {
+	static bool start = false;
+	if (!start) {
+		currentTime = std::chrono::system_clock::now();
+		start = true;
+	}
 	
 #ifdef NetworkDebug
 	std::cout << "Collision Thread 작동" << std::endl;
 #endif
-
-	if (!ThreadStart) {
-		currentTime = std::chrono::system_clock::now();
-		ThreadStart = true;
-	}
-
 	if (SharedData.CheckAllPlayerStatusReady())
 	{
 		CollisionCheckBulletAndWall();
@@ -349,15 +346,19 @@ DWORD WINAPI Collision_Thread(LPVOID arg)
 #endif
 
 		timeElapsed = std::chrono::system_clock::now() - currentTime;
-		if (timeElapsed.count() > 1.0f / 30.0f)
-		{
+
+		//if (timeElapsed.count() > 1.0f / 30.0f)
+		//{
 			currentTime = std::chrono::system_clock::now();
 			SharedData.Update(timeElapsed.count());
 #ifdef NetworkDebug
 			std::cout << "업데이트 작동" << std::endl;
+			for (auto& player : SharedData.m_pPlayers)
+			{
+				//std::cout << player.playerId << " : " << player.position.x << ", " << player.position.y << std::endl;
+			}
+		//}
 #endif
-
-		}
 	}
 	ResetEvent(hCollideEvent);
 	SetEvent(hClientEvent);
@@ -448,9 +449,6 @@ int main(int argc, char* argv[]) {
 	hClientEvent = CreateEvent(NULL, TRUE, TRUE, NULL);
 	hCollideEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
 
-
-
-	currentTime = std::chrono::system_clock::now();
 
 	SOCKET client_sock;
 	sockaddr_in clientaddr;

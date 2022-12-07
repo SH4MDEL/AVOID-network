@@ -41,9 +41,8 @@ void Enemy::SetNextNote(float fElapsedTime, int lotateSpeed, int note, int selec
 
 	if (selectedMusic == 0) {
 		theta += SpeedData * pi * 1.f / 170.f * (fElapsedTime * (680.f / 60.f));
-		m_position.x = ENEMY_DIST * cos(theta);
-		m_position.y = ENEMY_DIST * sin(theta);
-		//std::cout << m_position.x << ", " << m_position.y << std::endl;
+		m_position.x = (float)ENEMY_DIST * cos(theta);
+		m_position.y = (float)ENEMY_DIST * sin(theta);
 	}
 	else if (selectedMusic == 1) {
 		theta += SpeedData * pi * 1.f / 170.f * (fElapsedTime * (656.f / 60.f));
