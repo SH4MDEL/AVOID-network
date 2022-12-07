@@ -2,7 +2,7 @@
 #pragma pack(1)
 
 constexpr short		SERVER_PORT					= 9000;
-constexpr char*		SERVER_ADDR					= "192.168.62.30";
+constexpr char*		SERVER_ADDR					= "127.0.0.1";
 constexpr int		BUF_SIZE					= 512;
 constexpr int		MAX_USER					= 3;
 

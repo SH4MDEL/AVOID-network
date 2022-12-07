@@ -128,11 +128,6 @@ void ServerSharedData::PlayerLeft(SOCKET sock) {
 		return a.playerSocket == sock;
 		}), m_pPlayers.end());
 
-
-	// 다음에 보낼 패킷 설정
-
-	nextPacket = SC_PACKET_LOGOUT;
-	nextPacketPlayerId = NO_NEED_PLAYER_ID;
 }
 
 
@@ -187,8 +182,10 @@ bool ServerSharedData::CheckAllPlayerStatusReady() {
 
 void ServerSharedData::CreateNewGame(char* dataBuf) {
 
+	int musicNum = 0;
+
 	if (!musicStart) {
-		int musicNum = 0;
+		
 
 		if (dataBuf == NULL) {
 
@@ -203,13 +200,13 @@ void ServerSharedData::CreateNewGame(char* dataBuf) {
 					switch (player.selectedMusic) {
 					case SELECTED_MUSIC::BBKKBKK:
 					{
-						int musicNum = 0;
+						musicNum = 0;
 						music = SELECTED_MUSIC::BBKKBKK;
 					}
 					break;
 					case SELECTED_MUSIC::TRUE_BLUE:
 					{
-						int musicNum = 1;
+						musicNum = 1;
 						music = SELECTED_MUSIC::TRUE_BLUE;
 					}
 					break;
@@ -369,7 +366,7 @@ void ServerSharedData::Update(float fTimeElapsed) {
 	}
 	
 
-	if ((music == SELECTED_MUSIC::BBKKBKK && time >= 1450) && (music == SELECTED_MUSIC::TRUE_BLUE && time >= 1310)) {
+	if ((music == SELECTED_MUSIC::BBKKBKK && time >= 1450) || (music == SELECTED_MUSIC::TRUE_BLUE && time >= 1310)) {
 		nextPacket = SC_PACKET_MUSIC_END;
 		nextPacketPlayerId = NO_NEED_PLAYER_ID;
 		musicStart = false;

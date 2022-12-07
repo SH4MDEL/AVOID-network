@@ -14,8 +14,11 @@
 SOCKET listen_sock = NULL;
 
 CRITICAL_SECTION CS;
+CRITICAL_SECTION CS2;
 
 ServerSharedData SharedData;
+
+bool ThreadStart = false;
 
 DWORD WINAPI Client_Thread(LPVOID arg)
 {
@@ -66,6 +69,7 @@ DWORD WINAPI Client_Thread(LPVOID arg)
 			EnterCriticalSection(&CS);
 			MakePacket(client_sock);
 			LeaveCriticalSection(&CS);
+
 			delete[] pBuf;
 		}
 
@@ -253,6 +257,12 @@ void MakePacket(SOCKET sock) {
 			player.isCollide = FALSE;
 
 			playerData[i].playerID = player.playerId;
+#ifdef NetworkDebug
+			for (auto& player : SharedData.m_pPlayers)
+			{
+				std::cout << player.playerId << " : " << player.position.x << ", " << player.position.y << std::endl;
+			}
+#endif
 			++i;
 		}
 		
@@ -281,8 +291,12 @@ void MakePacket(SOCKET sock) {
 		i = 0;
 		for (auto& enemy : SharedData.m_pEnemies) {
 			for (auto& bullet : enemy.GetBullets()) {
+				
 				bulletDataBuf[i] = bullet.GetPosition();
+#ifdef NetworkDebug
 				std::cout << bullet.GetPosition().x << ", " << bullet.GetPosition().y << std::endl;
+#endif
+
 				++i;
 			}
 		}
@@ -315,34 +329,41 @@ void MakePacket(SOCKET sock) {
 
 DWORD WINAPI Collision_Thread(LPVOID arg)
 {
+	
+#ifdef NetworkDebug
 	std::cout << "Collision Thread 작동" << std::endl;
+#endif
+
+	if (!ThreadStart) {
+		currentTime = std::chrono::system_clock::now();
+		ThreadStart = true;
+	}
 
 	if (SharedData.CheckAllPlayerStatusReady())
 	{
 		CollisionCheckBulletAndWall();
 		CollisionCheckPlayerAndBullet();
 		CollisionCheckAbility();
-
+#ifdef NetworkDebug
 		std::cout << "충돌체크 작동" << std::endl;
+#endif
 
 		timeElapsed = std::chrono::system_clock::now() - currentTime;
 		if (timeElapsed.count() > 1.0f / 30.0f)
 		{
 			currentTime = std::chrono::system_clock::now();
 			SharedData.Update(timeElapsed.count());
+#ifdef NetworkDebug
 			std::cout << "업데이트 작동" << std::endl;
-			for (auto& player : SharedData.m_pPlayers)
-			{
-				std::cout << player.playerId << " : " << player.position.x << ", " << player.position.y << std::endl;
-			}
+#endif
+
 		}
 	}
-
 	ResetEvent(hCollideEvent);
 	SetEvent(hClientEvent);
-
+#ifdef NetworkDebug
 	std::cout << "충돌 이벤트 비신호 및 클라이언트 이벤트 신호" << std::endl;
-
+#endif
 	return 0;
 }
 
@@ -422,6 +443,7 @@ int main(int argc, char* argv[]) {
 	initServer();
 
 	InitializeCriticalSection(&CS);
+	InitializeCriticalSection(&CS2);
 
 	hClientEvent = CreateEvent(NULL, TRUE, TRUE, NULL);
 	hCollideEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
