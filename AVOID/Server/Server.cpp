@@ -250,11 +250,7 @@ void MakePacket(SOCKET sock) {
 		for (auto& player : SharedData.m_pPlayers)
 		{
 			playerData[i].coord = player.position;
-
 			playerData[i].isCollide = player.isCollide;
-			if (player.isCollide) {
-				player.isCollide = FALSE;
-			}
 			playerData[i].playerID = player.playerId;
 #ifdef NetworkDebug
 			for (auto& player : SharedData.m_pPlayers)
@@ -357,17 +353,11 @@ DWORD WINAPI Collision_Thread(LPVOID arg)
 
 		timeElapsed = std::chrono::system_clock::now() - currentTime;
 
-		//if (timeElapsed.count() > 1.0f / 30.0f)
-		//{
-			currentTime = std::chrono::system_clock::now();
-			SharedData.Update(timeElapsed.count());
+
+		currentTime = std::chrono::system_clock::now();
+		SharedData.Update(timeElapsed.count());
 #ifdef NetworkDebug
-			std::cout << "업데이트 작동" << std::endl;
-			for (auto& player : SharedData.m_pPlayers)
-			{
-				//std::cout << player.playerId << " : " << player.position.x << ", " << player.position.y << std::endl;
-			}
-		//}
+		std::cout << "업데이트 작동" << std::endl;
 #endif
 	}
 	
@@ -404,6 +394,9 @@ void CollisionCheckPlayerAndBullet() {
 	double r1 = 0;
 	double r2 = 0;
 
+	for (auto& player : SharedData.m_pPlayers) {
+		if (player.isCollide) player.isCollide = false;
+	}
 	for (auto& enemy : SharedData.m_pEnemies) {
 		for (auto& bullet = enemy.GetBullets().begin(); bullet != enemy.GetBullets().end(); ++bullet) {
 			for (auto& player : SharedData.m_pPlayers) {

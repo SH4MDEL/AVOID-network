@@ -340,7 +340,7 @@ void CFramework::SetMusic(int selectedMusic, int sceneType)
 
 void CFramework::SetRank(int rank, int sceneType)
 {
-	if (sceneType == CScene::SceneTag::Ingame) {
+	if (sceneType == CScene::SceneTag::Result) {
 #ifdef USE_NETWORK
 		Scene_Result* scene = (Scene_Result*)m_pCurrScene;
 		scene->SetRank(rank);

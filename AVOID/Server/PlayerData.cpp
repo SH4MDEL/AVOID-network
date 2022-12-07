@@ -166,8 +166,6 @@ void ServerSharedData::UpdatePlayerStatus(SOCKET sock, char* dataBuf)
 
 }
 
-
-
 // 모든 플레이어가 다 한번 스테이터스를 바꿨는지 확인.
 bool ServerSharedData::CheckAllPlayerStatusReady() {
 	for (auto& i : m_pPlayers) {
@@ -177,6 +175,9 @@ bool ServerSharedData::CheckAllPlayerStatusReady() {
 	}
 
 	std::cout << "충돌 체크 이벤트 생성 가능" << std::endl;
+	for (auto& i : m_pPlayers) {
+		i.isStatusChanged = false;
+	}
 	return true;
 }
 
