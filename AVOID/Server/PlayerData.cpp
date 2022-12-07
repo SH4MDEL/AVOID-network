@@ -311,6 +311,8 @@ int ServerSharedData::GetPlayerRank(SOCKET sock, char* dataBuf) {
 		}
 	}
 
+
+
 	for (auto& player : m_pPlayers) {
 		if (player.hp == -1) {
 			nextPacket = NULL;
@@ -326,7 +328,7 @@ int ServerSharedData::GetPlayerRank(SOCKET sock, char* dataBuf) {
 
 
 	nextPacket = SC_PACKET_RANK;
-	nextPacketPlayerId = NULL;
+	nextPacketPlayerId = NO_NEED_PLAYER_ID;
 
 	return 0;
 }

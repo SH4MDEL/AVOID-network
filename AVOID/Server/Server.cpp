@@ -314,13 +314,13 @@ void MakePacket(SOCKET sock) {
 		packet.size = sizeof(sc_packet_rank);
 		packet.type = SC_PACKET_RANK;
 		int i = 1;
+
 		for (auto p = SharedData.m_pPlayers.begin(); p != SharedData.m_pPlayers.end(); ++p) {
-			if (sock == p->playerSocket) {
-				packet.rank = i;
-			}
+			packet.rank = i;
+			send(p->playerSocket, reinterpret_cast<char*>(&packet), sizeof(sc_packet_rank), 0);
 			++i;
 		}
-		send(sock, reinterpret_cast<char*>(&packet), sizeof(sc_packet_rank), 0);
+		
 		SharedData.InitializeSharedData();
 		start = false;
 	}
