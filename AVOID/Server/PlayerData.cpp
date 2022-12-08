@@ -176,8 +176,8 @@ void ServerSharedData::UpdatePlayerStatus(SOCKET sock, char* dataBuf)
 	// 그리고 스레드를 만들 때에 해당 충돌체크를 하는 것이 맞는지 확인하여 충돌체크의 순서를 도는것이 맞는듯 하다.
 	// 그러니까 항상 스레드를 만드는 것으로 해야겠다.
 
-	nextPacket = SC_PACKET_OBJECTS_INFO;
-	nextPacketPlayerId = packet->playerID;
+	nextPacket = SC_PACKET_OBJECTS_INFO;;
+	nextPacketPlayerId = NO_NEED_PLAYER_ID;
 
 	ResetEvent(hClientEvent);
 	SetEvent(hCollideEvent);
@@ -311,15 +311,21 @@ int ServerSharedData::GetPlayerRank(SOCKET sock, char* dataBuf) {
 		}
 	}
 
-
+#ifdef NetworkDebug
+	for (auto& player : m_pPlayers) {
+		std::cout << player.playerId << " HP : " << player.hp << std::endl;
+	}
+#endif
 
 	for (auto& player : m_pPlayers) {
 		if (player.hp == -1) {
 			nextPacket = NULL;
 			nextPacketPlayerId = NULL;
+
 			return -1;
 		}
 	}
+
 
 
 	std::sort(m_pPlayers.begin(), m_pPlayers.end(), [](const CPlayerData& a, const CPlayerData& b) {

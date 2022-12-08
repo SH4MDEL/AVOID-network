@@ -60,15 +60,15 @@ DWORD WINAPI Client_Thread(LPVOID arg)
 
 			pBuf = GetDataFromPacket(client_sock, pBuf, packetType);
 			
-			EnterCriticalSection(&CS);
+			//EnterCriticalSection(&CS);
 			ApplyPacketData(client_sock, pBuf, packetType);
-			LeaveCriticalSection(&CS);
+			//LeaveCriticalSection(&CS);
 
 			WaitForSingleObject(hClientEvent, INFINITE);
 			
-			EnterCriticalSection(&CS);
+			//EnterCriticalSection(&CS);
 			MakePacket(client_sock);
-			LeaveCriticalSection(&CS);
+			//LeaveCriticalSection(&CS);
 
 			delete[] pBuf;
 		}
@@ -231,6 +231,7 @@ void MakePacket(SOCKET sock) {
 		break;
 	case SC_PACKET_OBJECTS_INFO:
 	{
+		int retval;
 		sc_packet_objects_info packet;
 		packet.size = sizeof(sc_packet_objects_info);
 		packet.type = SC_PACKET_OBJECTS_INFO;
@@ -238,7 +239,10 @@ void MakePacket(SOCKET sock) {
 		packet.enemyNum = SharedData.m_pEnemies.size();
 		packet.bulletNum = SharedData.GetBulletNum();
 
-		send(sock, reinterpret_cast<char*>(&packet), sizeof(sc_packet_objects_info), 0);
+		int retval = send(sock, reinterpret_cast<char*>(&packet), sizeof(sc_packet_objects_info), 0);
+		if (retval == SOCKET_ERROR) {
+			std::cout << "Error Send SC_PACKET_OBJECTS_INFO." << std::endl;
+		}
 		std::cout << "Send SC_PACKET_OBJECTS_INFO." << std::endl;
 
 
@@ -335,7 +339,6 @@ void MakePacket(SOCKET sock) {
 DWORD WINAPI Collision_Thread(LPVOID arg)
 {
 
-
 	if (!start) {
 		currentTime = std::chrono::system_clock::now();
 		start = true;
@@ -346,11 +349,9 @@ DWORD WINAPI Collision_Thread(LPVOID arg)
 #endif
 	if (SharedData.CheckAllPlayerStatusReady())
 	{
-		EnterCriticalSection(&CS2);
 		CollisionCheckBulletAndWall();
 		CollisionCheckPlayerAndBullet();
 		CollisionCheckAbility();
-		LeaveCriticalSection(&CS2);
 #ifdef NetworkDebug
 		std::cout << "충돌체크 작동" << std::endl;
 #endif
