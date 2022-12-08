@@ -227,8 +227,8 @@ void Scene_Ingame::Update(float fTimeElapsed)
 			if (ps.isCollide) {
 				if (i == m_playerID) {
 					m_players[i]->SetHp(m_players[i]->hitHp);
-					if (m_players[0]->GetHp() <= 0) {
-						m_players[0]->SetHp_zero();
+					if (m_players[i]->GetHp() < 0) {
+						m_players[i]->SetHp_zero();
 					}
 					IngameSound->play(Sound::SoundTag::Hitsound);
 				}
