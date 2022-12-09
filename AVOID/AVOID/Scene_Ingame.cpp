@@ -254,7 +254,7 @@ void Scene_Ingame::Update(float fTimeElapsed)
 		packet.hp = m_players[m_playerID]->GetHp();
 		Send(&packet);
 	}
-	if (m_rank != -1) {
+	if (m_isGameEnd && m_rank != -1) {
 #ifdef NETWORK_DEBUG
 		cout << "SCENE ÀüÈ¯(Ingame -> Result)" << endl;
 #endif // NETWORK_DEBUG
