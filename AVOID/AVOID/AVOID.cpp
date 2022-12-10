@@ -282,7 +282,7 @@ void Recv()
 
 void TranslatePacket(const packet& packetBuf)
 {
-	int retval;
+	int retval, remain;
 	switch (packetBuf.type)
 	{
 	case SC_PACKET_LOGIN_CONFIRM:
@@ -310,12 +310,31 @@ void TranslatePacket(const packet& packetBuf)
 	case SC_PACKET_OBJECTS_INFO:
 	{
 		sc_packet_objects_info pk;
-		retval = recv(g_socket, reinterpret_cast<char*>(&pk) + 2, packetBuf.size - 2, MSG_WAITALL);
+		remain = packetBuf.size - 2;
+		while (remain > 0) {
+			retval = recv(g_socket, reinterpret_cast<char*>(&pk) + packetBuf.size - remain, remain, MSG_WAITALL);
+			remain -= retval;
+		}
 		Scene_Ingame* scene = (Scene_Ingame*)myFramework.GetCurrScene();
 		scene->SetPlayerEnemyData(pk.playerNum, pk.enemyNum, pk.bulletNum);
-		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetPlayersCoord()), pk.playerNum * sizeof(PlayerStatus), MSG_WAITALL);
-		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetEnemysCoord()), pk.enemyNum * sizeof(Coord), MSG_WAITALL);
-		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetBulletsCoord()), pk.bulletNum * sizeof(Coord), MSG_WAITALL);
+		remain = pk.playerNum * sizeof(PlayerStatus);
+		while (remain > 0) {
+			retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetPlayersCoord()) + pk.playerNum * sizeof(PlayerStatus) - remain,
+				remain, MSG_WAITALL);
+			remain -= retval;
+		}
+		remain = pk.enemyNum * sizeof(Coord);
+		while (remain > 0) {
+			retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetEnemysCoord()) + pk.enemyNum * sizeof(Coord) - remain,
+				remain, MSG_WAITALL);
+			remain -= retval;
+		}
+		remain = pk.bulletNum * sizeof(Coord);
+		while (remain > 0) {
+			retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetBulletsCoord()) + pk.bulletNum * sizeof(Coord) - remain,
+				remain, MSG_WAITALL);
+			remain -= retval;
+		}
 		
 		SetEvent(g_event);
 #ifdef NETWORK_DEBUG
@@ -360,7 +379,7 @@ void Send(void* packetBuf)
 	remain = reinterpret_cast<packet*>(packetBuf)->size;
 	while (remain > 0) {
 		retval = send(g_socket, reinterpret_cast<char*>(packetBuf) + reinterpret_cast<packet*>(packetBuf)->size - remain,
-			reinterpret_cast<packet*>(packetBuf)->size, 0);
+			remain, 0);
 		remain -= retval;
 	}
 }
