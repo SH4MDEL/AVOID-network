@@ -1,11 +1,20 @@
 #pragma once
 #include "stdafx.h"
 
-
-class CObject {
+class Object
+{
 public:
-	CObject();
-	~CObject();
+	Object() = default;
+	Object(Coord position);
+	~Object() = default;
 
-	void Update() { };
+	virtual void Update(float timeElapsed) = 0;
+
+	Coord GetPosition() { return m_position; }
+
+	void SetPosition(Coord position) { m_position = position; }
+
+protected:
+	Coord		m_position;
 };
+

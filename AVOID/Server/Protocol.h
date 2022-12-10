@@ -19,7 +19,10 @@ constexpr char		SC_PACKET_MUSIC_END = 4;
 constexpr char		SC_PACKET_RANK = 5;
 constexpr char		SC_PACKET_LOGOUT = 100;
 
-
+struct Coord
+{
+	short x, y;
+};
 
 struct packet
 {

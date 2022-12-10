@@ -1,9 +1,5 @@
 #include "Object.h"
 
-CObject::CObject() {
-
-}
-
-CObject::~CObject() {
-
+Object::Object(Coord position) : m_position(position)
+{
 }
