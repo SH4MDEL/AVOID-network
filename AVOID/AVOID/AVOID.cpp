@@ -316,6 +316,7 @@ void TranslatePacket(const packet& packetBuf)
 		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetPlayersCoord()), pk.playerNum * sizeof(PlayerStatus), MSG_WAITALL);
 		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetEnemysCoord()), pk.enemyNum * sizeof(Coord), MSG_WAITALL);
 		retval = recv(g_socket, reinterpret_cast<char*>(&scene->GetBulletsCoord()), pk.bulletNum * sizeof(Coord), MSG_WAITALL);
+		
 		SetEvent(g_event);
 #ifdef NETWORK_DEBUG
 		cout << "SC_PACKET_OBJECTS_INFO ÇØ¼®" << endl;
@@ -355,6 +356,12 @@ void TranslatePacket(const packet& packetBuf)
 
 void Send(void* packetBuf)
 {
-	int retval = send(g_socket, reinterpret_cast<char*>(packetBuf), reinterpret_cast<packet*>(packetBuf)->size, 0);
+	int retval, remain;
+	remain = reinterpret_cast<packet*>(packetBuf)->size;
+	while (remain > 0) {
+		retval = send(g_socket, reinterpret_cast<char*>(packetBuf) + reinterpret_cast<packet*>(packetBuf)->size - remain,
+			reinterpret_cast<packet*>(packetBuf)->size, 0);
+		remain -= retval;
+	}
 }
 #endif // USE_NETWORK
