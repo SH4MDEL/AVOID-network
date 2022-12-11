@@ -116,7 +116,7 @@ DWORD WINAPI MainThread(LPVOID arg)
 			packet.type = SC_PACKET_RANK;
 			packet.size = sizeof(sc_packet_rank);
 			for (auto& player : sharedData.players) {
-				packet.rank = rank++;
+				packet.rank = ++rank;
 				Send(player.socket, &packet);
 			}
 			sharedData.musicEnd = false;

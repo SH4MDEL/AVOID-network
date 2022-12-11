@@ -68,7 +68,7 @@ void SharedData::Update(float timeElapsed)
 
 		PlayerStatus ps[MAX_USER];
 		int i = 0;
-		for (auto& player : players)
+		for (const auto& player : players)
 		{
 			ps[i].coord = player.position;
 			ps[i].isCollide = player.isCollide;
@@ -79,7 +79,7 @@ void SharedData::Update(float timeElapsed)
 
 		Coord es[ENEMY_NUM];
 		i = 0;
-		for (auto& enemy : enemys) {
+		for (const auto& enemy : enemys) {
 			es[i] = enemy.GetPosition();
 			++i;
 		}
@@ -87,7 +87,7 @@ void SharedData::Update(float timeElapsed)
 		Coord bs[100];
 		i = 0;
 		for (auto& enemy : enemys) {
-			for (auto& bullet : enemy.GetBullets()) {
+			for (const auto& bullet : enemy.GetBullets()) {
 				bs[i] = bullet.GetPosition();
 				++i;
 			}

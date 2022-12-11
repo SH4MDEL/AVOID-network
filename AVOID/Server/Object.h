@@ -10,7 +10,7 @@ public:
 
 	virtual void Update(float timeElapsed) = 0;
 
-	Coord GetPosition() { return m_position; }
+	Coord GetPosition() const { return m_position; }
 
 	void SetPosition(Coord position) { m_position = position; }
 
