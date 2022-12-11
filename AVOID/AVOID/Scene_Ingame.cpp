@@ -187,7 +187,6 @@ void Scene_Ingame::Render(HDC hdc)
 void Scene_Ingame::Update(float fTimeElapsed)
 {
 	TimeDelay += fTimeElapsed;
-	cout << "1" << endl;
 	if (musicStart == false && TimeDelay >= -1.f) {
 		if (m_selectedMusic == 0) {
 			IngameSound->play(Sound::SoundTag::bbkkbkk);
@@ -197,12 +196,10 @@ void Scene_Ingame::Update(float fTimeElapsed)
 		}
 		musicStart = true;
 	}
-	cout << "2" << endl;
 #ifdef USE_NETWORK
 	for (int i = 0; i < m_playerNum; i++) {
 		m_players[i]->Update(fTimeElapsed);
 	}
-	cout << "3" << endl;
 #endif // USE_NETWORK
 #ifndef USE_NETWORK
 	m_players[0]->Update(fTimeElapsed);
@@ -210,7 +207,6 @@ void Scene_Ingame::Update(float fTimeElapsed)
 #ifdef USE_NETWORK
 	// 플레이어의 위치 정해주기
 	if (!m_isGameEnd && TimeDelay >= -1.f) {
-		cout << "4" << endl;
 		cs_packet_player_status packet;
 		packet.type = CS_PACKET_PLAYER_STATUS;
 		packet.size = sizeof(cs_packet_player_status);
@@ -250,8 +246,6 @@ void Scene_Ingame::Update(float fTimeElapsed)
 			m_bullets[i]->SetServerPos(coord.x, coord.y);
 		}
 	}
-	cout << "5" << endl;
-	cout << m_rank << endl;
 	if (m_isGameEnd && m_rank == -1) {
 		cs_packet_player_hp packet;
 		packet.type = CS_PACKET_PLAYER_HP;

@@ -96,11 +96,11 @@ DWORD WINAPI MainThread(LPVOID arg)
 				PlayerData& pd = sharedData.GetPlayerData(ps.playerID);
 				pd.position = ps.coord;
 				pd.isSkill = ps.isSkill;
-
-				CollisionCheckBulletAndWall();
-				CollisionCheckPlayerAndBullet();
-				CollisionCheckAbility();
 			}
+
+			CollisionCheckBulletAndWall();
+			CollisionCheckPlayerAndBullet();
+			CollisionCheckAbility();
 
 			sharedData.Update(g_timer.GetDeltaTime());
 			ResetEvent(g_event);
@@ -242,7 +242,12 @@ void TranslatePacket(SOCKET socket, const packet& packetBuf)
 
 void Send(SOCKET socket, void* packetBuf)
 {
-	int retval = send(socket, reinterpret_cast<char*>(packetBuf), reinterpret_cast<packet*>(packetBuf)->size, 0);
+	int remain, retval;
+	remain = reinterpret_cast<packet*>(packetBuf)->size;
+	while (remain > 0) {
+		retval = send(socket, reinterpret_cast<char*>(packetBuf) + reinterpret_cast<packet*>(packetBuf)->size - remain, remain, 0);
+		remain -= retval;
+	}
 }
 
 void CollisionCheckBulletAndWall()

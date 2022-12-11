@@ -261,6 +261,7 @@ void InitServer()
 
 DWORD CALLBACK ProcessClient(LPVOID arg)
 {
+	cout << "asdf" << endl;
 	while (g_threadRun) {
 		Recv();
 	}
@@ -335,7 +336,6 @@ void TranslatePacket(const packet& packetBuf)
 				remain, MSG_WAITALL);
 			remain -= retval;
 		}
-		
 		SetEvent(g_event);
 #ifdef NETWORK_DEBUG
 		cout << "SC_PACKET_OBJECTS_INFO ÇØ¼®" << endl;
