@@ -221,6 +221,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 #ifdef USE_NETWORK
 void InitServer()
 {
+	ifstream is;
+	is.open("ip.txt");
+
 	int retval;
 	// 윈속 초기화
 	WSADATA wsa;
@@ -242,7 +245,12 @@ void InitServer()
 	struct sockaddr_in serveraddr;
 	memset(&serveraddr, 0, sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
-	inet_pton(AF_INET, SERVER_ADDR, &serveraddr.sin_addr);
+	if (is.fail()) inet_pton(AF_INET, SERVER_ADDR, &serveraddr.sin_addr);
+	else {
+		char osip[20];
+		is >> osip;
+		inet_pton(AF_INET, osip, &serveraddr.sin_addr);
+	}
 	serveraddr.sin_port = htons(SERVER_PORT);
 	retval = connect(g_socket, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
 	if (retval == SOCKET_ERROR) {

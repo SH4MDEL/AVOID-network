@@ -19,6 +19,7 @@
 #include <atlimage.h>					// png 이미지 파일을 사용하기 위함
 
 // C 런타임 헤더 파일입니다.
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
@@ -32,6 +33,7 @@
 #include <list>
 #include <array>
 #include <memory.h>
+#include <fstream>
 using namespace std;
 
 #include "Protocol.h"
@@ -77,7 +79,7 @@ extern bool			g_threadRun;
 #define MAX_FPS 1.0 / 30.0
 #else
 // #define MAX_FPS 1.0 / 60.0
-#define MAX_FPS 0
+#define MAX_FPS 1.0 / 60.0
 #endif
 
 // TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.
