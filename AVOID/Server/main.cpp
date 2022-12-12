@@ -151,6 +151,11 @@ int Recv(SOCKET socket)
 		std::cout << "Socket Error in recv" << std::endl;
 		WSAGetLastError();
 		sharedData.PlayerLeft(socket);
+		g_mutex.lock();
+		if (g_insertPlayerStatus.size() == sharedData.players.size()) {
+			SetEvent(g_event);
+		}
+		g_mutex.unlock();
 		return 0;
 	}
 	else if (retval == 0) {
