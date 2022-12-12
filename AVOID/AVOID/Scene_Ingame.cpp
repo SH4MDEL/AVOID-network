@@ -245,6 +245,7 @@ void Scene_Ingame::Update(float fTimeElapsed)
 			Coord coord = m_bulletsCoord[i];
 			m_bullets[i]->SetServerPos(coord.x, coord.y);
 		}
+		ResetEvent(g_event);
 	}
 	if (m_isGameEnd && m_rank == -1) {
 		cs_packet_player_hp packet;

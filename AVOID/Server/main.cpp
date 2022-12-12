@@ -101,7 +101,6 @@ DWORD WINAPI MainThread(LPVOID arg)
 			CollisionCheckBulletAndWall();
 			CollisionCheckPlayerAndBullet();
 			CollisionCheckAbility();
-
 			sharedData.Update(g_timer.GetDeltaTime());
 			ResetEvent(g_event);
 		}
@@ -121,6 +120,9 @@ DWORD WINAPI MainThread(LPVOID arg)
 			}
 			sharedData.musicEnd = false;
 			sharedData.ServerReset();
+		}
+		if (!sharedData.musicStart && !sharedData.musicEnd) {
+			Sleep(1);
 		}
 	}
 }

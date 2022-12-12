@@ -77,7 +77,7 @@ extern bool			g_threadRun;
 #define MAX_FPS 1.0 / 30.0
 #else
 // #define MAX_FPS 1.0 / 60.0
-#define MAX_FPS 0.0
+#define MAX_FPS 0
 #endif
 
 // TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.

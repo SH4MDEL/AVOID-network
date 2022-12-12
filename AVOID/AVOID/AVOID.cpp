@@ -229,7 +229,7 @@ void InitServer()
 		return;
 	}
 
-	g_event = CreateEvent(NULL, FALSE, TRUE, NULL);
+	g_event = CreateEvent(NULL, TRUE, FALSE, NULL);
 
 	//家南 积己
 	g_socket = socket(AF_INET, SOCK_STREAM, 0);
