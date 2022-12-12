@@ -198,6 +198,7 @@ void SharedData::CreateNewGame()
 	case 1:
 		musicSpeedFile = CreateFile(L"Data\\TrueBlueSpeed.txt",
 			GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);
+		timeDelay = -0.8f;
 		break;
 	}
 	ReadFile(musicSpeedFile, Inbuff, c, &read_size, NULL);

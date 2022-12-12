@@ -261,7 +261,6 @@ void InitServer()
 
 DWORD CALLBACK ProcessClient(LPVOID arg)
 {
-	cout << "asdf" << endl;
 	while (g_threadRun) {
 		Recv();
 	}

@@ -145,7 +145,7 @@ void Scene_Ingame::Render(HDC hdc)
 	}
 #ifdef USE_NETWORK
 	for (int i = 0; i < m_playerNum; i++) {
-		m_players[i]->Render(&hdc);
+		m_players[m_playersStatus[i].playerID]->Render(&hdc);
 	}
 	for (int i = 0; i < m_bulletNum; ++i) {
 		m_bullets[i]->Render(&hdc);
@@ -198,7 +198,7 @@ void Scene_Ingame::Update(float fTimeElapsed)
 	}
 #ifdef USE_NETWORK
 	for (int i = 0; i < m_playerNum; i++) {
-		m_players[i]->Update(fTimeElapsed);
+		m_players[m_playersStatus[i].playerID]->Update(fTimeElapsed);
 	}
 #endif // USE_NETWORK
 #ifndef USE_NETWORK
@@ -222,8 +222,8 @@ void Scene_Ingame::Update(float fTimeElapsed)
 		// 플레이어의 위치 정해주기
 		for (int i = 0; i < m_playerNum; ++i) {
 			PlayerStatus ps = m_playersStatus[i];
-			m_players[i]->SetServerPos(ps.coord.x, ps.coord.y);
-			m_players[i]->SetAbilityState(ps.isSkill);
+			m_players[ps.playerID]->SetServerPos(ps.coord.x, ps.coord.y);
+			m_players[ps.playerID]->SetAbilityState(ps.isSkill);
 			if (ps.isCollide) {
 				if (i == m_playerID) {
 					m_players[i]->SetHp(m_players[i]->hitHp);
@@ -232,7 +232,7 @@ void Scene_Ingame::Update(float fTimeElapsed)
 					}
 					IngameSound->play(Sound::SoundTag::Hitsound);
 				}
-				m_players[i]->SetState(true);			// 피격시 무적으로 만들음
+				m_players[ps.playerID]->SetState(true);			// 피격시 무적으로 만들음
 			}
 		}
 		// 적의 위치 정해주기
