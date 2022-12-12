@@ -4,7 +4,7 @@ Timer		g_timer;
 HANDLE		g_event;
 
 SharedData sharedData;
-
+static bool once = false;
 int main()
 {
 	WSADATA wsa;
@@ -50,7 +50,7 @@ int main()
 
 	while (1) {
 
-		if (sharedData.players.size() < MAX_USER) {
+		if (sharedData.players.size() < MAX_USER && !sharedData.musicStart) {
 
 			addrlen = sizeof(clientAddr);
 
@@ -79,7 +79,7 @@ int main()
 
 DWORD WINAPI MainThread(LPVOID arg)
 {
-	static bool once = false;
+
 	while (1) {
 		if (sharedData.musicStart && !g_insertPlayerStatus.empty() &&
 			g_insertPlayerStatus.size() == sharedData.players.size()) {
@@ -153,11 +153,18 @@ int Recv(SOCKET socket)
 		std::cout << "Socket Error in recv" << std::endl;
 		WSAGetLastError();
 		sharedData.PlayerLeft(socket);
-		g_mutex.lock();
-		if (g_insertPlayerStatus.size() == sharedData.players.size()) {
-			SetEvent(g_event);
+		if (sharedData.players.size() <= 0) {
+			sharedData.ServerReset();
+			once = false;
+			ResetEvent(g_event);
 		}
-		g_mutex.unlock();
+		else {
+			g_mutex.lock();
+			if (g_insertPlayerStatus.size() == sharedData.players.size()) {
+				SetEvent(g_event);
+			}
+			g_mutex.unlock();
+		}
 		return 0;
 	}
 	else if (retval == 0) {
