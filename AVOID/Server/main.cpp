@@ -5,8 +5,13 @@ HANDLE		g_event;
 
 SharedData sharedData;
 static bool once = false;
+CRITICAL_SECTION		g_critical_section;
+
 int main()
 {
+
+	InitializeCriticalSection(&g_critical_section);
+
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
 	{
@@ -159,11 +164,13 @@ int Recv(SOCKET socket)
 			ResetEvent(g_event);
 		}
 		else {
-			g_mutex.lock();
+			EnterCriticalSection(&g_critical_section);
+			//g_mutex.lock();
 			if (g_insertPlayerStatus.size() == sharedData.players.size()) {
 				SetEvent(g_event);
 			}
-			g_mutex.unlock();
+			//g_mutex.unlock();
+			LeaveCriticalSection(&g_critical_section);
 		}
 		return 0;
 	}
@@ -222,12 +229,14 @@ void TranslatePacket(SOCKET socket, const packet& packetBuf)
 		ps.coord = pk.coord;
 		ps.isSkill = pk.isSkill;
 
-		g_mutex.lock();
+		EnterCriticalSection(&g_critical_section);
+		//g_mutex.lock();
 		g_insertPlayerStatus.push(ps);
 		if (g_insertPlayerStatus.size() == sharedData.players.size()) {
 			SetEvent(g_event);
 		}
-		g_mutex.unlock();
+		//g_mutex.unlock();
+		LeaveCriticalSection(&g_critical_section);
 #ifdef SERVER_DEBUG
 		cout << "CS_PACKET_PLAYER_STATUS ÇØ¼®" << endl;
 #endif // SERVER_DEBUG

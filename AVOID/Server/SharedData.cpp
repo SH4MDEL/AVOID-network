@@ -2,7 +2,8 @@
 
 queue<PlayerStatus>		g_insertPlayerStatus;
 vector<int>				g_hpData;
-mutex					g_mutex;
+//mutex					g_mutex;
+
 
 SharedData::SharedData() : musicStart(false), musicEnd(false), tick(0), timeDelay(-1.f)
 {
